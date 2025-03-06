@@ -1,0 +1,85 @@
+.login-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 500px;
+  margin: 80px auto;
+  padding: 40px;
+}
+
+.login-container h1 {
+  margin-bottom: 40px;
+  font-size: 32px;
+  font-weight: 500;
+}
+
+form {
+  width: 100%;
+}
+
+.input-group {
+  width: 100%;
+  margin-bottom: 25px;
+}
+
+.input-group label {
+  display: block;
+  margin-bottom: 12px;
+  font-size: 16px;
+}
+
+input {
+  width: 100%;
+  padding: 15px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 16px;
+  box-sizing: border-box;
+}
+
+.login-button {
+  width: 100%;
+  padding: 15px;
+  background-color: #01048f;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 18px;
+  margin-top: 15px;
+  font-weight: 500;
+}
+
+.login-button:hover {
+  background-color: #01048f;
+}
+
+.navigation-links {
+  width: 100%;
+  margin-top: 30px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.signup-link {
+  font-size: 16px;
+}
+
+.signup-link a {
+  color: #01048f;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.guest-link {
+  color: #01048f;
+  text-decoration: none;
+  font-size: 16px;
+}
+
+.guest-link:hover, .signup-link a:hover {
+  text-decoration: underline;
+}
+  
