@@ -1,0 +1,117 @@
+.register-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 500px;
+  margin: 80px auto;
+  padding: 40px;
+}
+
+.register-container h1 {
+  margin-bottom: 40px;
+  font-size: 32px;
+  font-weight: 500;
+}
+
+form {
+  width: 100%;
+}
+
+.input-group {
+  width: 100%;
+  margin-bottom: 25px;
+}
+
+.input-group label {
+  display: block;
+  margin-bottom: 12px;
+  font-size: 16px;
+}
+
+input {
+  width: 100%;
+  padding: 15px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 16px;
+  box-sizing: border-box;
+}
+
+.register-button {
+  width: 100%;
+  padding: 15px;
+  background-color: #01048f;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 18px;
+  margin-top: 15px;
+  font-weight: 500;
+}
+
+.register-button:hover {
+  background-color: #01048f;
+}
+
+.navigation-links {
+  width: 100%;
+  margin-top: 30px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.login-link {
+  font-size: 16px;
+}
+
+.login-link a {
+  color: #01048f;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.guest-link {
+  color: #01048f;
+  text-decoration: none;
+  font-size: 16px;
+}
+
+.guest-link:hover, .login-link a:hover {
+  text-decoration: underline;
+}
+
+.error-message {
+  color: rgb(200, 0, 0);
+  margin: -15px 0 20px 0;
+  text-align: left;
+  font-size: 12px;
+  font-family: -apple-system, system-ui, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+input:invalid {
+  border-color: #e0b4b4;
+}
+
+/* This styles the validation popup */
+input:invalid::before {
+  content: "Please fill out this field.";
+  position: absolute;
+  top: -10px;
+  left: 10px;
+  background-color: #f26419;  /* Change this to your preferred color */
+  color: white;
+  padding: 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  z-index: 1000;
+}
+
+/* Remove the default browser validation popup appearance */
+input:invalid::-webkit-validation-bubble-message,
+input:invalid::-webkit-validation-bubble {
+  display: none;
+}
+  

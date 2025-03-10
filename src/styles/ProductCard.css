@@ -1,0 +1,70 @@
+/* src/styles/ProductCard.css */
+.product-card {
+    position: relative;
+    width: 100%;
+    max-width: 250px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 15px;
+    text-align: center;
+    background-color: white;
+    cursor: pointer;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  
+  .product-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
+  }
+  
+  .heart-icon {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    font-size: 20px;
+    color: red;
+    cursor: pointer;
+    transition: transform 0.2s;
+    z-index: 2; /* Tıklanabilir olması için öne al */
+    background-color: #fff;
+    border-radius: 50%;
+    padding: 5px;
+  }
+  
+  .heart-icon:hover {
+    transform: scale(1.1);
+  }
+  
+  .product-image {
+    width: 100%;
+    height: auto;
+    margin-bottom: 10px;
+  }
+  
+  .product-name {
+    font-size: 16px;
+    margin: 10px 0;
+    color: #333;
+  }
+  
+  .product-price {
+    font-size: 18px;
+    font-weight: bold;
+    color: #f26419;
+  }
+  
+  .add-to-cart {
+    margin-top: 10px;
+    padding: 8px 12px;
+    border: none;
+    background-color: #01048f;
+    color: white;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .add-to-cart:hover {
+    background-color: #333;
+  }
+  

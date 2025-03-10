@@ -1,0 +1,16 @@
+/* src/styles/HomePage.css */
+.home-page {
+  margin-top: 100px; /* Header kaplıyor, biraz boşluk bırak */
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.products-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 90px; /* Ürünler arasına biraz daha boşluk */
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
