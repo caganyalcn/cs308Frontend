@@ -13,14 +13,47 @@ export const AppProvider = ({ children }) => {
     }
   };
 
+  const removeFromFavorites = (productId) => {
+    setFavorites(favorites.filter(item => item.id !== productId));
+  };
+
   const addToCart = (product) => {
     if (!cart.some((c) => c.id === product.id)) {
-      setCart([...cart, product]);
+      setCart([...cart, { ...product, quantity: 1 }]);
+    } else {
+      // If item exists, increase quantity
+      updateQuantity(product.id, (cart.find(item => item.id === product.id)?.quantity || 1) + 1);
     }
   };
 
+  const removeFromCart = (productId) => {
+    setCart(cart.filter(item => item.id !== productId));
+  };
+
+  const updateQuantity = (productId, newQuantity) => {
+    if (newQuantity <= 0) {
+      // Remove item if quantity is 0 or less
+      removeFromCart(productId);
+      return;
+    }
+    
+    setCart(cart.map(item => 
+      item.id === productId 
+        ? { ...item, quantity: newQuantity } 
+        : item
+    ));
+  };
+
   return (
-    <AppContext.Provider value={{ favorites, cart, addToFavorites, addToCart }}>
+    <AppContext.Provider value={{ 
+      favorites, 
+      cart, 
+      addToFavorites,
+      removeFromFavorites, 
+      addToCart,
+      removeFromCart,
+      updateQuantity
+    }}>
       {children}
     </AppContext.Provider>
   );
