@@ -1,4 +1,3 @@
-// src/AppContext.js
 import React, { createContext, useState } from "react";
 
 export const AppContext = createContext();
@@ -21,7 +20,7 @@ export const AppProvider = ({ children }) => {
     if (!cart.some((c) => c.id === product.id)) {
       setCart([...cart, { ...product, quantity: 1 }]);
     } else {
-      // If item exists, increase quantity
+      // Eğer ürün zaten sepette varsa, miktarını artır
       updateQuantity(product.id, (cart.find(item => item.id === product.id)?.quantity || 1) + 1);
     }
   };
@@ -32,7 +31,7 @@ export const AppProvider = ({ children }) => {
 
   const updateQuantity = (productId, newQuantity) => {
     if (newQuantity <= 0) {
-      // Remove item if quantity is 0 or less
+      // Eğer miktar 0 veya daha küçükse ürünü kaldır
       removeFromCart(productId);
       return;
     }

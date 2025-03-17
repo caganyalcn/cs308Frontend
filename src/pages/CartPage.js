@@ -1,20 +1,18 @@
-// src/pages/CartPage.js
 import React, { useContext } from "react";
 import Header from "../components/Header";
 import { AppContext } from "../AppContext";
-import "../styles/CartPage.css"; // New CSS file for cart styling
+import "../styles/CartPage.css"; 
 
 const CartPage = () => {
   const { cart, removeFromCart, updateQuantity } = useContext(AppContext);
-  
-  // Calculate cart total - properly handle numeric values
+
   const cartTotal = cart.reduce((total, item) => {
     const price = parseFloat(item.price) || 0;
     const quantity = item.quantity || 1;
     return total + (price * quantity);
   }, 0);
 
-  // Format price helper function
+  
   const formatPrice = (price) => {
     return price.toLocaleString('tr-TR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
   };
@@ -76,8 +74,9 @@ const CartPage = () => {
                         className="remove-item"
                         onClick={() => removeFromCart(item.id)}
                         aria-label={`Sepetten ${item.name} ürününü kaldır`}
+                        style={{ background: "none", border: "none", color: "red", fontSize: "20px", cursor: "pointer" }}
                       >
-                        <i className="fa fa-trash"></i>
+                        ❌
                       </button>
                     </div>
                     
