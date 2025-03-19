@@ -1,11 +1,11 @@
-// src/components/Header.js
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import logo from "./Logo.png";
 import "../styles/Header.css";
 
 const Header = () => {
   const navigate = useNavigate();
+  const [showAccountMenu, setShowAccountMenu] = useState(false);
 
   const handleSearch = () => {
     alert("Arama özelliği henüz eklenmedi!");
@@ -34,6 +34,22 @@ const Header = () => {
         <button onClick={() => navigate("/cart")} className="cart-button">
           Sepetim
         </button>
+
+        {/* Hesabım butonu */}
+        <div className="account-menu">
+          <button 
+            className="account-button"
+            onClick={() => setShowAccountMenu(!showAccountMenu)}
+          >
+            Hesabım ▼
+          </button>
+
+          {showAccountMenu && (
+            <div className="dropdown-menu">
+              <button onClick={() => navigate("/orders")}>Siparişlerim</button>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

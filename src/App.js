@@ -8,6 +8,9 @@ import HomePage from "./pages/HomePage";
 import ProductDetailPage from "./pages/ProductDetailPage";
 import FavoritesPage from "./pages/FavoritesPage";
 import CartPage from "./pages/CartPage";
+import PaymentPage from "./pages/PaymentPage";
+import OrdersPage from "./pages/OrdersPage";
+import ReturnPage from "./pages/ReturnPage";
 
 function App() {
   return (
@@ -20,6 +23,9 @@ function App() {
           <Route path="/product/:id" element={<ProductDetailPage />} />
           <Route path="/favorites" element={<FavoritesPage />} />
           <Route path="/cart" element={<CartPage />} />
+          <Route path="/payment" element={<PaymentPage />} /> {/* Yeni route */}
+          <Route path="/orders" element={<OrdersPage />} />
+          <Route path="/return" element={<ReturnPage />} />
         </Routes>
       </Router>
     </AppProvider>

@@ -50,27 +50,22 @@
   
   .header-right {
     display: flex;
-    gap: 15px;
-    /* Dilerseniz margin-left'i azaltabilirsiniz, 
-       çok sağa yaslanmasın diye 20 -> 10 yaptım */
-    margin-left: 10px; 
-    
+    align-items: center;
+    gap: 20px; /* Butonlar arasındaki boşluğu artır */
+    margin-right: 40px; /* "Hesabım" butonunu biraz sola çek */
   }
   
   .header-right button {
-    padding: 10px 12px;
-    background-color: white;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    font-size: 16px; /* Biraz büyük */
+    padding: 10px 15px;
+    border: none;
+    background: none;
     cursor: pointer;
-    transition: background-color 0.2s, color 0.2s;
+    font-size: 16px;
   }
   
   .header-right button:hover {
-    background-color: #f26419;
-    color: white;
-  }
+    color: #007bff;
+  }s
   /* src/styles/Header.css */
 .favorites-button, .cart-button {
     padding: 10px 15px;

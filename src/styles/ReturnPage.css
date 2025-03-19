@@ -1,0 +1,79 @@
+/* Genel sayfa ayarları */
+.return-page {
+    max-width: 600px;
+    margin: 40px auto;
+    padding: 20px;
+    background-color: #f7f7f7;
+    font-family: Arial, sans-serif;
+  }
+  
+  /* İçerik kutusu düzenlemeleri */
+  .return-container {
+    background: #fff;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    text-align: start; /* İçeriği solda hizala */
+  }
+  
+  /* Başlık stili */
+  .return-container h2 {
+    margin-bottom: 20px;
+    font-size: 26px;
+    text-align: center;
+  }
+  
+  /* Açıklama metni */
+  .instruction-text {
+    font-size: 18px;
+    margin-bottom: 15px;
+    text-align: center;
+  }
+  
+  .return-options {
+    display: flex;              /* İçinde dikey sıralama */
+    flex-direction: column;     /* Seçenekler alt alta gelsin */
+    align-items: flex-start;    /* Solda hizala */
+    gap: 12px;                  /* Seçenekler arası boşluk */
+    margin-bottom: 20px;
+  }
+  
+  .return-options label {
+    display: inline-flex;       /* Radyo butonu + metni tek satırda tut */
+    align-items: center;        /* Dikey ortalama */
+    font-size: 16px;
+    cursor: pointer;
+    white-space: nowrap;        /* Uzun metin varsa satır kırılmasını önlemek için */
+     width: 5%;            
+  }
+  
+  .return-options input {
+    margin-right: 10px;         /* Radyo butonu ile metin arasına boşluk */
+  }
+  
+  /* Buton stili */
+  .submit-return {
+    width: 100%;
+    padding: 12px;
+    background: red;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 6px;
+    font-size: 16px;
+    font-weight: bold;
+    transition: background 0.3s;
+  }
+  
+  .submit-return:hover {
+    background: darkred;
+  }
+  
+  /* Başarı mesajı */
+  .success-message {
+    font-size: 18px;
+    color: green;
+    font-weight: bold;
+    text-align: center;
+  }
+  

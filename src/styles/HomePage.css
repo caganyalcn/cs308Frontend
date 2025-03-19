@@ -14,3 +14,12 @@
   margin: 0 auto;
   padding: 20px;
 }
+
+/* Ensure all product images are the same size */
+.product-card img {
+  width: 250px; /* Set a fixed width */
+  height: 250px; /* Set a fixed height */
+  object-fit: cover; /* Ensures images keep their aspect ratio while filling the box */
+  border-radius: 8px; /* Keeps the same styling as before */
+}
+
