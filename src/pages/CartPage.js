@@ -1,20 +1,21 @@
 import React, { useContext } from "react";
+import { useNavigate } from "react-router-dom"; 
 import Header from "../components/Header";
 import { AppContext } from "../AppContext";
 import "../styles/CartPage.css"; 
 
 const CartPage = () => {
   const { cart, removeFromCart, updateQuantity } = useContext(AppContext);
+  const navigate = useNavigate();
 
   const cartTotal = cart.reduce((total, item) => {
-    const price = parseFloat(item.price) || 0;
+    const price = parseFloat(item.price.replace(',', '.')) || 0; // TL formatından dönüşüm
     const quantity = item.quantity || 1;
-    return total + (price * quantity);
+    return total + price * quantity;
   }, 0);
 
-  
   const formatPrice = (price) => {
-    return price.toLocaleString('tr-TR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    return price.toLocaleString('tr-TR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + " TL ₺";
   };
 
   return (
@@ -27,16 +28,18 @@ const CartPage = () => {
           <div className="empty-cart">
             <i className="fa fa-shopping-cart empty-cart-icon"></i>
             <p>Sepetiniz boş.</p>
-            <button className="continue-shopping">Alışverişe Devam Et</button>
+            <button className="continue-shopping" onClick={() => navigate("/home")}>
+              Alışverişe Devam Et
+            </button>
           </div>
         ) : (
           <div className="cart-details">
             <div className="cart-items">
               {cart.map((item) => {
-                const price = parseFloat(item.price) || 0;
+                const price = parseFloat(item.price.replace(',', '.')) || 0;
                 const quantity = item.quantity || 1;
                 const itemTotal = price * quantity;
-                
+
                 return (
                   <div key={item.id} className="cart-item">
                     <div className="item-image-container">
@@ -49,7 +52,7 @@ const CartPage = () => {
                     
                     <div className="item-details">
                       <h3 className="item-name">{item.name}</h3>
-                      <p className="item-price">{formatPrice(price)} TL ₺</p>
+                      <p className="item-price">{formatPrice(price)}</p>
                     </div>
                     
                     <div className="item-actions">
@@ -81,7 +84,7 @@ const CartPage = () => {
                     </div>
                     
                     <div className="item-total">
-                      {formatPrice(itemTotal)} TL ₺
+                      {formatPrice(itemTotal)}
                     </div>
                   </div>
                 );
@@ -92,7 +95,7 @@ const CartPage = () => {
               <h3>Sipariş Özeti</h3>
               <div className="summary-row">
                 <span>Ara Toplam</span>
-                <span>{formatPrice(cartTotal)} TL ₺</span>
+                <span>{formatPrice(cartTotal)}</span>
               </div>
               <div className="summary-row">
                 <span>Kargo</span>
@@ -100,14 +103,14 @@ const CartPage = () => {
               </div>
               <div className="summary-row total">
                 <span>Toplam</span>
-                <span>{formatPrice(cartTotal)} TL ₺</span>
+                <span>{formatPrice(cartTotal)}</span>
               </div>
               
-              <button className="checkout-button">
+              <button className="checkout-button" onClick={() => navigate("/payment")}>
                 Ödemeye Geç
               </button>
               
-              <button className="continue-shopping-link">
+              <button className="continue-shopping-link" onClick={() => navigate("/home")}>
                 Alışverişe Devam Et
               </button>
             </div>
