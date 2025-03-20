@@ -1,85 +1,164 @@
 /* src/styles/Header.css */
+
+/* 🔹 Öneri Kutusunun Konumunu Tam Düzeltiyoruz */
+.search-suggestions {
+  position: absolute;
+  top: calc(100% + 5px); /* 🔹 Arama kutusunun hemen altına 5px boşluk bırak */
+  left: 50%; /* 🔹 Arama kutusunun tam ortasına hizala */
+  transform: translateX(-50%); /* 🔹 Kutunun tam ortada kalmasını sağlar */
+  background: white;
+  border: 1px solid #ddd;
+  max-height: 180px;
+  overflow-y: auto;
+  width: 250px; /* 🔹 Arama kutusuna uygun genişlik */
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  border-radius: 5px;
+  padding: 5px;
+}
+
+/* 🔹 Öneri Kutusundaki Ürünlerin Daha Küçük Olmasını Sağlıyoruz */
+.suggestion-item {
+  display: flex;
+  align-items: center;
+  padding: 5px;
+  cursor: pointer;
+  transition: background 0.2s;
+  font-size: 12px; /* 🔹 Yazılar daha küçük olacak */
+}
+
+/* 🔹 Ürün Adı ve Görsel Yan Yana Küçük Olsun */
+.suggestion-item:hover {
+  background: #f5f5f5;
+}
+
+.suggestion-image {
+  width: 25px; /* 🔹 Küçük resimler */
+  height: 25px;
+  object-fit: cover;
+  margin-right: 8px;
+  border-radius: 5px;
+}
+
+/* 🔹 Header Tasarımı */
 .header-container {
-    width: 100%;
-    height: 80px;
-    background-color: #ffffff;
-    display: flex;
-    align-items: center;
-    padding: 0 20px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    position: fixed;
-    top: 0;
-    left: 0;
-    z-index: 1000;
-  }
-  
-  .logo-container {
-    display: flex;
-    align-items: center;
-    cursor: pointer;
-  }
-  
-  .logo {
-    width: 50px;
-    margin-right: 10px;
-  }
-  
-  .search-container {
-    flex: 1; /* Ortada kalması için */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-  
-  .search-input {
-    width: 300px;
-    padding: 8px;
-    border-radius: 4px 0 0 4px;
-    border: 1px solid #ccc;
-    outline: none;
-  }
-  
-  .search-button {
-    padding: 8px 16px;
-    border: 1px solid #ccc;
-    border-left: none;
-    border-radius: 0 4px 4px 0;
-    cursor: pointer;
-    background-color: #f2f2f2;
-  }
-  
-  .header-right {
-    display: flex;
-    align-items: center;
-    gap: 20px; /* Butonlar arasındaki boşluğu artır */
-    margin-right: 40px; /* "Hesabım" butonunu biraz sola çek */
-  }
-  
-  .header-right button {
-    padding: 10px 15px;
-    border: none;
-    background: none;
-    cursor: pointer;
-    font-size: 16px;
-  }
-  
-  .header-right button:hover {
-    color: #007bff;
-  }s
-  /* src/styles/Header.css */
+  width: 100%;
+  height: 80px;
+  background-color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+}
+
+/* 🔹 Logo */
+.logo-container {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.logo {
+  width: 50px;
+  margin-right: 10px;
+}
+
+/* 🔹 Arama Kutusu Ortada */
+.search-container {
+  display: flex;
+  align-items: center;
+  position: relative;
+  flex: 1;
+  justify-content: center;
+}
+
+.search-input {
+  width: 250px;
+  padding: 8px;
+  border-radius: 4px 0 0 4px;
+  border: 1px solid #ccc;
+  outline: none;
+}
+
+.search-button {
+  padding: 8px 16px;
+  border: 1px solid #ccc;
+  border-left: none;
+  border-radius: 0 4px 4px 0;
+  cursor: pointer;
+  background-color: #f2f2f2;
+}
+
+/* 🔹 Sağ Tarafa Butonları Geri Getiriyoruz */
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin-right: 20px;
+}
+
+/* 🔹 Hesabım Butonu */
+.account-menu {
+  position: relative;
+}
+
+.account-button {
+  background: none;
+  border: none;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.account-button:hover {
+  color: #007bff;
+}
+
+.dropdown-menu {
+  position: absolute;
+  background: white;
+  border: 1px solid #ddd;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 10px;
+  right: 0;
+  top: 100%;
+}
+
+/* 🔹 Favoriler ve Sepet Butonları */
 .favorites-button, .cart-button {
-    padding: 10px 15px;
-    background-color: white;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    font-size: 16px;
-    cursor: pointer;
-    transition: background-color 0.2s, color 0.2s;
-    margin-right: 30px; /* Butonları sola kaydırmak için */
-  }
-  
-  .favorites-button:hover, .cart-button:hover {
-    background-color: #f26419;
-    color: white;
-  }
-  
+  padding: 10px 15px;
+  background-color: white;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.favorites-button:hover, .cart-button:hover {
+  background-color: #f26419;
+  color: white;
+}
+/* 🔹 Geri Git Butonu (Logonun Altına Alındı) */
+.back-button {
+  position: absolute;
+  left: 20px; /* 🔹 Sol köşeye biraz boşluk bırak */
+  top: 90px; /* 🔹 Logonun altına indir */
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: #333;
+  z-index: 1001;
+  display: block;
+}
+
+.back-button:hover {
+  color: #007bff;
+}
+
+
