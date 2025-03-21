@@ -3,10 +3,10 @@ import { useNavigate } from "react-router-dom";
 import Header from "../components/Header";
 import "../styles/OrdersPage.css";
 
-const OrdersPage = () => {
+const OrdersPage = ({ isEmbedded = false }) => {
   const navigate = useNavigate();
 
-  // Siparişler verisi
+  // Orders data
   const [orders] = useState([
     {
       id: 1,
@@ -30,33 +30,59 @@ const OrdersPage = () => {
     },
   ]);
 
+  const handleReturnRequest = () => {
+    navigate("/return");
+  };
+  
+  const getStatusClass = (status) => {
+    if (status === "Kargoya Verildi") return "shipped";
+    if (status === "Teslim Edildi") return "delivered";
+    return "preparing";
+  };
+
   return (
-    <div className="orders-page">
-      <Header />
+    <div className={isEmbedded ? "embedded-orders" : "orders-page"}>
+      {!isEmbedded && <Header />}
       <h2 className="orders-title">Siparişlerim</h2>
 
       {orders.map((order) => (
         <div key={order.id} className="order-item">
-          <div className="order-info">
-            <p><strong>Sipariş Tarihi:</strong> {order.date}</p>
-            <p><strong>Tutar:</strong> {order.total}</p>
+          <div className="order-header">
+            <div className="order-number">Sipariş #{order.id}</div>
+            <div className="order-date">{order.date}</div>
           </div>
-
-          <div className="order-status">
-            <p className={`status ${order.status === "Kargoya Verildi" ? "shipped" : "preparing"}`}>
-              {order.status}
-            </p>
+          
+          <div className="order-body">
+            <div className="order-info">
+              <p><strong>Ürün Sayısı:</strong> {order.items.length} ürün</p>
+              <p><strong>Toplam Tutar:</strong> {order.total}</p>
+            </div>
+            
+            <div className="order-status">
+              <span className={`status ${getStatusClass(order.status)}`}>
+                {order.status}
+              </span>
+            </div>
           </div>
-
+          
           <div className="order-images">
             {order.items.map((item) => (
               <img key={item.id} src={item.image} alt="Ürün" className="order-image" />
             ))}
           </div>
-
-          <button className="return-button" onClick={() => navigate("/return")}>
-            İade Talebi
-          </button>
+          
+          <div className="order-footer">
+            <div className="order-total">{order.total}</div>
+            <div className="action-buttons">
+              <button className="details-button">Detayları Gör</button>
+              {order.status !== "Teslim Edildi" ? (
+                <button className="track-button">Kargo Takibi</button>
+              ) : null}
+              <button className="return-button" onClick={handleReturnRequest}>
+                İade Talebi
+              </button>
+            </div>
+          </div>
         </div>
       ))}
     </div>

@@ -3,21 +3,21 @@ import { useNavigate, useLocation } from "react-router-dom";
 import logo from "./Logo.png";
 import "../styles/Header.css";
 import products from "../data/products";
+import { FaUser, FaShoppingBasket, FaHeart } from "react-icons/fa";
 
 const Header = ({ setSearchQuery }) => {
   const navigate = useNavigate();
-  const location = useLocation(); // 🔹 Mevcut sayfanın URL'sini al
+  const location = useLocation();
 
   const [searchTerm, setSearchTerm] = useState("");
   const [suggestions, setSuggestions] = useState([]);
   const [showAccountMenu, setShowAccountMenu] = useState(false);
 
-  // Geri Git Butonu Fonksiyonu
   const handleGoBack = () => {
     if (location.pathname === "/return") {
-      navigate("/orders"); // 🔹 Eğer iade talebi sayfasındaysan önce Siparişlerim sayfasına dön
+      navigate("/orders");
     } else {
-      navigate("/home"); // 🔹 Diğer tüm sayfalardan HomePage'e dön
+      navigate("/home");
     }
   };
 
@@ -34,7 +34,7 @@ const Header = ({ setSearchQuery }) => {
       const filtered = products.filter((product) =>
         product.name
           .split(" ")
-          .some(word => word.toLowerCase().startsWith(value.toLowerCase()))
+          .some((word) => word.toLowerCase().startsWith(value.toLowerCase()))
       );
 
       setSuggestions(filtered);
@@ -45,9 +45,10 @@ const Header = ({ setSearchQuery }) => {
 
   return (
     <div className="header-container">
-      {/* 🔹 Geri Git Butonu (Sadece HomePage DEĞİLSE göster) */}
       {location.pathname !== "/home" && (
-        <button className="back-button" onClick={handleGoBack}>←</button>
+        <button className="back-button" onClick={handleGoBack}>
+          ←
+        </button>
       )}
 
       <div className="logo-container" onClick={() => navigate("/home")}>
@@ -75,7 +76,11 @@ const Header = ({ setSearchQuery }) => {
                 className="suggestion-item"
                 onClick={() => navigate(`/product/${product.id}`)}
               >
-                <img src={product.image} alt={product.name} className="suggestion-image" />
+                <img
+                  src={product.image}
+                  alt={product.name}
+                  className="suggestion-image"
+                />
                 <span>{product.name}</span>
               </div>
             ))}
@@ -85,25 +90,23 @@ const Header = ({ setSearchQuery }) => {
 
       <div className="header-right">
         <button onClick={() => navigate("/favorites")} className="favorites-button">
-          Favorilerim
+          <FaHeart className="nav-icon" /> Favorilerim
         </button>
         <button onClick={() => navigate("/cart")} className="cart-button">
-          Sepetim
+          <FaShoppingBasket className="nav-icon" /> Sepetim
         </button>
 
         <div className="account-menu">
-          <button 
+          {/* Clicking this button now navigates to the account page */}
+          <button
             className="account-button"
-            onClick={() => setShowAccountMenu(!showAccountMenu)}
+            onClick={() => navigate("/hesabim")} 
           >
-            Hesabım ▼
+            <FaUser className="nav-icon" /> Hesabım
           </button>
 
-          {showAccountMenu && (
-            <div className="dropdown-menu">
-              <button onClick={() => navigate("/orders")}>Siparişlerim</button>
-            </div>
-          )}
+
+          
         </div>
       </div>
     </div>

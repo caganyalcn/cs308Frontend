@@ -7,35 +7,33 @@ const ProductCard = ({ product }) => {
   const navigate = useNavigate();
   const { favorites, addToFavorites, removeFromFavorites, cart, addToCart, removeFromCart } = useContext(AppContext);
 
-  // Ürün favorilerde mi kontrol et
   const isFavorited = favorites.some(fav => fav.id === product.id);
-  const isInCart = cart.some(item => item.id === product.id); // Ürün sepette mi?
+  const isInCart = cart.some(item => item.id === product.id);
 
   const handleCardClick = () => {
     navigate(`/product/${product.id}`);
   };
 
   const handleHeartClick = (e) => {
-    e.stopPropagation(); // Kartın genel tıklamasını engelle
+    e.stopPropagation();
     if (isFavorited) {
-      removeFromFavorites(product.id); // Favorilerden çıkar
+      removeFromFavorites(product.id);
     } else {
-      addToFavorites(product); // Favorilere ekle
+      addToFavorites(product);
     }
   };
 
   const handleCartClick = (e) => {
     e.stopPropagation();
     if (isInCart) {
-      removeFromCart(product.id); // Sepetten çıkar
+      removeFromCart(product.id);
     } else {
-      addToCart(product); // Sepete ekle
+      addToCart(product);
     }
   };
 
   return (
     <div className="product-card" onClick={handleCardClick}>
-      {/* Kalp butonu - Renk değiştirerek favori durumunu gösterecek */}
       <div 
         className="heart-icon" 
         onClick={handleHeartClick} 
@@ -47,8 +45,12 @@ const ProductCard = ({ product }) => {
       <img src={product.image} alt={product.name} className="product-image" />
       <h2 className="product-name">{product.name}</h2>
       <p className="product-price">{product.price}</p>
-
-      {/* Sepete Ekle/Çıkar butonu */}
+      
+      {/* Added product description */}
+      <p className="product-description">{product.description}</p>
+      {/* Added product rating */}
+      <p className="product-rating">⭐ {product.rating}</p>
+      
       <button className="add-to-cart" onClick={handleCartClick}>
         {isInCart ? "Sepetten Çıkar" : "Sepete Ekle"}
       </button>
@@ -57,4 +59,3 @@ const ProductCard = ({ product }) => {
 };
 
 export default ProductCard;
-

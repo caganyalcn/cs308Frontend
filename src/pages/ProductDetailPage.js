@@ -8,16 +8,15 @@ import "../styles/ProductDetailPage.css";
 const ProductDetailPage = () => {
   const { id } = useParams();
   const { cart, addToCart, removeFromCart, favorites, addToFavorites, removeFromFavorites } = useContext(AppContext);
-  const [isInCart, setIsInCart] = useState(false); // State ekledik
+  const [isInCart, setIsInCart] = useState(false);
 
   const product = products.find((p) => p.id === parseInt(id));
 
-  // **useEffect ile Sepet Durumunu Anlık Güncelle**
   useEffect(() => {
     if (product) {
-      setIsInCart(cart.some(item => item.id === product.id)); // Sepette olup olmadığını kontrol et
+      setIsInCart(cart.some(item => item.id === product.id));
     }
-  }, [cart, product]); // `cart` veya `product` değişirse butonu güncelle
+  }, [cart, product]);
 
   if (!product) {
     return (
@@ -28,25 +27,23 @@ const ProductDetailPage = () => {
     );
   }
 
-  // Ürün favorilerde mi kontrol et
   const isFavorited = favorites.some(fav => fav.id === product.id);
 
   const handleFavoriteClick = () => {
     if (isFavorited) {
-      removeFromFavorites(product.id); // Favorilerden çıkar
+      removeFromFavorites(product.id);
     } else {
-      addToFavorites(product); // Favorilere ekle
+      addToFavorites(product);
     }
   };
 
-  // **Sepete Ekle/Çıkar Butonu Mantığı**
   const handleCartClick = () => {
     if (isInCart) {
-      removeFromCart(product.id); // Sepetten çıkar
+      removeFromCart(product.id);
     } else {
-      addToCart(product); // Sepete ekle
+      addToCart(product);
     }
-    setIsInCart(!isInCart); // **Butonun anında güncellenmesini sağla**
+    setIsInCart(!isInCart);
   };
 
   return (
@@ -57,20 +54,20 @@ const ProductDetailPage = () => {
         <div className="detail-info">
           <h2>{product.name}</h2>
           <p className="detail-price">{product.price}</p>
+          <p className="detail-description">{product.description}</p>
+          <p className="detail-rating">Rating: ⭐ {product.rating}</p>
           
-          {/* **Sepete Ekle/Çıkar Butonu** */}
           <button 
             onClick={handleCartClick} 
-            className="detail-button"
+            className="detail-button" 
             style={{ background: isInCart ? "red" : "blue", color: "white" }}
           >
             {isInCart ? "Sepetten Çıkar" : "Sepete Ekle"}
           </button>
-
-          {/* **Favorilere Ekle/Çıkar Butonu** */}
+          
           <button 
             onClick={handleFavoriteClick} 
-            className="detail-button"
+            className="detail-button" 
             style={{ background: isFavorited ? "gray" : "black", color: "white" }}
           >
             {isFavorited ? "Favorilerden Çıkar" : "Favorilere Ekle"}

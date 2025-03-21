@@ -1,16 +1,14 @@
-/* src/styles/Header.css */
-
 /* 🔹 Öneri Kutusunun Konumunu Tam Düzeltiyoruz */
 .search-suggestions {
   position: absolute;
-  top: calc(100% + 5px); /* 🔹 Arama kutusunun hemen altına 5px boşluk bırak */
-  left: 50%; /* 🔹 Arama kutusunun tam ortasına hizala */
-  transform: translateX(-50%); /* 🔹 Kutunun tam ortada kalmasını sağlar */
+  top: calc(100% + 5px); /* Arama kutusunun hemen altına 5px boşluk bırak */
+  left: 50%; /* Arama kutusunun tam ortasına hizala */
+  transform: translateX(-50%); /* Kutunun tam ortada kalmasını sağlar */
   background: white;
   border: 1px solid #ddd;
   max-height: 180px;
   overflow-y: auto;
-  width: 250px; /* 🔹 Arama kutusuna uygun genişlik */
+  width: 250px; /* Arama kutusuna uygun genişlik */
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
   z-index: 1000;
   border-radius: 5px;
@@ -24,16 +22,15 @@
   padding: 5px;
   cursor: pointer;
   transition: background 0.2s;
-  font-size: 12px; /* 🔹 Yazılar daha küçük olacak */
+  font-size: 12px; /* Yazılar daha küçük olacak */
 }
 
-/* 🔹 Ürün Adı ve Görsel Yan Yana Küçük Olsun */
 .suggestion-item:hover {
   background: #f5f5f5;
 }
 
 .suggestion-image {
-  width: 25px; /* 🔹 Küçük resimler */
+  width: 25px; /* Küçük resimler */
   height: 25px;
   object-fit: cover;
   margin-right: 8px;
@@ -102,32 +99,6 @@
   margin-right: 20px;
 }
 
-/* 🔹 Hesabım Butonu */
-.account-menu {
-  position: relative;
-}
-
-.account-button {
-  background: none;
-  border: none;
-  font-size: 16px;
-  cursor: pointer;
-}
-
-.account-button:hover {
-  color: #007bff;
-}
-
-.dropdown-menu {
-  position: absolute;
-  background: white;
-  border: 1px solid #ddd;
-  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-  padding: 10px;
-  right: 0;
-  top: 100%;
-}
-
 /* 🔹 Favoriler ve Sepet Butonları */
 .favorites-button, .cart-button {
   padding: 10px 15px;
@@ -143,11 +114,43 @@
   background-color: #f26419;
   color: white;
 }
+
+/* 🔹 Hesabım Butonu - Border added to match favorites & cart */
+.account-button {
+  padding: 10px 15px;
+  background-color: white;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.account-button:hover {
+  background-color: #f26419;
+  color: white;
+}
+
+/* 🔹 Hesap Menüsü */
+.account-menu {
+  position: relative;
+}
+
+.dropdown-menu {
+  position: absolute;
+  background: white;
+  border: 1px solid #ddd;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 10px;
+  right: 0;
+  top: 100%;
+}
+
 /* 🔹 Geri Git Butonu (Logonun Altına Alındı) */
 .back-button {
   position: absolute;
-  left: 20px; /* 🔹 Sol köşeye biraz boşluk bırak */
-  top: 90px; /* 🔹 Logonun altına indir */
+  left: 20px; /* Sol köşeye biraz boşluk bırak */
+  top: 90px; /* Logonun altına indir */
   background: none;
   border: none;
   font-size: 24px;
@@ -161,4 +164,8 @@
   color: #007bff;
 }
 
-
+/* 🔹 Icon Styling for Header Buttons */
+.nav-icon {
+  margin-right: 5px;
+  font-size: 1.2em;
+}
