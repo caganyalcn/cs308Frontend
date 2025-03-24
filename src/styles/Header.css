@@ -1,28 +1,28 @@
-/* 🔹 Öneri Kutusunun Konumunu Tam Düzeltiyoruz */
+/* src/styles/Header.css */
+
 .search-suggestions {
   position: absolute;
-  top: calc(100% + 5px); /* Arama kutusunun hemen altına 5px boşluk bırak */
+  top: calc(100% + 5px); 
   left: 50%; /* Arama kutusunun tam ortasına hizala */
   transform: translateX(-50%); /* Kutunun tam ortada kalmasını sağlar */
   background: white;
   border: 1px solid #ddd;
   max-height: 180px;
   overflow-y: auto;
-  width: 250px; /* Arama kutusuna uygun genişlik */
+  width: 250px; 
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
   z-index: 1000;
   border-radius: 5px;
   padding: 5px;
 }
 
-/* 🔹 Öneri Kutusundaki Ürünlerin Daha Küçük Olmasını Sağlıyoruz */
 .suggestion-item {
   display: flex;
   align-items: center;
   padding: 5px;
   cursor: pointer;
   transition: background 0.2s;
-  font-size: 12px; /* Yazılar daha küçük olacak */
+  font-size: 12px; 
 }
 
 .suggestion-item:hover {
@@ -37,7 +37,6 @@
   border-radius: 5px;
 }
 
-/* 🔹 Header Tasarımı */
 .header-container {
   width: 100%;
   height: 80px;
@@ -53,7 +52,6 @@
   z-index: 1000;
 }
 
-/* 🔹 Logo */
 .logo-container {
   display: flex;
   align-items: center;
@@ -65,7 +63,6 @@
   margin-right: 10px;
 }
 
-/* 🔹 Arama Kutusu Ortada */
 .search-container {
   display: flex;
   align-items: center;
@@ -91,7 +88,6 @@
   background-color: #f2f2f2;
 }
 
-/* 🔹 Sağ Tarafa Butonları Geri Getiriyoruz */
 .header-right {
   display: flex;
   align-items: center;
@@ -99,7 +95,6 @@
   margin-right: 20px;
 }
 
-/* 🔹 Favoriler ve Sepet Butonları */
 .favorites-button, .cart-button {
   padding: 10px 15px;
   background-color: white;
@@ -115,7 +110,6 @@
   color: white;
 }
 
-/* 🔹 Hesabım Butonu - Border added to match favorites & cart */
 .account-button {
   padding: 10px 15px;
   background-color: white;
@@ -131,7 +125,6 @@
   color: white;
 }
 
-/* 🔹 Hesap Menüsü */
 .account-menu {
   position: relative;
 }
@@ -146,7 +139,6 @@
   top: 100%;
 }
 
-/* 🔹 Geri Git Butonu (Logonun Altına Alındı) */
 .back-button {
   position: absolute;
   left: 20px; /* Sol köşeye biraz boşluk bırak */
@@ -164,7 +156,6 @@
   color: #007bff;
 }
 
-/* 🔹 Icon Styling for Header Buttons */
 .nav-icon {
   margin-right: 5px;
   font-size: 1.2em;

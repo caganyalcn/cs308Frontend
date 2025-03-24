@@ -7,9 +7,18 @@ import "../styles/HomePage.css";
 function HomePage() {
   const [searchQuery, setSearchQuery] = useState("");
 
-  const filteredProducts = products.filter((product) =>
-    product.name.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const filteredProducts = products.filter((product) => {
+    const query = searchQuery.toLowerCase().trim();
+    if (query === "") return true;
+
+    const queryWords = query.split(" ").filter(Boolean);
+    const allText = `${product.name} ${product.description}`.toLowerCase();
+    const textWords = allText.split(/\s+/);
+
+    return queryWords.every((queryWord) =>
+      textWords.some((textWord) => textWord.startsWith(queryWord))
+    );
+  });
 
   return (
     <div className="home-page">

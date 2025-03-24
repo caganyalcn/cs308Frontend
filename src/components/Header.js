@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import logo from "./Logo.png";
 import "../styles/Header.css";
-import products from "../data/products";
 import { FaUser, FaShoppingBasket, FaHeart } from "react-icons/fa";
 
 const Header = ({ setSearchQuery }) => {
@@ -10,8 +9,7 @@ const Header = ({ setSearchQuery }) => {
   const location = useLocation();
 
   const [searchTerm, setSearchTerm] = useState("");
-  const [suggestions, setSuggestions] = useState([]);
-  const [showAccountMenu, setShowAccountMenu] = useState(false);
+  //const [showAccountMenu, setShowAccountMenu] = useState(false);
 
   const handleGoBack = () => {
     if (location.pathname === "/return") {
@@ -29,18 +27,7 @@ const Header = ({ setSearchQuery }) => {
   const handleInputChange = (e) => {
     const value = e.target.value;
     setSearchTerm(value);
-
-    if (value.length > 0) {
-      const filtered = products.filter((product) =>
-        product.name
-          .split(" ")
-          .some((word) => word.toLowerCase().startsWith(value.toLowerCase()))
-      );
-
-      setSuggestions(filtered);
-    } else {
-      setSuggestions([]);
-    }
+    setSearchQuery(value); // Filtreleme burada da çalışsın
   };
 
   return (
@@ -67,25 +54,6 @@ const Header = ({ setSearchQuery }) => {
         <button className="search-button" onClick={handleSearch}>
           Ara
         </button>
-
-        {suggestions.length > 0 && (
-          <div className="search-suggestions">
-            {suggestions.map((product) => (
-              <div
-                key={product.id}
-                className="suggestion-item"
-                onClick={() => navigate(`/product/${product.id}`)}
-              >
-                <img
-                  src={product.image}
-                  alt={product.name}
-                  className="suggestion-image"
-                />
-                <span>{product.name}</span>
-              </div>
-            ))}
-          </div>
-        )}
       </div>
 
       <div className="header-right">
@@ -97,16 +65,12 @@ const Header = ({ setSearchQuery }) => {
         </button>
 
         <div className="account-menu">
-          {/* Clicking this button now navigates to the account page */}
           <button
             className="account-button"
-            onClick={() => navigate("/hesabim")} 
+            onClick={() => navigate("/hesabim")}
           >
             <FaUser className="nav-icon" /> Hesabım
           </button>
-
-
-          
         </div>
       </div>
     </div>
