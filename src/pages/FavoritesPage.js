@@ -2,39 +2,37 @@
 import React, { useContext } from "react";
 import Header from "../components/Header";
 import { AppContext } from "../AppContext";
+import "../styles/FavoritesPage.css";
 
 const FavoritesPage = () => {
   const { favorites, removeFromFavorites } = useContext(AppContext);
 
   return (
-    <div style={{ marginTop: "100px" }}>
+    <div className="favorites-page">
       <Header />
-      <h2>Favorilerim</h2>
+      <h2 className="favorites-title">Favorilerim</h2>
       {favorites.length === 0 ? (
-        <p>Henüz favori eklemediniz.</p>
+        <p className="empty-message">Henüz favori eklemediniz.</p>
       ) : (
-        favorites.map((item) => (
-          <div 
-            key={item.id} 
-            style={{ display: "flex", alignItems: "center", gap: "10px", padding: "10px", borderBottom: "1px solid #ddd" }}
-          >
-            {/* Küçük Ürün Resmi */}
-            <img 
-              src={item.image} 
-              alt={item.name} 
-              style={{ width: "50px", height: "50px", objectFit: "cover", borderRadius: "5px" }} 
-            />
-            <span>{item.name} - {item.price}</span>
-
-            {/* Favorilerden Çıkarma Butonu */}
-            <button 
-              onClick={() => removeFromFavorites(item.id)} 
-              style={{ background: "red", color: "white", border: "none", padding: "5px 10px", cursor: "pointer", borderRadius: "5px" }}
-            >
-              ❌
-            </button>
-          </div>
-        ))
+        <div className="favorites-list">
+          {favorites.map((item) => (
+           <div key={item.id} className="favorite-card">
+           <img src={item.image} alt={item.name} className="favorite-image" />
+           <div className="favorite-info">
+             <h3 className="product-name">{item.name}</h3>
+             <p className="favorite-description">{item.description}</p>
+             <p className="favorite-price">{item.price}</p>
+             <button
+               className="remove-button"
+               onClick={() => removeFromFavorites(item.id)}
+             >
+               🗑️ Kaldır
+             </button>
+           </div>
+         </div>
+         
+          ))}
+        </div>
       )}
     </div>
   );
