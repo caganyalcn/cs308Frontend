@@ -1,3 +1,4 @@
+// src/components/ProductCard.js
 import React, { useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { AppContext } from "../AppContext";
@@ -45,13 +46,17 @@ const ProductCard = ({ product }) => {
       <img src={product.image} alt={product.name} className="product-image" />
       <h2 className="product-name">{product.name}</h2>
       <p className="product-price">{product.price}</p>
-      
-      {/* Added product description */}
       <p className="product-description">{product.description}</p>
-      {/* Added product rating */}
       <p className="product-rating">⭐ {product.rating}</p>
-      
-      <button className="add-to-cart" onClick={handleCartClick}>
+      <p className="product-stock">
+        {product.stock > 0 ? `Stokta: ${product.stock} adet` : "Tükendi"}
+      </p>
+
+      <button
+        className="add-to-cart"
+        onClick={handleCartClick}
+        disabled={product.stock === 0}
+      >
         {isInCart ? "Sepetten Çıkar" : "Sepete Ekle"}
       </button>
     </div>

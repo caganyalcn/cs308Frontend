@@ -51,13 +51,15 @@ const Header = ({ setSearchQuery, setSelectedCategory }) => {
         <h1>Çiftlik Bank</h1>
       </div>
 
-      <button className="category-toggle-button" onClick={() => setShowSidebar(!showSidebar)}>
-        ☰ 
-      </button>
+      {location.pathname === "/home" && (
+        <button className="category-toggle-button" onClick={() => setShowSidebar(!showSidebar)}>
+          ☰
+        </button>
+      )}
 
-      {showSidebar && (
+      {location.pathname === "/home" && showSidebar && (
         <div className="category-sidebar">
-          <h3 className="sidebar-title">Kategoriler</h3> {/* 👈 bu satır eklendi */}
+          <h3 className="sidebar-title">Kategoriler</h3>
           <ul>
             {categories.map((cat, index) => (
               <li key={index} onClick={() => handleCategoryClick(cat)}>

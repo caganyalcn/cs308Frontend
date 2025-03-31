@@ -1,11 +1,12 @@
 // src/pages/HomePage.js 
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import Header from "../components/Header";
 import ProductCard from "../components/ProductCard";
-import products from "../data/products";
+import { AppContext } from "../AppContext";
 import "../styles/HomePage.css";
 
 function HomePage() {
+  const { products } = useContext(AppContext);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
 

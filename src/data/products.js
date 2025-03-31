@@ -1,4 +1,4 @@
-// ✅ 1. src/data/products.js
+// src/data/products.js
 
 const products = [
   { 
@@ -8,7 +8,8 @@ const products = [
     image: "https://static.ticimax.cloud/cdn-cgi/image/width=-,quality=85/50524/uploads/urunresimleri/buyuk/10lu-gezen-tavuk-yumurtasi-fe5899.jpg",
     description: "Serbest dolaşan tavuklardan elde edilen taze organik yumurta.",
     rating: 4.5,
-    category: "Süt Ürünleri"
+    category: "Süt Ürünleri",
+    stock: 12
   },
   { 
     id: 2,  
@@ -17,7 +18,8 @@ const products = [
     image: "https://static.ticimax.cloud/cdn-cgi/image/width=-,quality=85/56277/uploads/urunresimleri/buyuk/akmese-organik-sut-3lt-sadece-bursa-ve-dc0e09.png",
     description: "Taze ve doğal organik süt.",
     rating: 4.2,
-    category: "Süt Ürünleri"
+    category: "Süt Ürünleri",
+    stock: 8
   },
   { 
     id: 3,  
@@ -26,7 +28,8 @@ const products = [
     image: "https://static.ticimax.cloud/cdn-cgi/image/width=-,quality=85/56277/uploads/urunresimleri/buyuk/100-salamura-keci-peyniri-400-gr-8a5-c9.png",
     description: "El yapımı, lezzetli ve sağlıklı organik peynir.",
     rating: 4.8,
-    category: "Süt Ürünleri"
+    category: "Süt Ürünleri",
+    stock: 14
   },
   { 
     id: 4,  
@@ -35,7 +38,8 @@ const products = [
     image: "https://static.ticimax.cloud/cdn-cgi/image/width=-,quality=85/56277/uploads/urunresimleri/buyuk/organik-sofralik-domates-1-kg-sadece-b-ef144f.jpeg",
     description: "Taze ve organik domatesler, sağlıklı yemekler için ideal.",
     rating: 4.0,
-    category: "Sebzeler"
+    category: "Sebzeler",
+    stock: 22
   },
   { 
     id: 5,  
@@ -44,7 +48,8 @@ const products = [
     image: "https://static.ticimax.cloud/cdn-cgi/image/width=360,quality=85/56277/uploads/urunresimleri/buyuk/og-kozalak-macunu-240-gr-cf2-9f.jpg",
     description: "Doğal içeriğiyle kozalağın faydalarını sunan macun.",
     rating: 4.3,
-    category: "Macunlar"
+    category: "Macunlar",
+    stock: 6
   },
   { 
     id: 6,  
@@ -53,7 +58,8 @@ const products = [
     image: "https://static.ticimax.cloud/cdn-cgi/image/width=360,quality=85/56277/uploads/urunresimleri/buyuk/jovia-organik-70-bitter-cikolata-yaban-d3ef-4.jpg",
     description: "Zengin kakao aroması ve organik içeriğiyle bitter çikolata keyfi.",
     rating: 4.7,
-    category: "Atıştırmalıklar"
+    category: "Atıştırmalıklar",
+    stock: 5
   },
   { 
     id: 7,  
@@ -62,7 +68,8 @@ const products = [
     image: "https://static.ticimax.cloud/cdn-cgi/image/width=-,quality=85/56277/uploads/urunresimleri/buyuk/taze-kuskonmaz--b-4ec9.jpg",
     description: "Vitamin deposu taze kuşkonmaz, sağlıklı beslenme için.",
     rating: 4.4,
-    category: "Sebzeler"
+    category: "Sebzeler",
+    stock: 9
   },
   { 
     id: 8,  
@@ -71,7 +78,8 @@ const products = [
     image: "https://static.ticimax.cloud/cdn-cgi/image/width=-,quality=85/56277/uploads/urunresimleri/buyuk/taze-bogurtlen-213f64.jpg",
     description: "Tatlı ve taze böğürtlen, doğal atıştırmalık olarak ideal.",
     rating: 4.6,
-    category: "Meyveler"
+    category: "Meyveler",
+    stock: 4
   },
   { 
     id: 9,  
@@ -80,7 +88,8 @@ const products = [
     image: "https://static.ticimax.cloud/cdn-cgi/image/width=-,quality=85/56277/uploads/urunresimleri/buyuk/kara-murver-puresi-230g--46d1-.jpg",
     description: "Doğal ve besleyici kara mürver püresi.",
     rating: 4.1,
-    category: "Macunlar"
+    category: "Macunlar",
+    stock: 3
   },
   { 
     id: 10, 
@@ -89,7 +98,8 @@ const products = [
     image: "https://static.ticimax.cloud/cdn-cgi/image/width=-,quality=85/56277/uploads/urunresimleri/buyuk/taze-zerdecal-100gr-935-38.jpeg",
     description: "Antioksidan özellikleriyle taze zerdeçal.",
     rating: 4.3,
-    category: "Sebzeler"
+    category: "Sebzeler",
+    stock: 7
   },
   { 
     id: 11, 
@@ -98,7 +108,8 @@ const products = [
     image: "https://static.ticimax.cloud/cdn-cgi/image/width=-,quality=85/56277/uploads/urunresimleri/buyuk/taze-zencefil-250gpaket-7-e72f.jpg",
     description: "Baharat olarak veya sağlık amaçlı kullanabileceğiniz taze zencefil.",
     rating: 4.2,
-    category: "Sebzeler"
+    category: "Sebzeler",
+    stock: 10
   },
   { 
     id: 12, 
@@ -107,7 +118,8 @@ const products = [
     image: "https://static.ticimax.cloud/cdn-cgi/image/width=-,quality=85/56277/uploads/urunresimleri/buyuk/tatli-patates-2-kg-da-734.jpg",
     description: "Lezzetli ve besleyici tatlı patates.",
     rating: 4.5,
-    category: "Sebzeler"
+    category: "Sebzeler",
+    stock: 15
   }
 ];
 
