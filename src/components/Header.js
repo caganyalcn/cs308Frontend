@@ -1,15 +1,16 @@
+// src/components/Header.js
 import React, { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import logo from "./Logo.png";
 import "../styles/Header.css";
 import { FaUser, FaShoppingBasket, FaHeart } from "react-icons/fa";
 
-const Header = ({ setSearchQuery }) => {
+const Header = ({ setSearchQuery, setSelectedCategory }) => {
   const navigate = useNavigate();
   const location = useLocation();
 
   const [searchTerm, setSearchTerm] = useState("");
-  //const [showAccountMenu, setShowAccountMenu] = useState(false);
+  const [showSidebar, setShowSidebar] = useState(false);
 
   const handleGoBack = () => {
     if (location.pathname === "/return") {
@@ -27,8 +28,15 @@ const Header = ({ setSearchQuery }) => {
   const handleInputChange = (e) => {
     const value = e.target.value;
     setSearchTerm(value);
-    setSearchQuery(value); // Filtreleme burada da çalışsın
+    setSearchQuery(value);
   };
+
+  const handleCategoryClick = (category) => {
+    setSelectedCategory(category === "Tümü" ? "" : category);
+    setShowSidebar(false);
+  };
+
+  const categories = ["Tümü", "Süt Ürünleri", "Sebzeler", "Macunlar", "Meyveler", "Atıştırmalıklar"];
 
   return (
     <div className="header-container">
@@ -42,6 +50,23 @@ const Header = ({ setSearchQuery }) => {
         <img src={logo} alt="Çiftlikbank Logo" className="logo" />
         <h1>Çiftlik Bank</h1>
       </div>
+
+      <button className="category-toggle-button" onClick={() => setShowSidebar(!showSidebar)}>
+        ☰ 
+      </button>
+
+      {showSidebar && (
+        <div className="category-sidebar">
+          <h3 className="sidebar-title">Kategoriler</h3> {/* 👈 bu satır eklendi */}
+          <ul>
+            {categories.map((cat, index) => (
+              <li key={index} onClick={() => handleCategoryClick(cat)}>
+                {cat}
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
 
       <div className="search-container">
         <input
@@ -65,10 +90,7 @@ const Header = ({ setSearchQuery }) => {
         </button>
 
         <div className="account-menu">
-          <button
-            className="account-button"
-            onClick={() => navigate("/hesabim")}
-          >
+          <button className="account-button" onClick={() => navigate("/hesabim")}>
             <FaUser className="nav-icon" /> Hesabım
           </button>
         </div>

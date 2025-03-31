@@ -1,3 +1,4 @@
+// src/pages/HomePage.js 
 import React, { useState } from "react";
 import Header from "../components/Header";
 import ProductCard from "../components/ProductCard";
@@ -6,23 +7,18 @@ import "../styles/HomePage.css";
 
 function HomePage() {
   const [searchQuery, setSearchQuery] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("");
 
   const filteredProducts = products.filter((product) => {
     const query = searchQuery.toLowerCase().trim();
-    if (query === "") return true;
-
-    const queryWords = query.split(" ").filter(Boolean);
-    const allText = `${product.name} ${product.description}`.toLowerCase();
-    const textWords = allText.split(/\s+/);
-
-    return queryWords.every((queryWord) =>
-      textWords.some((textWord) => textWord.startsWith(queryWord))
-    );
+    const matchesSearch = query === "" || `${product.name} ${product.description}`.toLowerCase().includes(query);
+    const matchesCategory = selectedCategory === "" || product.category === selectedCategory;
+    return matchesSearch && matchesCategory;
   });
 
   return (
     <div className="home-page">
-      <Header setSearchQuery={setSearchQuery} />
+      <Header setSearchQuery={setSearchQuery} setSelectedCategory={setSelectedCategory} />
       <div className="products-grid">
         {filteredProducts.length > 0 ? (
           filteredProducts.map((product) => (
