@@ -18,8 +18,9 @@ function PaymentPage() {
 
   const handlePayment = (e) => {
     e.preventDefault();
-    alert("Ödeme başarılı! Siparişiniz alındı.");
-    navigate("/home"); // Ödeme tamamlandığında anasayfaya yönlendir
+    // Here you would typically send the payment details to your backend
+    // For now, we'll just navigate to the success page
+    navigate("/payment-success");
   };
 
   return (

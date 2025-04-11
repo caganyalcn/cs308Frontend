@@ -11,6 +11,7 @@ import AddRatingPage from "./pages/AddRatingPage";
 import FavoritesPage from "./pages/FavoritesPage";
 import CartPage from "./pages/CartPage";
 import PaymentPage from "./pages/PaymentPage";
+import PaymentSuccessPage from "./pages/PaymentSuccessPage";
 import OrdersPage from "./pages/OrdersPage";
 import ReturnPage from "./pages/ReturnPage";
 import AccountPage from "./pages/AccountPage";
@@ -29,6 +30,7 @@ function App() {
           <Route path="/favorites" element={<FavoritesPage />} />
           <Route path="/cart" element={<CartPage />} />
           <Route path="/payment" element={<PaymentPage />} />
+          <Route path="/payment-success" element={<PaymentSuccessPage />} />
           <Route path="/orders" element={<OrdersPage />} />
           <Route path="/return" element={<ReturnPage />} />
           <Route path="/hesabim" element={<AccountPage />} />
