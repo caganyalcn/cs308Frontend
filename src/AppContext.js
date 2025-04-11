@@ -19,18 +19,19 @@ export const AppProvider = ({ children }) => {
     setFavorites(favorites.filter(item => item.id !== productId));
   };
 
-  const addToCart = (product) => {
-    if (product.stock === 0) return;
+  const addToCart = (product, quantity = 1) => {
+    if (product.stock === 0 || quantity <= 0) return;
 
     if (!cart.some((c) => c.id === product.id)) {
-      setCart([...cart, { ...product, quantity: 1 }]);
+      setCart([...cart, { ...product, quantity }]);
     } else {
-      updateQuantity(product.id, getProductInCart(product.id).quantity + 1);
+      const currentInCart = getProductInCart(product.id);
+      updateQuantity(product.id, currentInCart.quantity + quantity);
     }
 
     setProducts((prev) =>
       prev.map((p) =>
-        p.id === product.id ? { ...p, stock: p.stock - 1 } : p
+        p.id === product.id ? { ...p, stock: p.stock - quantity } : p
       )
     );
   };

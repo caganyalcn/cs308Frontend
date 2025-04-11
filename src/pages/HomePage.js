@@ -1,7 +1,7 @@
 // src/pages/HomePage.js 
 import React, { useState, useContext } from "react";
 import Header from "../components/Header";
-import ProductCard from "../components/ProductCard";
+import ProductCard from "../data/ProductCard";
 import { AppContext } from "../AppContext";
 import "../styles/HomePage.css";
 
