@@ -244,6 +244,7 @@
   font-weight: 600;
   color: #000;
 }
+
 .sort-wrapper { position: relative; }
 .sort-wrapper { margin-right: 1.2rem; }
 
@@ -285,3 +286,4 @@
 .sort-dropdown li:hover {
   background: #f2f2f2;
 }
+
