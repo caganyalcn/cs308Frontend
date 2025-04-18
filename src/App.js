@@ -15,6 +15,8 @@ import PaymentSuccessPage from "./pages/PaymentSuccessPage";
 import OrdersPage from "./pages/OrdersPage";
 import ReturnPage from "./pages/ReturnPage";
 import AccountPage from "./pages/AccountPage";
+import AddressesPage from "./pages/AddressesPage";
+import PaymentMethodsPage from "./pages/PaymentMethodsPage";
 
 function App() {
   return (
@@ -34,6 +36,8 @@ function App() {
           <Route path="/orders" element={<OrdersPage />} />
           <Route path="/return" element={<ReturnPage />} />
           <Route path="/hesabim" element={<AccountPage />} />
+          <Route path="/hesabim/adreslerim" element={<AddressesPage />} />
+          <Route path="/hesabim/odeme-yontemlerim" element={<PaymentMethodsPage />} />
         </Routes>
       </Router>
     </AppProvider>

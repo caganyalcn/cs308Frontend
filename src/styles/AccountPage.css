@@ -1,284 +1,322 @@
 .account-page {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     max-width: 1200px;
     margin: 0 auto;
     padding: 20px;
-    padding-top: 100px; /* Added space for header */
-  }
-  
-  .account-container {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.page-header {
     display: flex;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 24px;
+}
+
+.back-button {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    border: none;
+    background-color: #f5f5f5;
+    color: #333;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.2s;
+}
+
+.back-button:hover {
+    background-color: #e0e0e0;
+}
+
+.back-button i {
+    font-size: 16px;
+}
+
+.account-title {
+    font-size: 24px;
+    font-weight: 600;
+    color: #333;
+    margin: 0;
+    flex-grow: 1;
+}
+
+.account-container {
+    display: grid;
+    grid-template-columns: 280px 1fr;
     gap: 30px;
     margin-top: 20px;
-    min-height: 600px;
-  }
-  
-  /* Sidebar Styles */
-  .account-sidebar {
-    flex: 0 0 250px;
-    background-color: #f8f9fa;
+}
+
+.account-sidebar {
+    background-color: #fff;
     border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
     padding: 20px;
-  }
-  
-  .profile-summary {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+}
+
+.profile-summary {
+    text-align: center;
     padding-bottom: 20px;
-    border-bottom: 1px solid #eaeaea;
+    border-bottom: 1px solid #f0f0f0;
     margin-bottom: 20px;
-  }
-  
-  .profile-picture {
+}
+
+.profile-picture {
     width: 100px;
     height: 100px;
     border-radius: 50%;
-    object-fit: cover;
-    border: 3px solid white;
-    box-shadow: 0 3px 10px rgba(0,0,0,0.1);
     margin-bottom: 15px;
-  }
-  
-  .profile-summary h3 {
-    margin: 10px 0 5px;
+}
+
+.profile-summary h3 {
+    margin: 0 0 5px;
     font-size: 18px;
-    font-weight: 600;
-  }
-  
-  .profile-summary p {
+    color: #333;
+}
+
+.profile-summary p {
     margin: 0;
     color: #666;
     font-size: 14px;
-  }
-  
-  .sidebar-menu {
+}
+
+.sidebar-menu {
     display: flex;
     flex-direction: column;
-    gap: 8px;
-  }
-  
-  .menu-item {
-    display: flex;
-    align-items: center;
-    padding: 12px 15px;
-    border-radius: 6px;
-    text-align: left;
-    background: none;
-    border: none;
-    font-size: 15px;
-    color: #333;
-    cursor: pointer;
-    transition: all 0.2s ease;
-  }
-  
-  .menu-item:hover {
-    background-color: rgba(0,0,0,0.03);
-  }
-  
-  .menu-item.active {
-    background-color: #007bff;
-    color: white;
-    font-weight: 500;
-  }
-  
-  .menu-item i {
-    margin-right: 10px;
-    font-size: 16px;
-  }
-  
-  /* Content Area Styles */
-  .account-content {
-    flex: 1;
-    background-color: white;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-    padding: 25px;
-  }
-  
-  /* Profile Form Styles */
-  .profile-details h2 {
-    margin-top: 0;
-    margin-bottom: 25px;
-    font-size: 22px;
-    color: #333;
-    border-bottom: 1px solid #eaeaea;
-    padding-bottom: 15px;
-  }
-  
-  .edit-profile-form {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-  }
-  
-  .form-group {
-    display: grid;
-    grid-template-columns: 1fr auto;
     gap: 10px;
+}
+
+.menu-item {
+    display: flex;
     align-items: center;
-  }
-  
-  .form-group label {
-    grid-column: 1 / -1;
-    font-size: 14px;
-    color: #555;
-    margin-bottom: 5px;
-  }
-  
-  .form-group input {
+    gap: 10px;
     padding: 12px 15px;
-    border: 1px solid #ddd;
-    border-radius: 6px;
-    font-size: 15px;
-  }
-  
-  .edit-button {
-    padding: 12px 20px;
-    background-color: #f0f0f0;
     border: none;
-    border-radius: 6px;
+    background: none;
     color: #333;
+    font-size: 15px;
     cursor: pointer;
+    border-radius: 6px;
+    transition: all 0.2s;
+    text-align: left;
+}
+
+.menu-item:hover {
+    background-color: #f5f5f5;
+}
+
+.menu-item.active {
+    background-color: #e3f2fd;
+    color: #0970d7;
     font-weight: 500;
-    transition: background-color 0.2s;
-  }
-  
-  .edit-button:hover {
-    background-color: #e0e0e0;
-  }
-  
-  .save-button {
-    margin-top: 10px;
-    padding: 14px;
-    background-color: #007bff;
+}
+
+.menu-item i {
+    font-size: 16px;
+    width: 20px;
+    text-align: center;
+}
+
+.account-content {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    padding: 25px;
+}
+
+.profile-details h2 {
+    font-size: 20px;
+    color: #333;
+    margin: 0 0 20px;
+}
+
+.edit-profile-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.form-group {
+    display: flex;
+    align-items: flex-start;
+    gap: 15px;
+}
+
+.form-group label {
+    width: 140px;
+    color: #555;
+    font-size: 14px;
+    padding-top: 8px;
+}
+
+.form-group input {
+    flex: 1;
+    padding: 8px 12px;
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+    font-size: 14px;
+    transition: border-color 0.2s;
+}
+
+.form-group input:focus {
+    outline: none;
+    border-color: #0970d7;
+}
+
+.edit-button {
+    padding: 8px 12px;
+    background-color: #e3f2fd;
+    color: #0970d7;
+    border: 1px solid #b7e3ff;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.2s;
+}
+
+.edit-button:hover {
+    background-color: #b7e3ff;
+}
+
+.save-button {
+    align-self: flex-end;
+    padding: 10px 20px;
+    background-color: #0970d7;
     color: white;
     border: none;
-    border-radius: 6px;
-    font-weight: 500;
+    border-radius: 4px;
     cursor: pointer;
-    transition: background-color 0.2s;
-  }
-  
-  .save-button:hover {
-    background-color: #0069d9;
-  }
-  
-  /* Orders Section Styles */
-  .orders-section h2 {
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.2s;
+    margin-top: 10px;
+}
+
+.save-button:hover {
+    background-color: #0050a3;
+}
+
+.orders-wrapper {
+    margin: -25px;
+}
+
+/* Orders Section Styles */
+.orders-section h2 {
     margin-top: 0;
     margin-bottom: 25px;
     font-size: 22px;
     color: #333;
     border-bottom: 1px solid #eaeaea;
     padding-bottom: 15px;
-  }
-  
-  .orders-container {
+}
+
+.orders-container {
     display: flex;
     flex-direction: column;
     gap: 20px;
-  }
-  
-  .order-card {
+}
+
+.order-card {
     border: 1px solid #eaeaea;
     border-radius: 8px;
     overflow: hidden;
     transition: transform 0.2s, box-shadow 0.2s;
-  }
-  
-  .order-card:hover {
+}
+
+.order-card:hover {
     transform: translateY(-2px);
     box-shadow: 0 5px 15px rgba(0,0,0,0.05);
-  }
-  
-  .order-header {
+}
+
+.order-header {
     display: flex;
     justify-content: space-between;
     background-color: #f8f9fa;
     padding: 15px;
     border-bottom: 1px solid #eaeaea;
-  }
-  
-  .order-id {
+}
+
+.order-id {
     font-weight: 600;
     color: #333;
-  }
-  
-  .order-date {
+}
+
+.order-date {
     color: #666;
     font-size: 14px;
-  }
-  
-  .order-details {
+}
+
+.order-details {
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 15px;
-  }
-  
-  .order-images {
+}
+
+.order-images {
     display: flex;
     gap: 10px;
-  }
-  
-  .product-thumbnail {
+}
+
+.product-thumbnail {
     width: 60px;
     height: 60px;
     border-radius: 4px;
     object-fit: cover;
     border: 1px solid #eaeaea;
-  }
-  
-  .order-info {
+}
+
+.order-info {
     display: flex;
     flex-direction: column;
     align-items: flex-end;
     gap: 10px;
-  }
-  
-  .order-status-badge {
+}
+
+.order-status-badge {
     padding: 6px 12px;
     border-radius: 20px;
     font-size: 13px;
     font-weight: 500;
     background-color: #e0e0e0;
     color: #333;
-  }
-  
-  .order-status-badge[data-status="siparişiniz-hazırlanıyor"] {
+}
+
+.order-status-badge[data-status="siparişiniz-hazırlanıyor"] {
     background-color: #fff3cd;
     color: #856404;
-  }
-  
-  .order-status-badge[data-status="kargoya-verildi"],
-  .order-status-badge[data-status="taşınıyor"] {
+}
+
+.order-status-badge[data-status="kargoya-verildi"],
+.order-status-badge[data-status="taşınıyor"] {
     background-color: #cce5ff;
     color: #004085;
-  }
-  
-  .order-status-badge[data-status="teslim-edildi"] {
+}
+
+.order-status-badge[data-status="teslim-edildi"] {
     background-color: #d4edda;
     color: #155724;
-  }
-  
-  .order-total {
+}
+
+.order-total {
     font-weight: 600;
     font-size: 16px;
     color: #333;
-  }
-  
-  .order-actions {
+}
+
+.order-actions {
     display: flex;
     justify-content: flex-end;
     gap: 10px;
     padding: 0 15px 15px;
-  }
-  
-  .details-button,
-  .track-button,
-  .return-button {
+}
+
+.details-button,
+.track-button,
+.return-button {
     padding: 8px 16px;
     border-radius: 6px;
     font-size: 14px;
@@ -286,60 +324,60 @@
     cursor: pointer;
     border: none;
     transition: background-color 0.2s;
-  }
-  
-  .details-button {
+}
+
+.details-button {
     background-color: #f8f9fa;
     color: #333;
     border: 1px solid #ddd;
-  }
-  
-  .details-button:hover {
+}
+
+.details-button:hover {
     background-color: #e9ecef;
-  }
-  
-  .track-button {
+}
+
+.track-button {
     background-color: #17a2b8;
     color: white;
-  }
-  
-  .track-button:hover {
+}
+
+.track-button:hover {
     background-color: #138496;
-  }
-  
-  .return-button {
+}
+
+.return-button {
     background-color: #dc3545;
     color: white;
-  }
-  
-  .return-button:hover {
+}
+
+.return-button:hover {
     background-color: #c82333;
-  }
-  
-  /* Responsive adjustments */
-  @media (max-width: 768px) {
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
     .account-container {
-      flex-direction: column;
+        flex-direction: column;
     }
     
     .account-sidebar {
-      flex: none;
-      width: 100%;
+        flex: none;
+        width: 100%;
     }
     
     .form-group {
-      grid-template-columns: 1fr;
+        grid-template-columns: 1fr;
     }
     
     .order-details {
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 15px;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
     }
     
     .order-info {
-      width: 100%;
-      flex-direction: row;
-      justify-content: space-between;
+        width: 100%;
+        flex-direction: row;
+        justify-content: space-between;
     }
-  }
+}

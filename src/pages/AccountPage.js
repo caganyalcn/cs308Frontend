@@ -18,14 +18,29 @@ const AccountPage = () => {
   // State for active tab
   const [activeTab, setActiveTab] = useState("profile");
 
-  // Handle navigation to Favorites page
+  // Handle navigation
   const navigateToFavorites = () => {
     navigate("/favorites");
+  };
+
+  const navigateToAddresses = () => {
+    navigate("/hesabim/adreslerim");
+  };
+
+  const navigateToPaymentMethods = () => {
+    navigate("/hesabim/odeme-yontemlerim");
   };
 
   return (
     <div className="account-page">
       <Header />
+      <div className="page-header">
+        <button className="back-button" onClick={() => navigate(-1)}>
+          <i className="fa fa-arrow-left"></i> Geri Dön
+        </button>
+        <h2 className="account-title">Hesabım</h2>
+      </div>
+      
       <div className="account-container">
         <div className="account-sidebar">
           <div className="profile-summary">
@@ -57,10 +72,16 @@ const AccountPage = () => {
             >
               <i className="fa fa-heart"></i> Favorilerim
             </button>
-            <button className="menu-item">
+            <button 
+              className="menu-item"
+              onClick={navigateToAddresses}
+            >
               <i className="fa fa-map-marker"></i> Adreslerim
             </button>
-            <button className="menu-item">
+            <button 
+              className="menu-item"
+              onClick={navigateToPaymentMethods}
+            >
               <i className="fa fa-credit-card"></i> Ödeme Yöntemlerim
             </button>
           </div>
@@ -98,7 +119,6 @@ const AccountPage = () => {
           
           {activeTab === "orders" && (
             <div className="orders-section orders-wrapper">
-              {/* Pass isEmbedded prop to OrdersPage */}
               <OrdersPage isEmbedded={true} />
             </div>
           )}
