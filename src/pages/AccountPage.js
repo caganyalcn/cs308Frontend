@@ -1,3 +1,4 @@
+// src/pages/AccountPage.js
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Header from "../components/Header";
@@ -6,100 +7,105 @@ import "../styles/AccountPage.css";
 
 const AccountPage = () => {
   const navigate = useNavigate();
-  
-  // User data
+
+  /* —— kullanıcı mock ——————————— */
   const user = {
     name: "Jane Doe",
     email: "jane.doe@example.com",
     profilePicture: "https://via.placeholder.com/150",
-    password: "••••••••", // For display only
+    password: "••••••••",
   };
 
-  // State for active tab
+  /* —— sekme kontrolü ——————————— */
   const [activeTab, setActiveTab] = useState("profile");
 
-  // Handle navigation to Favorites page
-  const navigateToFavorites = () => {
-    navigate("/favorites");
-  };
+  /* —— yönlendirme kısayolları —— */
+  const gotoFavorites   = () => navigate("/favorites");
+  const gotoPaymentPage = () => navigate("/payment-methods");
 
   return (
     <div className="account-page">
       <Header />
+
       <div className="account-container">
+        {/* SOL SİDEBAR */}
         <div className="account-sidebar">
           <div className="profile-summary">
-            <img
-              src={user.profilePicture}
-              alt={user.name}
-              className="profile-picture"
-            />
+            <img src={user.profilePicture} alt={user.name} className="profile-picture" />
             <h3>{user.name}</h3>
             <p>{user.email}</p>
           </div>
-          
+
           <div className="sidebar-menu">
-            <button 
+            <button
               className={`menu-item ${activeTab === "profile" ? "active" : ""}`}
               onClick={() => setActiveTab("profile")}
             >
-              <i className="fa fa-user"></i> Profil Bilgilerim
+              <i className="fa fa-user" /> Profil Bilgilerim
             </button>
-            <button 
+
+            <button
               className={`menu-item ${activeTab === "orders" ? "active" : ""}`}
               onClick={() => setActiveTab("orders")}
             >
-              <i className="fa fa-shopping-bag"></i> Siparişlerim
+              <i className="fa fa-shopping-bag" /> Siparişlerim
             </button>
-            <button 
-              className="menu-item"
-              onClick={navigateToFavorites}
-            >
-              <i className="fa fa-heart"></i> Favorilerim
+
+            <button className="menu-item" onClick={gotoFavorites}>
+              <i className="fa fa-heart" /> Favorilerim
             </button>
+
             <button className="menu-item">
-              <i className="fa fa-map-marker"></i> Adreslerim
+              <i className="fa fa-map-marker" /> Adreslerim
             </button>
-            <button className="menu-item">
-              <i className="fa fa-credit-card"></i> Ödeme Yöntemlerim
+
+            {/* Ödeme Yöntemleri artık ayrı sayfaya gider */}
+            <button className="menu-item" onClick={gotoPaymentPage}>
+              <i className="fa fa-credit-card" /> Ödeme Yöntemlerim
             </button>
           </div>
         </div>
-        
+
+        {/* SAĞ İÇERİK */}
         <div className="account-content">
           {activeTab === "profile" && (
             <div className="profile-details">
               <h2>Kişisel Bilgilerim</h2>
+
               <div className="edit-profile-form">
                 <div className="form-group">
-                  <label>Ad Soyad</label>
+                  <label>Ad Soyad</label>
                   <input type="text" value={user.name} readOnly />
                   <button className="edit-button">Düzenle</button>
                 </div>
+
                 <div className="form-group">
-                  <label>E-posta Adresi</label>
+                  <label>E‑posta Adresi</label>
                   <input type="email" value={user.email} readOnly />
                   <button className="edit-button">Düzenle</button>
                 </div>
+
                 <div className="form-group">
                   <label>Şifre</label>
                   <input type="password" value={user.password} readOnly />
                   <button className="edit-button">Değiştir</button>
                 </div>
+
                 <div className="form-group">
-                  <label>Telefon Numarası</label>
+                  <label>Telefon Numarası</label>
                   <input type="tel" placeholder="Telefon numarası ekleyin" />
                   <button className="edit-button">Ekle</button>
                 </div>
-                <button className="save-button">Değişiklikleri Kaydet</button>
+
+                <button className="save-button">Değişiklikleri Kaydet</button>
               </div>
             </div>
           )}
-          
+
           {activeTab === "orders" && (
             <div className="orders-section orders-wrapper">
-              {/* Pass isEmbedded prop to OrdersPage */}
-              <OrdersPage isEmbedded={true} />
+              {/* OrdersPage gömülü */}
+              <OrdersPage isEmbedded />
             </div>
           )}
         </div>

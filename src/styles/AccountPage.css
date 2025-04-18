@@ -342,4 +342,38 @@
       flex-direction: row;
       justify-content: space-between;
     }
+    .card-list      { list-style:none; padding:0; margin-bottom:1.5rem; }
+    .card-list li   { display:flex; align-items:center; gap:.8rem;
+                      border:1px solid #ddd; border-radius:6px;
+                      padding:.6rem .9rem; margin-bottom:.5rem; }
+    .card-number    { font-weight:600; }
+    .delete-btn     { background:#f44336; color:#fff; border:none; padding:.3rem .7rem;
+                      border-radius:4px; cursor:pointer; }
+    
+    /*  Ödeme Yöntemlerim formu – aralıkları artır */
+    .card-form input {
+      padding: .55rem .9rem;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: .92rem;
+      margin-bottom: 1.2rem;   /*  ⬅️  aralık */
+    }
+    
+    .card-form h3  { margin-bottom: .9rem; }
+    
+    .add-btn {
+      margin-top: .2rem;
+      padding: .55rem 1.2rem;
+      background:#0066ff; color:#fff; border:none; border-radius:6px;
+      font-weight:600; cursor:pointer;
+    }
+    .add-btn:hover { background:#0057d1; }
+    
+    .card-name {
+      font-weight: 600;
+      margin-right: .5rem;
+    }
+    
+
+
   }
