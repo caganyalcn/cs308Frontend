@@ -16,6 +16,7 @@ import OrdersPage from "./pages/OrdersPage";
 import ReturnPage from "./pages/ReturnPage";
 import AccountPage from "./pages/AccountPage";
 import PaymentMethodsPage from "./pages/PaymentMethodsPage"; 
+import AddressesPage from "./pages/AddressesPage"; 
 
 function App() {
   return (
@@ -36,6 +37,7 @@ function App() {
           <Route path="/return" element={<ReturnPage />} />
           <Route path="/hesabim" element={<AccountPage />} />
           <Route path="/payment-methods" element={<PaymentMethodsPage />} />
+          <Route path="/addresses" element={<AddressesPage />} />
         </Routes>
       </Router>
     </AppProvider>

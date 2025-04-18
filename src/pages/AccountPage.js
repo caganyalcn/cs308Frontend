@@ -55,8 +55,8 @@ const AccountPage = () => {
               <i className="fa fa-heart" /> Favorilerim
             </button>
 
-            <button className="menu-item">
-              <i className="fa fa-map-marker" /> Adreslerim
+             <button className="menu-item" onClick={() => navigate("/addresses")}>
+            <i className="fa fa-map-marker" /> Adreslerim
             </button>
 
             {/* Ödeme Yöntemleri artık ayrı sayfaya gider */}

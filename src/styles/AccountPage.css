@@ -374,6 +374,12 @@
       margin-right: .5rem;
     }
     
+    .addr-list    { list-style:none; padding:0; margin-bottom:1.5rem; }
+    .addr-list li { display:flex; justify-content:space-between; align-items:flex-start;
+                    border:1px solid #ddd; border-radius:6px; padding:.7rem 1rem; margin-bottom:.7rem; }
+    .addr-info    { line-height:1.4rem; }
+    .addr-form input { padding:.55rem .9rem; border:1px solid #ccc; border-radius:6px;
+                      font-size:.92rem; margin-bottom:1.1rem; }
 
 
   }
