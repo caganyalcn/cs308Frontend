@@ -3,59 +3,59 @@ import React, { useState, useEffect } from "react";
 import Header from "../components/Header";
 import "../styles/AccountPage.css";
 
-const API = process.env.REACT_APP_API_BASE_URL || "";
+const API = "http://127.0.0.1:8000"; // Gerekirse .env'e taşıyabilirsin
 
 const AddressesPage = () => {
   const [addresses, setAddresses] = useState([]);
-  const [loading, setLoading]     = useState(true);
+  const [loading, setLoading] = useState(true);
 
-  const [title,   setTitle]   = useState("");
-  const [line1,   setLine1]   = useState("");
-  const [city,    setCity]    = useState("");
-  const [zip,     setZip]     = useState("");
+  const [title, setTitle] = useState("");
+  const [line1, setLine1] = useState("");
+  const [city, setCity] = useState("");
+  const [zip, setZip] = useState("");
 
-  /* ------- get addresses ------- */
+  // GET: Tüm adresleri getir
   useEffect(() => {
-    (async () => {
-      try {
-        const res = await fetch(`${API}/api/addresses`, {
-          credentials: "include",
-        });
-        if (res.ok) setAddresses(await res.json());
-      } catch (_) {/* backend yok */}
-      setLoading(false);
-    })();
+    fetch(`${API}/api/accounts/addresses/`, {
+      method: "GET",
+      credentials: "include",
+    })
+      .then((res) => res.json())
+      .then((data) => setAddresses(data))
+      .catch((err) => console.error("Adresler alınamadı:", err))
+      .finally(() => setLoading(false));
   }, []);
 
-  /* ------- add address ------- */
-  const addAddress = async (e) => {
+  // POST: Yeni adres ekle
+  const addAddress = (e) => {
     e.preventDefault();
-    if (!title || !line1 || !city || !zip) return;
 
     const payload = { title, line1, city, zip };
-    try {
-      const res = await fetch(`${API}/api/addresses`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
-        body: JSON.stringify(payload),
-      });
-      if (res.ok) payload.id = (await res.json()).id;
-    } catch (_) { payload.id = Date.now(); }
-    setAddresses([...addresses, payload]);
-
-    setTitle(""); setLine1(""); setCity(""); setZip("");
+    fetch(`${API}/api/accounts/addresses/`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+      body: JSON.stringify(payload),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        setAddresses([...addresses, data]);
+        setTitle("");
+        setLine1("");
+        setCity("");
+        setZip("");
+      })
+      .catch((err) => console.error("Adres eklenemedi:", err));
   };
 
-  /* ------- delete address ------- */
-  const delAddress = async (id) => {
-    try {
-      await fetch(`${API}/api/addresses/${id}`, {
-        method: "DELETE",
-        credentials: "include",
-      });
-    } catch (_) {/* backend yok */}
-    setAddresses(addresses.filter((a) => a.id !== id));
+  // DELETE: Adres sil
+  const delAddress = (id) => {
+    fetch(`${API}/api/accounts/addresses/${id}/`, {
+      method: "DELETE",
+      credentials: "include",
+    })
+      .then(() => setAddresses(addresses.filter((a) => a.id !== id)))
+      .catch((err) => console.error("Adres silinemedi:", err));
   };
 
   return (
