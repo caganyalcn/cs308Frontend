@@ -5,36 +5,129 @@
   max-width: 500px;
   margin: 80px auto;
   padding: 40px;
+  background-color: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.logo-container {
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.logo-image {
+  width: 150px;
+  height: auto;
 }
 
 .register-container h1 {
-  margin-bottom: 40px;
-  font-size: 32px;
-  font-weight: 500;
+  margin-bottom: 10px;
+  font-size: 28px;
+  font-weight: 600;
+  color: #333;
+  text-align: center;
+}
+
+.subtitle {
+  color: #666;
+  margin-bottom: 30px;
+  text-align: center;
+  font-size: 16px;
 }
 
 form {
   width: 100%;
 }
 
+.form-row {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 25px;
+}
+
+.form-row .input-group {
+  flex: 1;
+  margin-bottom: 0;
+}
+
 .input-group {
   width: 100%;
   margin-bottom: 25px;
+  position: relative;
 }
 
 .input-group label {
   display: block;
   margin-bottom: 12px;
   font-size: 16px;
+  font-weight: 500;
+  color: #555;
 }
 
 input {
   width: 100%;
   padding: 15px;
   border: 1px solid #ddd;
-  border-radius: 6px;
+  border-radius: 8px;
   font-size: 16px;
   box-sizing: border-box;
+  transition: all 0.3s ease;
+  background-color: #f9f9f9;
+}
+
+input:focus {
+  outline: none;
+  border-color: #01048f;
+  box-shadow: 0 0 0 2px rgba(1, 4, 143, 0.2);
+  background-color: #ffffff;
+}
+
+input.filled {
+  background-color: #ffffff;
+  border-color: #01048f;
+}
+
+.password-input-container {
+  position: relative;
+  display: flex;
+}
+
+.toggle-password {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: #01048f;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  padding: 5px;
+}
+
+.password-strength {
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.strength-bars {
+  display: flex;
+  gap: 5px;
+}
+
+.strength-bar {
+  height: 4px;
+  flex: 1;
+  border-radius: 2px;
+  transition: all 0.3s ease;
+}
+
+.strength-text {
+  font-size: 12px;
+  font-weight: 500;
 }
 
 .register-button {
@@ -43,15 +136,56 @@ input {
   background-color: #01048f;
   color: white;
   border: none;
-  border-radius: 6px;
+  border-radius: 8px;
   cursor: pointer;
   font-size: 18px;
   margin-top: 15px;
   font-weight: 500;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 6px rgba(1, 4, 143, 0.2);
 }
 
 .register-button:hover {
-  background-color: #01048f;
+  background-color: #000066;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 8px rgba(1, 4, 143, 0.3);
+}
+
+.register-button:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 4px rgba(1, 4, 143, 0.2);
+}
+
+.register-button:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.register-button.loading {
+  position: relative;
+  color: transparent;
+}
+
+.register-button.loading::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 20px;
+  height: 20px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  border-top-color: white;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
 }
 
 .navigation-links {
@@ -65,30 +199,72 @@ input {
 
 .login-link {
   font-size: 16px;
+  color: #555;
 }
 
 .login-link a {
   color: #01048f;
   text-decoration: none;
   font-weight: 500;
+  transition: all 0.2s ease;
 }
 
 .guest-link {
   color: #01048f;
   text-decoration: none;
   font-size: 16px;
+  font-weight: 500;
+  transition: all 0.2s ease;
 }
 
 .guest-link:hover, .login-link a:hover {
   text-decoration: underline;
+  color: #000066;
 }
 
+/* Error styling */
 .error-message {
-  color: rgb(200, 0, 0);
-  margin: -15px 0 20px 0;
-  text-align: left;
-  font-size: 12px;
-  font-family: -apple-system, system-ui, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  color: #d32f2f;
+  margin: 5px 0 15px 0;
+  font-size: 14px;
+  font-weight: 500;
+  background-color: #ffebee;
+  padding: 10px;
+  border-radius: 8px;
+  width: 100%;
+  text-align: center;
+}
+
+input.error {
+  border-color: #d32f2f;
+  background-color: #fff8f8;
+}
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+  .register-container {
+    margin: 40px 20px;
+    padding: 30px 20px;
+  }
+  
+  .register-container h1 {
+    font-size: 24px;
+    margin-bottom: 8px;
+  }
+  
+  .subtitle {
+    font-size: 14px;
+    margin-bottom: 25px;
+  }
+  
+  .form-row {
+    flex-direction: column;
+    gap: 0;
+  }
+  
+  input, .register-button {
+    padding: 12px;
+  }
 }
 
 input:invalid {
