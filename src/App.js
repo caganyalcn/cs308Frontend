@@ -17,28 +17,34 @@ import ReturnPage from "./pages/ReturnPage";
 import AccountPage from "./pages/AccountPage";
 import PaymentMethodsPage from "./pages/PaymentMethodsPage"; 
 import AddressesPage from "./pages/AddressesPage"; 
+import AdminDashboardPage from "./pages/AdminDashboardPage";
+import Header from "./components/Header";
 
 function App() {
   return (
     <AppProvider>
       <Router>
-        <Routes>
-          <Route path="/" element={<LoginPage />} />
-          <Route path="/register" element={<RegisterPage />} />
-          <Route path="/home" element={<HomePage />} />
-          <Route path="/product/:id" element={<ProductDetailPage />} />
-          <Route path="/product/:id/ratings" element={<ProductRatingsPage />} />
-          <Route path="/product/:id/ratings/add" element={<AddRatingPage />} />
-          <Route path="/favorites" element={<FavoritesPage />} />
-          <Route path="/cart" element={<CartPage />} />
-          <Route path="/payment" element={<PaymentPage />} />
-          <Route path="/payment-success" element={<PaymentSuccessPage />} />
-          <Route path="/orders" element={<OrdersPage />} />
-          <Route path="/return" element={<ReturnPage />} />
-          <Route path="/hesabim" element={<AccountPage />} />
-          <Route path="/payment-methods" element={<PaymentMethodsPage />} />
-          <Route path="/addresses" element={<AddressesPage />} />
-        </Routes>
+        <div className="App">
+          <Header />
+          <Routes>
+            <Route path="/" element={<LoginPage />} />
+            <Route path="/register" element={<RegisterPage />} />
+            <Route path="/home" element={<HomePage />} />
+            <Route path="/product/:id" element={<ProductDetailPage />} />
+            <Route path="/product/:id/ratings" element={<ProductRatingsPage />} />
+            <Route path="/product/:id/ratings/add" element={<AddRatingPage />} />
+            <Route path="/favorites" element={<FavoritesPage />} />
+            <Route path="/cart" element={<CartPage />} />
+            <Route path="/payment" element={<PaymentPage />} />
+            <Route path="/payment-success" element={<PaymentSuccessPage />} />
+            <Route path="/orders" element={<OrdersPage />} />
+            <Route path="/return" element={<ReturnPage />} />
+            <Route path="/hesabim" element={<AccountPage />} />
+            <Route path="/payment-methods" element={<PaymentMethodsPage />} />
+            <Route path="/addresses" element={<AddressesPage />} />
+            <Route path="/admin" element={<AdminDashboardPage />} />
+          </Routes>
+        </div>
       </Router>
     </AppProvider>
   );

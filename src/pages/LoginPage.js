@@ -1,10 +1,14 @@
 // src/pages/LoginPage.js
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+import axios from 'axios';
 import "../styles/LoginPage.css";
 import logo from "../components/Logo.png";
 
 const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || 'http://localhost:8000';
+
+// Configure axios defaults
+axios.defaults.withCredentials = true;
 
 function LoginPage() {
   const navigate = useNavigate();
@@ -17,27 +21,33 @@ function LoginPage() {
     setError("");
 
     try {
-      const response = await fetch(`${API_BASE_URL}/api/accounts/login/`, {
-        method: 'POST',
+      const response = await axios.post(`${API_BASE_URL}/api/accounts/login/`, {
+        email,
+        password
+      }, {
+        withCredentials: true,
         headers: {
           'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email, password }),
-        credentials: 'include', // This is important for handling cookies
+        }
       });
 
-      if (response.ok) {
-        const data = await response.json();
-        // Store user data in localStorage or context if needed
-        localStorage.setItem('user', JSON.stringify(data));
-        navigate("/home");
+      const data = response.data;
+      // Store user data in localStorage
+      localStorage.setItem('user', JSON.stringify(data.user));
+      
+      // Check if user is admin and redirect accordingly
+      if (data.is_admin) {
+        navigate("/admin");
       } else {
-        const errorData = await response.json();
-        setError(errorData.message || "Login failed. Please check your credentials.");
+        navigate("/home");
       }
     } catch (err) {
-      setError("An error occurred. Please try again later.");
       console.error("Login error:", err);
+      if (err.response?.data?.message) {
+        setError(err.response.data.message);
+      } else {
+        setError("An error occurred. Please try again later.");
+      }
     }
   };
 
