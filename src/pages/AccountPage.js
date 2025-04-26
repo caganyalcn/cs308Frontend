@@ -1,9 +1,10 @@
 // Updated React AccountPage with editable fields and backend integration
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import Header from "../components/Header";
 import OrdersPage from "./OrdersPage";
 import "../styles/AccountPage.css";
+import { AppContext } from "../AppContext";
 
 const AccountPage = () => {
   const navigate = useNavigate();
@@ -11,6 +12,7 @@ const AccountPage = () => {
   const [editMode, setEditMode] = useState({ name: false, email: false, phone: false });
   const [formData, setFormData] = useState({ name: "", email: "", phone: "" });
   const [activeTab, setActiveTab] = useState("profile");
+  const { logout } = useContext(AppContext);
 
   useEffect(() => {
     fetch("http://127.0.0.1:8000/api/accounts/me/", {
@@ -67,6 +69,7 @@ const AccountPage = () => {
             <button className="menu-item" onClick={gotoFavorites}><i className="fa fa-heart" /> Favorilerim</button>
             <button className="menu-item" onClick={() => navigate("/addresses")}><i className="fa fa-map-marker" /> Adreslerim</button>
             <button className="menu-item" onClick={gotoPaymentPage}><i className="fa fa-credit-card" /> Ödeme Yöntemlerim</button>
+            <button className="menu-item" onClick={logout} style={{ backgroundColor: "#dc3545", color: "white" }}><i className="fa fa-sign-out" /> Çıkış Yap</button>
           </div>
         </div>
 

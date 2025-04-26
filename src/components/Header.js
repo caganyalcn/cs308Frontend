@@ -1,15 +1,16 @@
 // src/components/Header.js
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useContext } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import logo from "./Logo.png";
 import "../styles/Header.css";
 import { FaUser, FaShoppingBasket, FaHeart, FaSort } from "react-icons/fa";
+import { AppContext } from "../AppContext";
 
 /*
  * Props:
- *   setSearchQuery       – arama metnini HomePage’e iletmek
- *   setSelectedCategory  – kategori filtresini HomePage’e iletmek
- *   onSortChange(option) – "priceAsc" | "priceDesc" | "popular"
+ *   setSearchQuery       – arama metnini HomePage'e iletmek
+ *   setSelectedCategory  – kategori filtresini HomePage'e iletmek
+ *   onSortChange(option) – "priceAsc" | "priceDesc" | "popular"
  */
 const Header = ({
   setSearchQuery,
@@ -18,13 +19,14 @@ const Header = ({
 }) => {
   const navigate  = useNavigate();
   const location  = useLocation();
+  const { logout } = useContext(AppContext);
 
   /* ——— local state ——— */
   const [searchTerm,  setSearchTerm]  = useState("");
   const [showSidebar, setShowSidebar] = useState(false);
   const [showSort,    setShowSort]    = useState(false);
 
-  /* dropdown’u kapatmak için dış tıklama yakala */
+  /* dropdown'u kapatmak için dış tıklama yakala */
   const sortRef = useRef(null);
   useEffect(() => {
     const outside = (e) =>
@@ -34,7 +36,7 @@ const Header = ({
     return () => document.removeEventListener("mousedown", outside);
   }, []);
 
-  /* ——— search ——— */
+  /* ——— search ——— */
   const handleInputChange = (e) => {
     setSearchTerm(e.target.value);
     setSearchQuery(e.target.value);
@@ -87,7 +89,7 @@ const Header = ({
       {/* logo */}
       <div className="logo-container" onClick={() => navigate("/home")}>
         <img src={logo} alt="Çiftlikbank Logo" className="logo" />
-        <h1>Çiftlik Bank</h1>
+        <h1>Çiftlik Bank</h1>
       </div>
 
       {/* kategori toggle */}
@@ -134,7 +136,7 @@ const Header = ({
             className="sort-button"
             onClick={() => setShowSort((s) => !s)}
           >
-            <FaSort className="nav-icon" /> Sırala
+            <FaSort className="nav-icon" /> Sırala
           </button>
 
           {showSort && (
@@ -152,13 +154,13 @@ const Header = ({
       {/* sağ menü */}
       <div className="header-right">
         <button onClick={() => navigate("/favorites")} className="favorites-button">
-          <FaHeart className="nav-icon" /> Favorilerim
+          <FaHeart className="nav-icon" /> Favorilerim
         </button>
         <button onClick={() => navigate("/cart")} className="cart-button">
-          <FaShoppingBasket className="nav-icon" /> Sepetim
+          <FaShoppingBasket className="nav-icon" /> Sepetim
         </button>
         <button onClick={() => navigate("/hesabim")} className="account-button">
-          <FaUser className="nav-icon" /> Hesabım
+          <FaUser className="nav-icon" /> Hesabım
         </button>
       </div>
     </div>

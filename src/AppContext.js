@@ -129,6 +129,13 @@ export const AppProvider = ({ children }) => {
     return cart.find((item) => item.id === productId);
   };
 
+  // Logout function
+  const logout = () => {
+    // Clear session data (e.g., cookies, local storage)
+    // Redirect to login page
+    window.location.href = "/";
+  };
+
   return (
     <AppContext.Provider value={{ 
       favorites, 
@@ -141,6 +148,7 @@ export const AppProvider = ({ children }) => {
       removeFromCart,
       updateQuantity,
       getProductInCart,
+      logout,
     }}>
       {children}
     </AppContext.Provider>
