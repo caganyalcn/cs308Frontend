@@ -89,14 +89,20 @@ const ProductDetailPage = () => {
     return stars;
   };
 
+  const formatPrice = (price) => {
+    return typeof price === 'number' 
+      ? price.toLocaleString('tr-TR', { minimumFractionDigits: 2 }) + ' TL'
+      : price;
+  };
+
   return (
     <div className="product-detail-container">
       <Header />
       <div className="product-detail">
-        <img src={product.image} alt={product.name} />
+        <img src={product.image_url} alt={product.name} />
         <div className="detail-info">
           <h2>{product.name}</h2>
-          <p className="detail-price">{product.price}</p>
+          <p className="detail-price">{formatPrice(product.price)}</p>
           <p className="detail-description">{product.description}</p>
           
           <div className="detail-rating-display">
@@ -110,13 +116,13 @@ const ProductDetailPage = () => {
             </Link>
           </div>
           
-          <p className="detail-stock">Stokta: {product.stock > 0 ? `${product.stock} adet` : "Tükendi"}</p>
+          <p className="detail-stock">Stokta: {product.stock_quantity > 0 ? `${product.stock_quantity} adet` : "Tükendi"}</p>
 
           <button 
             onClick={handleCartClick} 
             className="detail-button" 
             style={{ background: isInCart ? "#dc3545" : "#01048f", color: "white" }}
-            disabled={product.stock === 0}
+            disabled={product.stock_quantity === 0}
           >
             {isInCart ? "Sepetten Çıkar" : "Sepete Ekle"}
           </button>
