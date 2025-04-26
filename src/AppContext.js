@@ -73,7 +73,7 @@ export const AppProvider = ({ children }) => {
         if (cartRes.ok) {
           const data = await cartRes.json();
           setCart(data.cart || []);
-        }
+    }
       }
     } catch (err) {
       console.error("Sepete eklenemedi", err);
@@ -130,13 +130,13 @@ export const AppProvider = ({ children }) => {
   };
 
   return (
-    <AppContext.Provider value={{
-      favorites,
-      cart,
+    <AppContext.Provider value={{ 
+      favorites, 
+      cart, 
       products,
       loading,
       addToFavorites,
-      removeFromFavorites,
+      removeFromFavorites, 
       addToCart,
       removeFromCart,
       updateQuantity,
