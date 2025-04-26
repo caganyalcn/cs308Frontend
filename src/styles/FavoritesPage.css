@@ -1,0 +1,92 @@
+.favorites-page {
+    margin-top: 100px;
+    padding: 20px;
+    font-family: Arial, sans-serif;
+    background-color: #fff;
+    min-height: 100vh;
+  }
+  
+  .favorites-title {
+    text-align: center;
+    font-size: 28px;
+    font-weight: bold;
+    margin-bottom: 40px;
+  }
+  
+  .empty-message {
+    text-align: center;
+    font-size: 18px;
+    color: #555;
+  }
+  
+  .favorites-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+  
+  .favorite-card {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    border: 1px solid #ddd;
+    border-radius: 12px;
+    padding: 15px;
+    background-color: #f9f9f9;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  }
+  
+  .favorite-image {
+    width: 120px;
+    height: 120px;
+    object-fit: cover;
+    border-radius: 10px;
+    margin-right: 20px;
+  }
+  
+  .favorite-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    flex: 1;
+  }
+  
+  .product-name {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 6px;
+    color: #222;
+  }
+  
+  .favorite-description {
+    font-size: 14px;
+    color: #555;
+    margin-bottom: 6px;
+    max-width: 600px;
+  }
+  
+  .favorite-price {
+    font-size: 16px;
+    color: #f26419;
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+  
+  .remove-button {
+    background-color: #ff4d4d;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s ease;
+  }
+  
+  .remove-button:hover {
+    background-color: #cc0000;
+  }
+  
