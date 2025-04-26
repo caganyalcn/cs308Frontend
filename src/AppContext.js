@@ -10,6 +10,32 @@ export const AppProvider = ({ children }) => {
   const [cart, setCart] = useState([]); // [{product, quantity}]
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [currentUser, setCurrentUser] = useState(null);
+
+  // Check authentication status on app load
+  useEffect(() => {
+    const checkAuth = async () => {
+      try {
+        const res = await fetch(`${API}/api/accounts/me/`, {
+          credentials: 'include',
+        });
+        if (res.ok) {
+          const data = await res.json();
+          setIsAuthenticated(true);
+          setCurrentUser(data.user);
+        } else {
+          setIsAuthenticated(false);
+          setCurrentUser(null);
+        }
+      } catch (err) {
+        console.error("Auth check failed", err);
+        setIsAuthenticated(false);
+        setCurrentUser(null);
+      }
+    };
+    checkAuth();
+  }, []);
 
   // Fetch products from backend
   useEffect(() => {
@@ -73,7 +99,7 @@ export const AppProvider = ({ children }) => {
         if (cartRes.ok) {
           const data = await cartRes.json();
           setCart(data.cart || []);
-    }
+        }
       }
     } catch (err) {
       console.error("Sepete eklenemedi", err);
@@ -130,10 +156,49 @@ export const AppProvider = ({ children }) => {
   };
 
   // Logout function
-  const logout = () => {
-    // Clear session data (e.g., cookies, local storage)
-    // Redirect to login page
-    window.location.href = "/";
+  const logout = async () => {
+    try {
+      const res = await fetch(`${API}/api/accounts/logout/`, {
+        method: 'POST',
+        credentials: 'include',
+      });
+      if (res.ok) {
+        // Clear any local state if needed
+        setCart([]);
+        setFavorites([]);
+        setIsAuthenticated(false);
+        setCurrentUser(null);
+        // Redirect to login page
+        window.location.href = "/";
+      }
+    } catch (err) {
+      console.error("Logout failed", err);
+    }
+  };
+
+  // Login function
+  const login = async (email, password) => {
+    try {
+      const res = await fetch(`${API}/api/accounts/login/`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ email, password }),
+      });
+      
+      if (res.ok) {
+        const data = await res.json();
+        setIsAuthenticated(true);
+        setCurrentUser(data.user);
+        return { success: true, isAdmin: data.is_admin };
+      } else {
+        const error = await res.json();
+        return { success: false, message: error.message };
+      }
+    } catch (err) {
+      console.error("Login failed", err);
+      return { success: false, message: "An error occurred during login" };
+    }
   };
 
   return (
@@ -142,6 +207,8 @@ export const AppProvider = ({ children }) => {
       cart, 
       products,
       loading,
+      isAuthenticated,
+      currentUser,
       addToFavorites,
       removeFromFavorites, 
       addToCart,
@@ -149,6 +216,7 @@ export const AppProvider = ({ children }) => {
       updateQuantity,
       getProductInCart,
       logout,
+      login,
     }}>
       {children}
     </AppContext.Provider>

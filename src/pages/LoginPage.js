@@ -1,17 +1,13 @@
 // src/pages/LoginPage.js
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
-import axios from 'axios';
+import { useState, useContext } from "react";
 import "../styles/LoginPage.css";
 import logo from "../components/Logo.png";
-
-const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || 'http://localhost:8000';
-
-// Configure axios defaults
-axios.defaults.withCredentials = true;
+import { AppContext } from "../AppContext";
 
 function LoginPage() {
   const navigate = useNavigate();
+  const { login } = useContext(AppContext);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -20,34 +16,16 @@ function LoginPage() {
     e.preventDefault();
     setError("");
 
-    try {
-      const response = await axios.post(`${API_BASE_URL}/api/accounts/login/`, {
-        email,
-        password
-      }, {
-        withCredentials: true,
-        headers: {
-          'Content-Type': 'application/json',
-        }
-      });
-
-      const data = response.data;
-      // Store user data in localStorage
-      localStorage.setItem('user', JSON.stringify(data.user));
-      
-      // Check if user is admin and redirect accordingly
-      if (data.is_admin) {
+    const result = await login(email, password);
+    
+    if (result.success) {
+      if (result.isAdmin) {
         navigate("/admin");
       } else {
         navigate("/home");
       }
-    } catch (err) {
-      console.error("Login error:", err);
-      if (err.response?.data?.message) {
-        setError(err.response.data.message);
-      } else {
-        setError("An error occurred. Please try again later.");
-      }
+    } else {
+      setError(result.message || "An error occurred. Please try again later.");
     }
   };
 

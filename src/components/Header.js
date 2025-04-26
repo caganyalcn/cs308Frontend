@@ -3,13 +3,14 @@ import React, { useState, useEffect, useRef, useContext } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import logo from "./Logo.png";
 import "../styles/Header.css";
-import { FaUser, FaShoppingBasket, FaHeart, FaSort } from "react-icons/fa";
+import { FaShoppingBasket, FaHeart, FaSort } from "react-icons/fa";
 import { AppContext } from "../AppContext";
+import AuthButtons from "./AuthButtons";
 
 /*
  * Props:
- *   setSearchQuery       – arama metnini HomePage'e iletmek
- *   setSelectedCategory  – kategori filtresini HomePage'e iletmek
+ *   setSearchQuery       – arama metnini HomePage'e iletmek
+ *   setSelectedCategory  – kategori filtresini HomePage'e iletmek
  *   onSortChange(option) – "priceAsc" | "priceDesc" | "popular"
  */
 const Header = ({
@@ -19,7 +20,7 @@ const Header = ({
 }) => {
   const navigate  = useNavigate();
   const location  = useLocation();
-  const { logout } = useContext(AppContext);
+  const { isAuthenticated } = useContext(AppContext);
 
   /* ——— local state ——— */
   const [searchTerm,  setSearchTerm]  = useState("");
@@ -159,9 +160,7 @@ const Header = ({
         <button onClick={() => navigate("/cart")} className="cart-button">
           <FaShoppingBasket className="nav-icon" /> Sepetim
         </button>
-        <button onClick={() => navigate("/hesabim")} className="account-button">
-          <FaUser className="nav-icon" /> Hesabım
-        </button>
+        <AuthButtons />
       </div>
     </div>
   );
