@@ -54,24 +54,21 @@ export const AppProvider = ({ children }) => {
   }, []);
 
   // Fetch cart from backend
-  useEffect(() => {
-    const fetchCart = async () => {
-      try {
-        const res = await fetch(`${API}/api/products/get-cart/`, {
-          credentials: "include",
-        });
-        if (res.ok) {
-          const data = await res.json();
-          setCart(data.cart || []);
-        }
-      } catch (err) {
-        console.error("Sepet alınamadı", err);
-      } finally {
-        setLoading(false);
+  const fetchCart = async () => {
+    try {
+      const res = await fetch(`${API}/api/products/get-cart/`, {
+        credentials: 'include',
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setCart(data.cart || []);
       }
-    };
-    fetchCart();
-  }, []);
+    } catch (err) {
+      setCart([]);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   // Favorites (local only)
   const addToFavorites = (product) => {
@@ -217,6 +214,7 @@ export const AppProvider = ({ children }) => {
       getProductInCart,
       logout,
       login,
+      fetchCart,
     }}>
       {children}
     </AppContext.Provider>

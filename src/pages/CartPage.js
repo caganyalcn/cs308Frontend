@@ -1,13 +1,18 @@
 // src/pages/CartPage.js
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Header from "../components/Header";
 import { AppContext } from "../AppContext";
 import "../styles/CartPage.css";
 
 const CartPage = () => {
-  const { cart, updateQuantity, removeFromCart, loading } = useContext(AppContext);
+  const { cart, updateQuantity, removeFromCart, loading, fetchCart } = useContext(AppContext);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    fetchCart();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const cartTotal = cart.reduce((total, item) => {
     return total + parseFloat(item.price) * item.quantity;
