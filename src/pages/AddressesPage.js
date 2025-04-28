@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import Header from "../components/Header";
 import "../styles/AccountPage.css";
 
-const API = "http://127.0.0.1:8000"; // Gerekirse .env'e taşıyabilirsin
+const API = "http://localhost:8000"; // Gerekirse .env'e taşıyabilirsin
 
 const AddressesPage = () => {
   const [addresses, setAddresses] = useState([]);

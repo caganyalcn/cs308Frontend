@@ -18,7 +18,6 @@ const ProductCard = ({ product }) => {
     cart,
     addToCart,
     removeFromCart,
-    updateQuantity,
   } = useContext(AppContext);
   const [showQuantitySelector, setShowQuantitySelector] = useState(false);
   const [quantity, setQuantity] = useState(1);
@@ -89,7 +88,7 @@ const ProductCard = ({ product }) => {
       <h2 className="product-name">{product.name}</h2>
       <p className="product-price">{formatPrice(product.price)}</p>
       <p className="product-description">{product.description}</p>
-      <p className="product-rating">⭐ {product.rating}</p>
+      <p className="product-rating">⭐ {product.avg_rating?.toFixed(1) ?? "-"} ({product.rating_count})</p>
       <p className="product-stock">
         {product.stock_quantity > 0
           ? `Stokta: ${product.stock_quantity} adet`

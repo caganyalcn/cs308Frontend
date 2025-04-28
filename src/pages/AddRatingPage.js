@@ -11,8 +11,6 @@ const AddRatingPage = () => {
   const [userRating, setUserRating] = useState(0);
   const [hoveredRating, setHoveredRating] = useState(0);
   const [comment, setComment] = useState("");
-  const [userName, setUserName] = useState("");
-  const [userEmail, setUserEmail] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
 
@@ -25,39 +23,38 @@ const AddRatingPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (userRating === 0) {
-      setErrorMessage("Lütfen bir puan seçiniz.");
-      return;
-    }
-
-    if (userName.trim() === "") {
-      setErrorMessage("Lütfen adınızı giriniz.");
+    if (userRating === 0 && comment.trim() === "") {
+      setErrorMessage("Lütfen bir puan veya yorum giriniz.");
       return;
     }
 
     try {
-      const response = await fetch("http://127.0.0.1:8000/api/reviews/add/", {
+      console.log("Submitting review...");
+      const response = await fetch("http://localhost:8000/api/reviews/add/", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
+        credentials: "include",
         body: JSON.stringify({
           product_id: parseInt(id),
-          username: userName,
-          email: userEmail,
-          rating: userRating,
+          rating: userRating === 0 ? null : userRating,
           comment: comment,
         }),
       });
+
+      console.log("Response status:", response.status);
+      const data = await response.json();
+      console.log("Response data:", data);
 
       if (response.ok) {
         setSuccessMessage("Değerlendirme gönderildi!");
         setTimeout(() => navigate(`/product/${id}/ratings`), 2000);
       } else {
-        const data = await response.json();
         setErrorMessage(data.error || "Bir hata oluştu.");
       }
     } catch (error) {
+      console.error("Error submitting review:", error);
       setErrorMessage("Sunucuya bağlanılamadı.");
     }
   };
@@ -116,30 +113,6 @@ const AddRatingPage = () => {
           </div>
 
           <div className="form-group">
-            <label htmlFor="userName">Adınız *</label>
-            <input
-              type="text"
-              id="userName"
-              value={userName}
-              onChange={(e) => setUserName(e.target.value)}
-              required
-              className="form-control"
-            />
-          </div>
-
-          <div className="form-group">
-            <label htmlFor="userEmail">E-posta Adresiniz</label>
-            <input
-              type="email"
-              id="userEmail"
-              value={userEmail}
-              onChange={(e) => setUserEmail(e.target.value)}
-              className="form-control"
-            />
-            <small>E-posta adresiniz görüntülenmeyecektir.</small>
-          </div>
-
-          <div className="form-group">
             <label htmlFor="comment">Yorumunuz (İsteğe Bağlı)</label>
             <textarea
               id="comment"
@@ -147,7 +120,9 @@ const AddRatingPage = () => {
               onChange={(e) => setComment(e.target.value)}
               className="form-control"
               rows="5"
+              placeholder="Ürün hakkındaki düşüncelerinizi paylaşın..."
             ></textarea>
+            <small>Yorumunuz yönetici onayından sonra yayınlanacaktır.</small>
           </div>
 
           <button type="submit" className="submit-button">Değerlendirmeyi Gönder</button>

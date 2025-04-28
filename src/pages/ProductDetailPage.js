@@ -9,33 +9,12 @@ const ProductDetailPage = () => {
   const { id } = useParams();
   const { products, cart, addToCart, removeFromCart, favorites, addToFavorites, removeFromFavorites } = useContext(AppContext);
   const [isInCart, setIsInCart] = useState(false);
-  const [averageRating, setAverageRating] = useState(0);
-  const [ratingCount, setRatingCount] = useState(0);
 
   const product = products.find((p) => p.id === parseInt(id));
 
   // Load saved ratings from localStorage and check cart status
   useEffect(() => {
     if (product) {
-      // Load ratings
-      const savedRatings = localStorage.getItem(`product_${product.id}_ratings`);
-      if (savedRatings) {
-        const parsedRatings = JSON.parse(savedRatings);
-        setRatingCount(parsedRatings.length);
-        
-        // Calculate average rating
-        if (parsedRatings.length > 0) {
-          const sum = parsedRatings.reduce((acc, curr) => acc + curr.rating, 0);
-          const newAverage = ((product.rating * 1 + sum) / (parsedRatings.length + 1)).toFixed(1);
-          setAverageRating(newAverage);
-        } else {
-          setAverageRating(product.rating);
-        }
-      } else {
-        setAverageRating(product.rating);
-        setRatingCount(1); // Default count is 1 (the product's initial rating)
-      }
-      
       // Check if product is in cart
       setIsInCart(cart.some(item => item.id === product.id));
     }
@@ -107,10 +86,10 @@ const ProductDetailPage = () => {
           
           <div className="detail-rating-display">
             <div className="stars-display">
-              {renderStars(averageRating)}
+              {renderStars(product.avg_rating)}
             </div>
-            <span className="rating-value">{averageRating}</span>
-            <span className="rating-count">({ratingCount} değerlendirme)</span>
+            <span className="rating-value">{product.avg_rating?.toFixed(1) ?? "-"}</span>
+            <span className="rating-count">({product.rating_count} değerlendirme)</span>
             <Link to={`/product/${product.id}/ratings`} className="view-all-link">
               Tüm Değerlendirmeleri Gör
             </Link>
