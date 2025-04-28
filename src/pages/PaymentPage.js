@@ -16,11 +16,31 @@ function PaymentPage() {
     setPaymentDetails({ ...paymentDetails, [e.target.name]: e.target.value });
   };
 
-  const handlePayment = (e) => {
+  const handlePayment = async (e) => {
     e.preventDefault();
-    // Here you would typically send the payment details to your backend
-    // For now, we'll just navigate to the success page
-    navigate("/payment-success");
+    console.log("Payment submitted!");
+
+    // Optionally, validate paymentDetails here
+
+    // Send the address to the backend (if you want to use it)
+    const res = await fetch("http://localhost:8000/api/orders/place/", {
+      method: "POST",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        address: paymentDetails.address, // You can add more fields if your backend expects them
+      }),
+    });
+
+    if (res.ok) {
+      // Optionally, clear payment form here
+      navigate("/payment-success");
+    } else {
+      const data = await res.json();
+      alert(data.error || "Ödeme başarısız oldu!");
+    }
   };
 
   return (
@@ -87,6 +107,7 @@ function PaymentPage() {
         </div>
         <button type="submit" className="payment-button">Ödemeyi Tamamla</button>
       </form>
+      <button onClick={() => alert("Test handler works!")}>Test Handler</button>
     </div>
   );
 }
