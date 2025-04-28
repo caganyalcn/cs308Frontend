@@ -76,7 +76,7 @@ const Header = ({
   return (
     <div className="header-container">
       {/* geri */}
-      {location.pathname !== "/home" && (
+      {location.pathname !== "/home" && location.pathname !== "/admin" && (
         <button
           className="back-button"
           onClick={() =>
@@ -118,17 +118,19 @@ const Header = ({
       )}
 
       {/* search */}
-      <div className="search-container">
-        <input
-          className="search-input"
-          value={searchTerm}
-          onChange={handleInputChange}
-          placeholder="Ürün ara..."
-        />
-        <button className="search-button" onClick={handleSearch}>
-          Ara
-        </button>
-      </div>
+      {location.pathname !== "/admin" && (
+        <div className="search-container">
+          <input
+            className="search-input"
+            value={searchTerm}
+            onChange={handleInputChange}
+            placeholder="Ürün ara..."
+          />
+          <button className="search-button" onClick={handleSearch}>
+            Ara
+          </button>
+        </div>
+      )}
 
       {/* sırala – click toggled */}
       {location.pathname === "/home" && (
@@ -154,12 +156,16 @@ const Header = ({
 
       {/* sağ menü */}
       <div className="header-right">
-        <button onClick={() => navigate("/favorites")} className="favorites-button">
-          <FaHeart className="nav-icon" /> Favorilerim
-        </button>
-        <button onClick={() => navigate("/cart")} className="cart-button">
-          <FaShoppingBasket className="nav-icon" /> Sepetim
-        </button>
+        {location.pathname !== "/admin" && (
+          <>
+            <button onClick={() => navigate("/favorites")} className="favorites-button">
+              <FaHeart className="nav-icon" /> Favorilerim
+            </button>
+            <button onClick={() => navigate("/cart")} className="cart-button">
+              <FaShoppingBasket className="nav-icon" /> Sepetim
+            </button>
+          </>
+        )}
         <AuthButtons />
       </div>
     </div>

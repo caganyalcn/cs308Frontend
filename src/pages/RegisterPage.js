@@ -85,7 +85,7 @@ function RegisterPage() {
       if (response.ok) {
         // Store user data in localStorage or context if needed
         localStorage.setItem('user', JSON.stringify(responseData));
-        navigate("/home");
+        navigate("/");
       } else {
         setError(responseData.message || "Registration failed. Please try again.");
       }
