@@ -11,35 +11,87 @@ function PaymentPage() {
     cvv: "",
     address: "",
   });
+  const [formErrors, setFormErrors] = useState({});
 
   const handleChange = (e) => {
-    setPaymentDetails({ ...paymentDetails, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    
+    // Format card number to remove spaces
+    if (name === "cardNumber") {
+      const formatted = value.replace(/\D/g, '').substring(0, 16);
+      setPaymentDetails({ ...paymentDetails, cardNumber: formatted });
+      return;
+    }
+    
+    // Format expiry date
+    if (name === "expiryDate") {
+      let formatted = value.replace(/\D/g, '');
+      if (formatted.length > 2) {
+        formatted = formatted.substring(0, 2) + '/' + formatted.substring(2, 4);
+      }
+      setPaymentDetails({ ...paymentDetails, expiryDate: formatted });
+      return;
+    }
+    
+    // Format CVV to allow only digits
+    if (name === "cvv") {
+      const formatted = value.replace(/\D/g, '').substring(0, 3);
+      setPaymentDetails({ ...paymentDetails, cvv: formatted });
+      return;
+    }
+    
+    setPaymentDetails({ ...paymentDetails, [name]: value });
+  };
+
+  const validateForm = () => {
+    const errors = {};
+    
+    if (!/^\d{16}$/.test(paymentDetails.cardNumber)) {
+      errors.cardNumber = "Kart numarası 16 haneli olmalıdır.";
+    }
+    
+    if (!/^\d{2}\/\d{2}$/.test(paymentDetails.expiryDate)) {
+      errors.expiryDate = "Geçerlilik tarihi MM/YY formatında olmalıdır.";
+    }
+    
+    if (!/^\d{3}$/.test(paymentDetails.cvv)) {
+      errors.cvv = "CVV kodu 3 haneli olmalıdır.";
+    }
+
+    setFormErrors(errors);
+    return Object.keys(errors).length === 0;
   };
 
   const handlePayment = async (e) => {
     e.preventDefault();
     console.log("Payment submitted!");
 
-    // Optionally, validate paymentDetails here
+    // Validate form before sending
+    if (!validateForm()) {
+      return;
+    }
 
-    // Send the address to the backend (if you want to use it)
-    const res = await fetch("http://localhost:8000/api/orders/place/", {
-      method: "POST",
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        address: paymentDetails.address, // You can add more fields if your backend expects them
-      }),
-    });
+    try {
+      const res = await fetch("http://localhost:8000/api/orders/place/", {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          address: paymentDetails.address,
+        }),
+      });
 
-    if (res.ok) {
-      // Optionally, clear payment form here
-      navigate("/payment-success");
-    } else {
-      const data = await res.json();
-      alert(data.error || "Ödeme başarısız oldu!");
+      if (res.ok) {
+        navigate("/payment-success");
+      } else {
+        const data = await res.json();
+        alert(data.error || "Ödeme başarısız oldu!");
+      }
+    } catch (error) {
+      console.error("Payment error:", error);
+      alert("Bir hata oluştu. Lütfen tekrar deneyin.");
     }
   };
 
@@ -107,7 +159,6 @@ function PaymentPage() {
         </div>
         <button type="submit" className="payment-button">Ödemeyi Tamamla</button>
       </form>
-      <button onClick={() => alert("Test handler works!")}>Test Handler</button>
     </div>
   );
 }

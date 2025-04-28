@@ -52,4 +52,48 @@
 
 .continue-shopping-btn:hover {
   background-color: #45a049;
-} 
+}
+
+.invoice {
+  width: 100%;
+  max-width: 600px;
+  margin: 2rem auto;
+  padding: 1.5rem;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  background-color: #fafafa;
+  text-align: left;
+}
+.invoice h2 {
+  margin-bottom: 1rem;
+  font-size: 1.5rem;
+  color: #333;
+}
+.invoice p {
+  margin: 0.5rem 0;
+  color: #555;
+}
+.invoice-items {
+  list-style: none;
+  padding: 0;
+  margin-top: 1rem;
+}
+.invoice-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+.item-image {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 4px;
+  margin-right: 1rem;
+}
+.item-details {
+  flex: 1;
+}
+.item-name {
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
