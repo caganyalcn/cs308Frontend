@@ -6,6 +6,8 @@ import OrdersPage from "./OrdersPage";
 import "../styles/AccountPage.css";
 import { AppContext } from "../AppContext";
 
+const API = process.env.REACT_APP_API_BASE_URL || "http://localhost:8000";
+
 const AccountPage = () => {
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
@@ -15,9 +17,13 @@ const AccountPage = () => {
   const { logout } = useContext(AppContext);
 
   useEffect(() => {
-    fetch("http://127.0.0.1:8000/api/accounts/me/", {
+    fetch(`${API}/api/accounts/me/`, {
       method: "GET",
       credentials: "include",
+      headers: {
+        "Accept": "application/json",
+        "Content-Type": "application/json",
+      }
     })
       .then((res) => res.json())
       .then((data) => {
@@ -32,7 +38,7 @@ const AccountPage = () => {
   };
 
   const handleSave = () => {
-    fetch("http://127.0.0.1:8000/api/accounts/update/", {
+    fetch(`${API}/api/accounts/update/`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
