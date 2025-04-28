@@ -6,7 +6,7 @@ import { AppContext } from "../AppContext";
 
 const AddRatingPage = () => {
   const { id } = useParams();
-  const { products } = useContext(AppContext);
+  const { products, fetchProducts } = useContext(AppContext);
   const navigate = useNavigate();
   const [userRating, setUserRating] = useState(0);
   const [hoveredRating, setHoveredRating] = useState(0);
@@ -49,6 +49,7 @@ const AddRatingPage = () => {
 
       if (response.ok) {
         setSuccessMessage("Değerlendirme gönderildi!");
+        await fetchProducts();
         setTimeout(() => navigate(`/product/${id}/ratings`), 2000);
       } else {
         setErrorMessage(data.error || "Bir hata oluştu.");

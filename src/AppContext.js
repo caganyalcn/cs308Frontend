@@ -38,18 +38,20 @@ export const AppProvider = ({ children }) => {
   }, []);
 
   // Fetch products from backend
-  useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        const res = await fetch(`${API}/api/products/products/`);
-        if (res.ok) {
-          const data = await res.json();
-          setProducts(data);
-        }
-      } catch (err) {
-        console.error("Ürünler alınamadı", err);
+  const fetchProducts = async () => {
+    try {
+      const res = await fetch(`${API}/api/products/products/`);
+      if (res.ok) {
+        const data = await res.json();
+        setProducts(data);
       }
-    };
+    } catch (err) {
+      console.error("Ürünler alınamadı", err);
+    }
+  };
+
+  // Fetch products on mount
+  useEffect(() => {
     fetchProducts();
   }, []);
 
@@ -215,6 +217,7 @@ export const AppProvider = ({ children }) => {
       logout,
       login,
       fetchCart,
+      fetchProducts,
     }}>
       {children}
     </AppContext.Provider>

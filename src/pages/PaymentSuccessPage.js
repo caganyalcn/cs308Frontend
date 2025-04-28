@@ -2,10 +2,13 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Header from "../components/Header";
 import "../styles/PaymentSuccessPage.css";
+import { useContext } from "react";
+import { AppContext } from "../AppContext";
 
 const PaymentSuccessPage = () => {
   const navigate = useNavigate();
   const [order, setOrder] = useState(null);
+  const { fetchProducts } = useContext(AppContext);
 
   useEffect(() => {
     fetch('http://localhost:8000/api/orders/latest/', {
@@ -20,7 +23,8 @@ const PaymentSuccessPage = () => {
       .catch((error) => console.error('Error fetching latest order:', error));
   }, []);
 
-  const handleContinueShopping = () => {
+  const handleContinueShopping = async () => {
+    await fetchProducts();
     navigate("/home");
   };
 

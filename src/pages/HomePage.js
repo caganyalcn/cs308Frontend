@@ -45,7 +45,7 @@ function HomePage() {
         list.sort((a, b) => parsePrice(b.price) - parsePrice(a.price));
         break;
       case "popular":
-        list.sort((a, b) => b.rating - a.rating);
+        list.sort((a, b) => b.avg_rating - a.avg_rating);
         break;
       default:
         break;
