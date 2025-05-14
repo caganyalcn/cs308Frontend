@@ -13,6 +13,12 @@ const SalesManagerPage = () => {
   // State for Wishlist Notification section
   const [productIdNotification, setProductIdNotification] = useState('');
 
+  // State for Invoice Viewer section
+  const [startDate, setStartDate] = useState('');
+  const [endDate, setEndDate] = useState('');
+  const [invoices, setInvoices] = useState([]); // To hold fetched invoices
+  const [viewingInvoices, setViewingInvoices] = useState(false); // To control display
+
   const handleSetPrice = () => {
     // Placeholder for backend API call
     console.log(`Setting price for product ${productIdPrice} to ${newPrice}`);
@@ -34,6 +40,25 @@ const SalesManagerPage = () => {
     console.log(`Sending wishlist notifications for product ${productIdNotification}`);
     alert(`Sent wishlist notifications for product ${productIdNotification}`);
     setProductIdNotification('');
+  };
+
+  const handleViewInvoices = () => {
+    // Placeholder for backend API call to fetch invoices based on date range
+    console.log(`Fetching invoices from ${startDate} to ${endDate}`);
+    // Mock data for now:
+    const mockInvoices = [
+      { id: 'INV001', date: '2023-10-01', amount: 150.00, customer: 'Alice' },
+      { id: 'INV002', date: '2023-10-05', amount: 200.50, customer: 'Bob' },
+    ];
+    setInvoices(mockInvoices);
+    setViewingInvoices(true);
+    // alert(`Invoices from ${startDate} to ${endDate} would be displayed here.`);
+  };
+
+  const handleExportInvoicesPDF = () => {
+    // Placeholder for PDF export functionality
+    console.log(`Exporting invoices from ${startDate} to ${endDate} to PDF`);
+    alert('PDF export functionality to be implemented.');
   };
 
   return (
@@ -114,6 +139,53 @@ const SalesManagerPage = () => {
         <button onClick={handleSendNotifications} className="action-button">
           Send Notifications
         </button>
+      </div>
+
+      <div className="feature-section">
+        <h2>View Invoices</h2>
+        <div className="form-group">
+          <label htmlFor="startDate">Start Date:</label>
+          <input 
+            type="date" 
+            id="startDate"
+            value={startDate}
+            onChange={(e) => setStartDate(e.target.value)}
+          />
+        </div>
+        <div className="form-group">
+          <label htmlFor="endDate">End Date:</label>
+          <input 
+            type="date" 
+            id="endDate"
+            value={endDate}
+            onChange={(e) => setEndDate(e.target.value)}
+          />
+        </div>
+        <button onClick={handleViewInvoices} className="action-button" style={{marginRight: '10px'}}>
+          View Invoices
+        </button>
+        {viewingInvoices && invoices.length > 0 && (
+          <button onClick={handleExportInvoicesPDF} className="action-button">
+            Export to PDF
+          </button>
+        )}
+
+        {viewingInvoices && (
+          <div className="invoice-list" style={{marginTop: '20px'}}>
+            <h3>Invoices ({startDate} to {endDate})</h3>
+            {invoices.length > 0 ? (
+              <ul>
+                {invoices.map(invoice => (
+                  <li key={invoice.id} style={{borderBottom: '1px solid #eee', padding: '10px 0'}}>
+                    ID: {invoice.id}, Date: {invoice.date}, Amount: ${invoice.amount.toFixed(2)}, Customer: {invoice.customer}
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p>No invoices found for the selected date range.</p>
+            )}
+          </div>
+        )}
       </div>
 
       {/* More sections will be added here */}
