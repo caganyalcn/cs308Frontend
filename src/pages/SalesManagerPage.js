@@ -10,6 +10,9 @@ const SalesManagerPage = () => {
   const [productIdDiscount, setProductIdDiscount] = useState('');
   const [discountPercentage, setDiscountPercentage] = useState('');
 
+  // State for Wishlist Notification section
+  const [productIdNotification, setProductIdNotification] = useState('');
+
   const handleSetPrice = () => {
     // Placeholder for backend API call
     console.log(`Setting price for product ${productIdPrice} to ${newPrice}`);
@@ -24,6 +27,13 @@ const SalesManagerPage = () => {
     alert(`Applied ${discountPercentage}% discount to product ${productIdDiscount}`);
     setProductIdDiscount('');
     setDiscountPercentage('');
+  };
+
+  const handleSendNotifications = () => {
+    // Placeholder for backend API call
+    console.log(`Sending wishlist notifications for product ${productIdNotification}`);
+    alert(`Sent wishlist notifications for product ${productIdNotification}`);
+    setProductIdNotification('');
   };
 
   return (
@@ -86,6 +96,23 @@ const SalesManagerPage = () => {
         </div>
         <button onClick={handleApplyDiscount} className="action-button">
           Apply Discount
+        </button>
+      </div>
+
+      <div className="feature-section">
+        <h2>Notify Wishlist Users</h2>
+        <div className="form-group">
+          <label htmlFor="productIdNotification">Product ID:</label>
+          <input 
+            type="text" 
+            id="productIdNotification"
+            value={productIdNotification}
+            onChange={(e) => setProductIdNotification(e.target.value)}
+            placeholder="Enter product ID for notifications"
+          />
+        </div>
+        <button onClick={handleSendNotifications} className="action-button">
+          Send Notifications
         </button>
       </div>
 
