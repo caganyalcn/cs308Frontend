@@ -1,0 +1,18 @@
+.sales-manager-page {
+  padding: 20px;
+  font-family: Arial, sans-serif;
+}
+
+.sales-manager-page h1 {
+  color: #333;
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.sales-manager-page p {
+  color: #555;
+  text-align: center;
+  font-size: 1.1em;
+}
+
+/* More styles will be added as we develop the page */ 

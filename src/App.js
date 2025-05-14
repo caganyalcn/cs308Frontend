@@ -18,6 +18,7 @@ import AccountPage from "./pages/AccountPage";
 import PaymentMethodsPage from "./pages/PaymentMethodsPage"; 
 import AddressesPage from "./pages/AddressesPage"; 
 import AdminDashboardPage from "./pages/AdminDashboardPage";
+import SalesManagerPage from "./pages/SalesManagerPage";
 import Header from "./components/Header";
 
 // Layout component to conditionally render header
@@ -45,6 +46,7 @@ const AppLayout = () => {
         <Route path="/payment-methods" element={<PaymentMethodsPage />} />
         <Route path="/addresses" element={<AddressesPage />} />
         <Route path="/admin" element={<AdminDashboardPage />} />
+        <Route path="/sales-manager" element={<SalesManagerPage />} />
       </Routes>
     </div>
   );
