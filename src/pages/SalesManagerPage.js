@@ -14,10 +14,16 @@ const SalesManagerPage = () => {
   const [productIdNotification, setProductIdNotification] = useState('');
 
   // State for Invoice Viewer section
-  const [startDate, setStartDate] = useState('');
-  const [endDate, setEndDate] = useState('');
+  const [startDateInv, setStartDateInv] = useState('');
+  const [endDateInv, setEndDateInv] = useState('');
   const [invoices, setInvoices] = useState([]); // To hold fetched invoices
   const [viewingInvoices, setViewingInvoices] = useState(false); // To control display
+
+  // State for Revenue/Loss Calculation section
+  const [startDateRev, setStartDateRev] = useState('');
+  const [endDateRev, setEndDateRev] = useState('');
+  const [defaultCostPercentage, setDefaultCostPercentage] = useState('60'); // Default to 60%
+  const [revenueReport, setRevenueReport] = useState(null);
 
   const handleSetPrice = () => {
     // Placeholder for backend API call
@@ -44,7 +50,7 @@ const SalesManagerPage = () => {
 
   const handleViewInvoices = () => {
     // Placeholder for backend API call to fetch invoices based on date range
-    console.log(`Fetching invoices from ${startDate} to ${endDate}`);
+    console.log(`Fetching invoices from ${startDateInv} to ${endDateInv}`);
     // Mock data for now:
     const mockInvoices = [
       { id: 'INV001', date: '2023-10-01', amount: 150.00, customer: 'Alice' },
@@ -52,13 +58,27 @@ const SalesManagerPage = () => {
     ];
     setInvoices(mockInvoices);
     setViewingInvoices(true);
-    // alert(`Invoices from ${startDate} to ${endDate} would be displayed here.`);
+    // alert(`Invoices from ${startDateInv} to ${endDateInv} would be displayed here.`);
   };
 
   const handleExportInvoicesPDF = () => {
     // Placeholder for PDF export functionality
-    console.log(`Exporting invoices from ${startDate} to ${endDate} to PDF`);
+    console.log(`Exporting invoices from ${startDateInv} to ${endDateInv} to PDF`);
     alert('PDF export functionality to be implemented.');
+  };
+
+  const handleCalculateRevenueLoss = () => {
+    // Placeholder for backend API call
+    console.log(`Calculating revenue/loss from ${startDateRev} to ${endDateRev} with ${defaultCostPercentage}% default cost.`);
+    // Mock data for now:
+    const mockReport = {
+      totalRevenue: 5000,
+      totalCost: parseFloat(defaultCostPercentage) / 100 * 5000,
+      netProfit: 5000 - (parseFloat(defaultCostPercentage) / 100 * 5000),
+      period: `${startDateRev} to ${endDateRev}`
+    };
+    setRevenueReport(mockReport);
+    // alert(`Revenue/Loss report for ${startDateRev} to ${endDateRev} would be displayed here.`);
   };
 
   return (
@@ -144,21 +164,21 @@ const SalesManagerPage = () => {
       <div className="feature-section">
         <h2>View Invoices</h2>
         <div className="form-group">
-          <label htmlFor="startDate">Start Date:</label>
+          <label htmlFor="startDateInv">Start Date:</label>
           <input 
             type="date" 
-            id="startDate"
-            value={startDate}
-            onChange={(e) => setStartDate(e.target.value)}
+            id="startDateInv"
+            value={startDateInv}
+            onChange={(e) => setStartDateInv(e.target.value)}
           />
         </div>
         <div className="form-group">
-          <label htmlFor="endDate">End Date:</label>
+          <label htmlFor="endDateInv">End Date:</label>
           <input 
             type="date" 
-            id="endDate"
-            value={endDate}
-            onChange={(e) => setEndDate(e.target.value)}
+            id="endDateInv"
+            value={endDateInv}
+            onChange={(e) => setEndDateInv(e.target.value)}
           />
         </div>
         <button onClick={handleViewInvoices} className="action-button" style={{marginRight: '10px'}}>
@@ -172,7 +192,7 @@ const SalesManagerPage = () => {
 
         {viewingInvoices && (
           <div className="invoice-list" style={{marginTop: '20px'}}>
-            <h3>Invoices ({startDate} to {endDate})</h3>
+            <h3>Invoices ({startDateInv} to {endDateInv})</h3>
             {invoices.length > 0 ? (
               <ul>
                 {invoices.map(invoice => (
@@ -184,6 +204,60 @@ const SalesManagerPage = () => {
             ) : (
               <p>No invoices found for the selected date range.</p>
             )}
+          </div>
+        )}
+      </div>
+
+      <div className="feature-section">
+        <h2>Revenue/Loss Calculation</h2>
+        <div className="form-group">
+          <label htmlFor="startDateRev">Start Date:</label>
+          <input 
+            type="date" 
+            id="startDateRev"
+            value={startDateRev}
+            onChange={(e) => setStartDateRev(e.target.value)}
+          />
+        </div>
+        <div className="form-group">
+          <label htmlFor="endDateRev">End Date:</label>
+          <input 
+            type="date" 
+            id="endDateRev"
+            value={endDateRev}
+            onChange={(e) => setEndDateRev(e.target.value)}
+          />
+        </div>
+        <div className="form-group">
+          <label htmlFor="defaultCostPercentage">Default Product Cost (%):</label>
+          <input 
+            type="number" 
+            id="defaultCostPercentage"
+            value={defaultCostPercentage}
+            onChange={(e) => setDefaultCostPercentage(e.target.value)}
+            placeholder="e.g., 60 for 60%"
+            step="1"
+            min="0"
+            max="100"
+          />
+        </div>
+        <button onClick={handleCalculateRevenueLoss} className="action-button">
+          Calculate Revenue/Loss
+        </button>
+
+        {revenueReport && (
+          <div className="revenue-report" style={{marginTop: '20px'}}>
+            <h3>Revenue/Loss Report ({revenueReport.period})</h3>
+            <p>Total Revenue: ${revenueReport.totalRevenue.toFixed(2)}</p>
+            <p>Total Cost (at {defaultCostPercentage}%): ${revenueReport.totalCost.toFixed(2)}</p>
+            <p style={{fontWeight: 'bold'}}>
+              Net {revenueReport.netProfit >= 0 ? 'Profit' : 'Loss'}: 
+              ${Math.abs(revenueReport.netProfit).toFixed(2)}
+            </p>
+            {/* Placeholder for chart */}
+            <div style={{marginTop: '15px', padding: '10px', border: '1px dashed #ccc', textAlign: 'center'}}>
+              Revenue/Loss Chart will be displayed here.
+            </div>
           </div>
         )}
       </div>

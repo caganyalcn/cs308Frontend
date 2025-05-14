@@ -1,0 +1,263 @@
+Backend Integration Guide: Sales Manager Features (Django & MySQL)
+
+This guide outlines how to connect the frontend Sales Manager features (implemented in `src/pages/SalesManagerPage.js`) to a Django backend using a MySQL database.
+
+**1. Django Project & App Setup**
+
+*   **Django Project**: Ensure you have a Django project set up.
+*   **Sales/Admin App**: Create a dedicated Django app (e.g., `sales_admin` or similar) to house the models and views for these features.
+    ```bash
+    python manage.py startapp sales_admin
+    ```
+*   **MySQL Configuration**:
+    *   Install the MySQL client for Python: `pip install mysqlclient`
+    *   Configure your Django `settings.py` to use MySQL:
+        ```python
+        DATABASES = {
+            'default': {
+                'ENGINE': 'django.db.backends.mysql',
+                'NAME': 'your_db_name',
+                'USER': 'your_db_user',
+                'PASSWORD': 'your_db_password',
+                'HOST': 'localhost', # Or your MySQL host
+                'PORT': '3306',      # Or your MySQL port
+                'OPTIONS': {
+                    'init_command': "SET sql_mode='STRICT_TRANS_TABLES'", # Recommended for MySQL
+                },
+            }
+        }
+        ```
+*   **Install Django REST framework**: For creating API endpoints.
+    ```bash
+    pip install djangorestframework
+    ```
+    Add `'rest_framework'` to `INSTALLED_APPS` in `settings.py`.
+
+**2. SalesManager Model or Role Flag**
+
+You need a way to identify Sales Managers. Two common approaches:
+
+*   **Django Groups & Permissions**:
+    *   Create a "Sales Manager" group in the Django admin.
+    *   Assign specific permissions to this group.
+    *   Add users to this group.
+    *   Use `@permission_required` decorator or `PermissionRequiredMixin` for views.
+
+*   **Custom User Model Flag**:
+    *   Extend the default Django User model or use a custom User model.
+    *   Add a boolean field like `is_sales_manager`.
+    ```python
+    # In your accounts app's models.py, for example
+    from django.contrib.auth.models import AbstractUser
+    from django.db import models
+
+    class CustomUser(AbstractUser):
+        is_sales_manager = models.BooleanField(default=False)
+        # ... other fields
+    ```
+    *   Update `AUTH_USER_MODEL` in `settings.py`.
+
+**3. API Endpoints (in your `sales_admin/views.py` and `sales_admin/urls.py`)**
+
+The frontend `SalesManagerPage.js` currently uses placeholder functions (e.g., `handleSetPrice`). These need to be updated to make `fetch` requests to Django REST framework API endpoints. The base API URL is already defined in `src/AppContext.js` as `const API = process.env.REACT_APP_API_BASE_URL || "http://localhost:8000";`.
+
+All endpoints should be protected and accessible only by Sales Managers.
+
+*   **Authentication**: Use Django REST framework's authentication classes (e.g., `SessionAuthentication`, `TokenAuthentication`).
+*   **Permissions**: Use permission classes like `IsAdminUser` (if Sales Managers are superusers) or create a custom permission class to check for the "Sales Manager" group or `is_sales_manager` flag.
+
+    ```python
+    # sales_admin/permissions.py (example)
+    from rest_framework.permissions import BasePermission
+
+    class IsSalesManager(BasePermission):
+        def has_permission(self, request, view):
+            return request.user and request.user.is_authenticated and \
+                   (request.user.is_staff or getattr(request.user, \'is_sales_manager\', False)) # Adjust as per your model
+    ```
+
+Here's a breakdown of endpoints corresponding to frontend features:
+
+    **a. Set Prices for New Products**
+    *   **Frontend Action**: `handleSetPrice` in `SalesManagerPage.js`.
+    *   **Required Data**: `productIdPrice`, `newPrice`.
+    *   **Backend Endpoint**: `POST /api/sales-admin/products/set-price/`
+    *   **Django View Logic (`sales_admin/views.py`)**:
+        *   Receive `product_id` and `new_price`.
+        *   Validate input.
+        *   Find the `Product` model instance.
+        *   Update its `price` field.
+        *   Save the product.
+        *   Return a success or error response.
+        ```python
+        # Example (Simplified)
+        from rest_framework.views import APIView
+        from rest_framework.response import Response
+        from rest_framework import status
+        # from .permissions import IsSalesManager # Your custom permission
+        # from products.models import Product # Assuming your Product model
+
+        class SetProductPriceView(APIView):
+            # permission_classes = [IsSalesManager] # Add your permission class
+
+            def post(self, request, *args, **kwargs):
+                product_id = request.data.get('product_id')
+                new_price = request.data.get('new_price')
+                # ... validation ...
+                try:
+                    product = Product.objects.get(id=product_id)
+                    product.price = new_price
+                    product.save()
+                    return Response({'message': 'Price updated successfully'}, status=status.HTTP_200_OK)
+                except Product.DoesNotExist:
+                    return Response({'error': 'Product not found'}, status=status.HTTP_404_NOT_FOUND)
+                except Exception as e:
+                    return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+        ```
+    *   **URL (`sales_admin/urls.py`)**:
+        ```python
+        from django.urls import path
+        from .views import SetProductPriceView
+
+        urlpatterns = [
+            path('products/set-price/', SetProductPriceView.as_view(), name='set_product_price'),
+            # ... other URLs
+        ]
+        ```
+
+    **b. Apply Discounts**
+    *   **Frontend Action**: `handleApplyDiscount`.
+    *   **Required Data**: `productIdDiscount`, `discountPercentage`.
+    *   **Backend Endpoint**: `POST /api/sales-admin/products/apply-discount/`
+    *   **Django View Logic**:
+        *   Receive `product_id` and `discount_percentage`.
+        *   Find the `Product`.
+        *   Store the discount (e.g., add a `discount_percentage` field to `Product` model or a separate `Discount` model linked to `Product`).
+        *   You might also want a start/end date for discounts.
+        *   Recalculate the effective price if needed or handle this at checkout/display.
+        *   Return success/error.
+
+    **c. Notify Users with Wishlist Items**
+    *   **Frontend Action**: `handleSendNotifications`.
+    *   **Required Data**: `productIdNotification`.
+    *   **Backend Endpoint**: `POST /api/sales-admin/products/notify-wishlist/`
+    *   **Django View Logic**:
+        *   Receive `product_id`.
+        *   Find all users who have this product in their `Wishlist` (requires a `Wishlist` model linking `User` and `Product`).
+        *   Implement an email sending mechanism (e.g., Django's `send_mail`).
+        *   Compose and send notification emails.
+        *   Return success/error (e.g., number of users notified).
+
+    **d. View Invoices in Date Range**
+    *   **Frontend Action**: `handleViewInvoices`.
+    *   **Required Data**: `startDateInv`, `endDateInv`.
+    *   **Backend Endpoint**: `GET /api/sales-admin/invoices/?start_date=YYYY-MM-DD&end_date=YYYY-MM-DD`
+    *   **Django View Logic**:
+        *   Receive `start_date` and `end_date` from query parameters.
+        *   Filter `Invoice` model (assuming you have one) by `created_at` or `invoice_date` within the range.
+        *   Serialize the invoice data (e.g., using Django REST framework serializers).
+        *   Return the list of invoices.
+        ```python
+        # Example Invoice Model (Simplified)
+        # class Invoice(models.Model):
+        #     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+        #     order = models.ForeignKey(Order, on_delete=models.CASCADE, unique=True) # Assuming Order model
+        #     invoice_id = models.CharField(max_length=100, unique=True)
+        #     created_at = models.DateTimeField(auto_now_add=True)
+        #     total_amount = models.DecimalField(max_digits=10, decimal_places=2)
+        #     # ... other fields like billing address, items (JSON or related model)
+        ```
+
+    **e. Export Invoices to PDF**
+    *   **Frontend Action**: `handleExportInvoicesPDF`.
+    *   **Required Data**: `startDateInv`, `endDateInv` (same as viewing).
+    *   **Backend Endpoint**: `GET /api/sales-admin/invoices/export-pdf/?start_date=YYYY-MM-DD&end_date=YYYY-MM-DD`
+    *   **Django View Logic**:
+        *   Similar to viewing invoices, fetch the data.
+        *   Use a PDF generation library (e.g., ReportLab, WeasyPrint, xhtml2pdf).
+        *   Generate the PDF document.
+        *   Return an `HttpResponse` with `content_type='application/pdf'`.
+
+    **f. Revenue/Loss Calculation with Default or Defined Cost**
+    *   **Frontend Action**: `handleCalculateRevenueLoss`.
+    *   **Required Data**: `startDateRev`, `endDateRev`, `defaultCostPercentage`.
+    *   **Backend Endpoint**: `GET /api/sales-admin/revenue-loss/?start_date=YYYY-MM-DD&end_date=YYYY-MM-DD&default_cost_percentage=XX`
+    *   **Django View Logic**:
+        *   Fetch all orders/sales within the date range.
+        *   For each product sold:
+            *   Get its selling price (at the time of sale, considering discounts).
+            *   Determine its cost. This is complex:
+                *   Ideally, you have a `cost_price` field in your `Product` model, or a historical cost price if it changes.
+                *   If not, use the `defaultCostPercentage` to estimate cost from the selling price.
+        *   Calculate total revenue (sum of selling prices).
+        *   Calculate total cost (sum of costs).
+        *   Calculate net profit/loss.
+        *   Return the report data (total revenue, total cost, net profit/loss). For a chart, you might return data points over time within the range.
+
+**4. Updating Frontend `fetch` Calls**
+
+In `SalesManagerPage.js`, replace placeholder console logs and alerts with `fetch` calls.
+
+Example for `handleSetPrice`:
+
+```javascript
+// Inside SalesManagerPage.js
+
+const API = process.env.REACT_APP_API_BASE_URL || "http://localhost:8000"; // Already in AppContext, ensure accessible or re-define
+
+// ...
+
+const handleSetPrice = async () => { // Make it async
+  if (!productIdPrice || !newPrice) {
+    alert("Please enter both Product ID and New Price.");
+    return;
+  }
+  try {
+    const response = await fetch(`${API}/api/sales-admin/products/set-price/`, { // Use your actual API base
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        // Include Authorization header if using token auth
+        // 'Authorization': `Bearer ${yourAuthToken}`, 
+      },
+      credentials: 'include', // If using session-based auth with cookies
+      body: JSON.stringify({ 
+        product_id: productIdPrice, // Ensure backend expects these names
+        new_price: parseFloat(newPrice) 
+      }),
+    });
+
+    const data = await response.json();
+
+    if (response.ok) {
+      alert(data.message || "Price set successfully!");
+      setProductIdPrice('');
+      setNewPrice('');
+    } else {
+      alert(`Error: ${data.error || 'Failed to set price.'}`);
+    }
+  } catch (error) {
+    console.error("Failed to set price:", error);
+    alert("An error occurred while setting the price.");
+  }
+};
+```
+Remember to adapt this for each handler function, using the correct HTTP method (GET/POST), endpoint, and request body/query parameters.
+
+**5. Data Validation and Error Handling**
+
+*   **Backend**: Django forms and serializers are excellent for validating incoming data.
+*   **Frontend**: Perform basic validation (e.g., required fields, correct data types) before sending requests to improve UX. Display errors returned from the backend.
+
+**6. Database Models (Conceptual)**
+
+You'll likely need or already have models like:
+
+*   `Product`: With fields for `name`, `description`, `price`, `stock_quantity`, `cost_price` (optional but recommended), `discount_percentage` (optional).
+*   `Order`: Linking to `User`, `OrderItems`. Contains `total_price`, `status`, `created_at`.
+*   `OrderItem`: Linking `Order` to `Product`, storing `quantity`, `price_at_purchase`.
+*   `Invoice`: Generated from `Order`, storing `invoice_id`, `user`, `order_details`, `total_amount`, `created_at`.
+*   `Wishlist`: Linking `User` to `Product`.
+*   `User` (Django's default or `CustomUser`): With role/flag for Sales Manager.
+
+This guide provides a starting point. The exact implementation details will depend on your specific Django project structure and requirements. 
