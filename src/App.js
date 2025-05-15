@@ -19,9 +19,12 @@ import PaymentMethodsPage from "./pages/PaymentMethodsPage";
 import AddressesPage from "./pages/AddressesPage"; 
 import AdminDashboardPage from "./pages/AdminDashboardPage";
 import SalesManagerPage from "./pages/SalesManagerPage";
+import ProductManagerPage from "./pages/ProductManagerPage"; 
+import ProductManagementPage from "./pages/ProductManagementPage"; 
 import Header from "./components/Header";
+import CategoryManagementPage from "./pages/CategoryManagementPage";
 
-// Layout component to conditionally render header
+
 const AppLayout = () => {
   const location = useLocation();
   const isAuthPage = location.pathname === "/" || location.pathname === "/register";
@@ -47,6 +50,9 @@ const AppLayout = () => {
         <Route path="/addresses" element={<AddressesPage />} />
         <Route path="/admin" element={<AdminDashboardPage />} />
         <Route path="/sales-manager" element={<SalesManagerPage />} />
+        <Route path="/product-manager" element={<ProductManagerPage />} /> {}
+        <Route path="/product-manager/products" element={<ProductManagementPage />} /> {}
+        <Route path="/product-manager/categories" element={<CategoryManagementPage />} />
       </Routes>
     </div>
   );

@@ -14,7 +14,7 @@ const AddressesPage = () => {
   const [city, setCity] = useState("");
   const [zip, setZip] = useState("");
 
-  // GET: Tüm adresleri getir
+  // GET: Tüm adresleri getirjfmymjfymfy
   useEffect(() => {
     fetch(`${API}/api/accounts/addresses/`, {
       method: "GET",
