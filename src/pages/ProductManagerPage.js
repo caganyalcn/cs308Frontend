@@ -8,62 +8,60 @@ const ProductManagerPage = () => {
   const menuItems = [
     {
       title: "Ürünleri Yönet",
-      icon: <FaBox className="text-4xl mb-4" />,
+      icon: <FaBox size={42} />,
       path: "/product-manager/products",
-      color: "bg-blue-600",
-      hoverColor: "hover:bg-blue-700"
+      color: "from-blue-500 to-blue-600",
     },
     {
       title: "Kategorileri Yönet",
-      icon: <FaTags className="text-4xl mb-4" />,
+      icon: <FaTags size={42} />,
       path: "/product-manager/categories",
-      color: "bg-indigo-600",
-      hoverColor: "hover:bg-indigo-700"
+      color: "from-indigo-500 to-indigo-600",
     },
     {
       title: "Teslimatları Yönet",
-      icon: <FaTruck className="text-4xl mb-4" />,
+      icon: <FaTruck size={42} />,
       path: "/product-manager/deliveries",
-      color: "bg-teal-600",
-      hoverColor: "hover:bg-teal-700"
+      color: "from-teal-500 to-teal-600",
     },
     {
       title: "Faturaları Görüntüle",
-      icon: <FaFileInvoice className="text-4xl mb-4" />,
+      icon: <FaFileInvoice size={42} />,
       path: "/product-manager/invoices",
-      color: "bg-purple-600",
-      hoverColor: "hover:bg-purple-700"
+      color: "from-purple-500 to-purple-600",
     },
     {
       title: "Yorumları Yönet",
-      icon: <FaComments className="text-4xl mb-4" />,
+      icon: <FaComments size={42} />,
       path: "/product-manager/comments",
-      color: "bg-pink-600",
-      hoverColor: "hover:bg-pink-700"
-    }
+      color: "from-pink-500 to-pink-600",
+    },
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-200 py-14 px-4">
       <div className="max-w-7xl mx-auto">
-        <div className="text-center mb-12">
-          <h1 className="text-4xl font-extrabold text-gray-900 sm:text-5xl sm:tracking-tight lg:text-6xl">
+        {/* Başlık */}
+        <header className="text-center mb-14 px-4">
+          <h1 className="text-4xl font-extrabold text-gray-800 sm:text-5xl">
             Ürün Yönetimi
           </h1>
-          <p className="mt-5 max-w-xl mx-auto text-xl text-gray-500">
-            Tüm ürün yönetimi işlemlerinizi buradan gerçekleştirebilirsiniz
+          <p className="mt-4 max-w-xl mx-auto text-lg text-gray-600">
+            Tüm yönetim işlemlerinizi buradan gerçekleştirebilirsiniz
           </p>
-        </div>
+        </header>
 
-        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {menuItems.map((item, index) => (
+        {/* Ortalanmış Grid */}
+        <div className="grid gap-8 justify-items-center sm:grid-cols-2 lg:grid-cols-3">
+          {menuItems.map(({ title, icon, path, color }) => (
             <button
-              key={index}
-              onClick={() => navigate(item.path)}
-              className={`${item.color} ${item.hoverColor} text-white rounded-xl shadow-lg p-8 transform transition-all duration-200 hover:scale-105 flex flex-col items-center justify-center`}
+              key={title}
+              onClick={() => navigate(path)}
+              className={`w-60 h-48 bg-gradient-to-br ${color} text-white rounded-2xl shadow-lg p-8 flex flex-col items-center justify-center transform transition hover:-translate-y-1 hover:shadow-2xl focus:outline-none`}
             >
-              {item.icon}
-              <span className="text-xl font-semibold">{item.title}</span>
+              <span className="absolute inset-0 rounded-2xl opacity-0 hover:opacity-10 bg-white transition" />
+              {icon}
+              <span className="mt-4 text-lg font-semibold text-center">{title}</span>
             </button>
           ))}
         </div>
