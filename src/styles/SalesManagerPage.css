@@ -6,7 +6,7 @@
 }
 
 .sales-manager-page h1 {
-  color: #2e3b2c; /* koyu yeşil-gri ton */
+  color: #2e3b2c;
   text-align: center;
   margin-bottom: 30px;
 }
@@ -22,7 +22,7 @@
 }
 
 .feature-section {
-  background-color: #fdfdfb; /* beyaza yakın doğal zemin */
+  background-color: #fdfdfb;
   border: 1px solid #e0e0d1;
   padding: 20px;
   margin-bottom: 20px;
@@ -61,7 +61,7 @@
 }
 
 .action-button {
-  background-color: #28a745; /* yeşil */
+  background-color: #28a745;
   color: white;
   padding: 10px 15px;
   border: none;
@@ -72,7 +72,7 @@
 }
 
 .action-button:hover {
-  background-color: #1e7e34; /* koyu yeşil */
+  background-color: #1e7e34;
 }
 
 .form-inline {
@@ -84,4 +84,33 @@
 .form-inline .form-group {
   flex: 1;
   min-width: 200px;
+}
+
+/* ✅ MOBİL UYUMLULUK */
+@media (max-width: 600px) {
+  .sales-manager-page {
+    padding: 10px;
+  }
+
+  .feature-section {
+    padding: 15px;
+  }
+
+  .form-inline {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .action-button {
+    width: 100%;
+    font-size: 0.95em;
+  }
+
+  .sales-manager-page h1 {
+    font-size: 1.5em;
+  }
+
+  .feature-section h2 {
+    font-size: 1.2em;
+  }
 }
