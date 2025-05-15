@@ -21,6 +21,14 @@ const SalesManagerPage = () => {
   const [notificationSuccess, setNotificationSuccess] = useState(false);
 
   const handleSetPrice = () => {
+    if (!productIdPrice || newPrice === '') {
+      alert('Please enter both product ID and new price.');
+      return;
+    }
+    if (parseFloat(newPrice) < 0) {
+      alert('Price cannot be negative.');
+      return;
+    }
     console.log(`Setting price for product ${productIdPrice} to ${newPrice}`);
     setProductIdPrice('');
     setNewPrice('');
@@ -29,6 +37,14 @@ const SalesManagerPage = () => {
   };
 
   const handleApplyDiscount = () => {
+    if (!productIdDiscount || discountPercentage === '') {
+      alert('Please enter both product ID and discount percentage.');
+      return;
+    }
+    if (parseFloat(discountPercentage) < 0) {
+      alert('Discount percentage cannot be negative.');
+      return;
+    }
     console.log(`Applying ${discountPercentage}% discount to product ${productIdDiscount}`);
     setProductIdDiscount('');
     setDiscountPercentage('');
@@ -37,6 +53,10 @@ const SalesManagerPage = () => {
   };
 
   const handleSendNotifications = () => {
+    if (!productIdNotification) {
+      alert('Please enter product ID to notify users.');
+      return;
+    }
     console.log(`Sending wishlist notifications for product ${productIdNotification}`);
     setProductIdNotification('');
     setNotificationSuccess(true);
