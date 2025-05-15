@@ -71,7 +71,7 @@ const SalesManagerPage = () => {
       <h1>Sales Manager Dashboard</h1>
       
       <div className="feature-section">
-        <h2>Set Product Price</h2>
+        <h2>💲 Set Product Price</h2>
         <div className="form-inline">
           <div className="form-group">
             <label htmlFor="productIdPrice">Product ID:</label>
@@ -101,7 +101,7 @@ const SalesManagerPage = () => {
       </div>
 
       <div className="feature-section">
-        <h2>Apply Discount</h2>
+        <h2>🎯 Apply Discount</h2>
         <div className="form-inline">
           <div className="form-group">
             <label htmlFor="productIdDiscount">Product ID:</label>
@@ -133,7 +133,7 @@ const SalesManagerPage = () => {
       </div>
 
       <div className="feature-section">
-        <h2>Notify Wishlist Users</h2>
+        <h2>🛎️ Notify Wishlist Users</h2>
         <div className="form-group">
           <label htmlFor="productIdNotification">Product ID:</label>
           <input 
@@ -150,7 +150,7 @@ const SalesManagerPage = () => {
       </div>
 
       <div className="feature-section">
-        <h2>View Invoices</h2>
+        <h2>📄 View Invoices</h2>
         <div className="form-group">
           <label htmlFor="startDateInv">Start Date:</label>
           <input 
@@ -197,7 +197,7 @@ const SalesManagerPage = () => {
       </div>
 
       <div className="feature-section">
-        <h2>Revenue/Loss Calculation</h2>
+        <h2>📊 Revenue/Loss Calculation</h2>
         <div className="form-group">
           <label htmlFor="startDateRev">Start Date:</label>
           <input 
