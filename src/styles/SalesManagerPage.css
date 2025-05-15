@@ -1,8 +1,8 @@
 .sales-manager-page {
   padding: 20px;
   font-family: Arial, sans-serif;
-  max-width: 800px; /* Limit width for better readability */
-  margin: 0 auto; /* Center the page content */
+  max-width: 800px;
+  margin: 0 auto;
 }
 
 .sales-manager-page h1 {
@@ -10,13 +10,6 @@
   text-align: center;
   margin-bottom: 30px;
 }
-
-/* Remove the generic p styling if not needed or adjust as necessary */
-/* .sales-manager-page p {
-  color: #555;
-  text-align: center;
-  font-size: 1.1em;
-} */
 
 .feature-section {
   background-color: #f9f9f9;
@@ -47,12 +40,13 @@
 
 .form-group input[type="text"],
 .form-group input[type="number"],
+.form-group input[type="date"],
 .form-group select {
   width: 100%;
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 4px;
-  box-sizing: border-box; /* Ensures padding doesn't add to width */
+  box-sizing: border-box;
 }
 
 .action-button {
@@ -69,4 +63,13 @@
   background-color: #0056b3;
 }
 
-/* More styles will be added as we develop the page */ 
+.form-inline {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.form-inline .form-group {
+  flex: 1;
+  min-width: 200px;
+}
