@@ -23,6 +23,9 @@ import ProductManagerPage from "./pages/ProductManagerPage";
 import ProductManagementPage from "./pages/ProductManagementPage"; 
 import Header from "./components/Header";
 import CategoryManagementPage from "./pages/CategoryManagementPage";
+import DeliveryManagementPage from "./pages/DeliveryManagementPage";
+import InvoiceManagementPage from "./pages/InvoiceManagementPage";
+import CommentManagementPage from "./pages/CommentManagementPage";
 
 
 const AppLayout = () => {
@@ -53,6 +56,10 @@ const AppLayout = () => {
         <Route path="/product-manager" element={<ProductManagerPage />} /> {}
         <Route path="/product-manager/products" element={<ProductManagementPage />} /> {}
         <Route path="/product-manager/categories" element={<CategoryManagementPage />} />
+        <Route path="/product-manager/deliveries" element={<DeliveryManagementPage />} />
+        <Route path="/product-manager/invoices" element={<InvoiceManagementPage />} />
+        <Route path="/product-manager/comments" element={<CommentManagementPage />} />
+        
       </Routes>
     </div>
   );
