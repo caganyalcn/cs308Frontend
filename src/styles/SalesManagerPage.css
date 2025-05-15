@@ -11,6 +11,17 @@
   margin-bottom: 30px;
 }
 
+.success-message {
+  background-color: #d4edda;
+  color: #155724;
+  padding: 10px 15px;
+  border: 1px solid #c3e6cb;
+  border-radius: 4px;
+  margin-top: 10px;
+  font-size: 0.95em;
+}
+
+
 .feature-section {
   background-color: #f9f9f9;
   border: 1px solid #ddd;
