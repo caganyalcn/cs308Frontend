@@ -1,8 +1,8 @@
 import React, { useState } from "react";
+import "../styles/CategoryManagementPage.css";
 
 const CategoryManagementPage = () => {
   const [categories, setCategories] = useState([
-    // Mock başlangıç verisi
     { id: 1, name: "Süt Ürünleri" },
     { id: 2, name: "Sebzeler" },
     { id: 3, name: "Meyveler" },
@@ -21,9 +21,7 @@ const CategoryManagementPage = () => {
     setCategories(categories.filter((c) => c.id !== id));
 
   const updateCategory = (id, name) =>
-    setCategories(
-      categories.map((c) => (c.id === id ? { ...c, name } : c))
-    );
+    setCategories(categories.map((c) => (c.id === id ? { ...c, name } : c)));
 
   return (
     <div className="max-w-4xl mx-auto py-10 px-6">
@@ -68,7 +66,7 @@ const CategoryRow = ({ cat, onDelete, onSave }) => {
   const [tempName, setTempName] = useState(cat.name);
 
   return (
-    <div className="flex items-center justify-between px-6 py-3 border-b">
+    <div className="category-row">
       {editing ? (
         <>
           <input
@@ -76,40 +74,44 @@ const CategoryRow = ({ cat, onDelete, onSave }) => {
             value={tempName}
             onChange={(e) => setTempName(e.target.value)}
           />
-          <button
-            onClick={() => {
-              onSave(tempName.trim() || cat.name);
-              setEditing(false);
-            }}
-            className="bg-green-500 text-white px-3 py-1 rounded mr-2"
-          >
-            Kaydet
-          </button>
-          <button
-            onClick={() => {
-              setTempName(cat.name);
-              setEditing(false);
-            }}
-            className="bg-gray-400 text-white px-3 py-1 rounded"
-          >
-            İptal
-          </button>
+          <div className="button-group">
+            <button
+              onClick={() => {
+                onSave(tempName.trim() || cat.name);
+                setEditing(false);
+              }}
+              className="bg-green-500 text-white px-3 py-1 rounded"
+            >
+              Kaydet
+            </button>
+            <button
+              onClick={() => {
+                setTempName(cat.name);
+                setEditing(false);
+              }}
+              className="bg-gray-400 text-white px-3 py-1 rounded"
+            >
+              İptal
+            </button>
+          </div>
         </>
       ) : (
         <>
-          <span className="flex-1">{cat.name}</span>
-          <button
-            onClick={() => setEditing(true)}
-            className="bg-yellow-400 text-white px-3 py-1 rounded mr-2"
-          >
-            Düzenle
-          </button>
-          <button
-            onClick={onDelete}
-            className="bg-red-500 text-white px-3 py-1 rounded"
-          >
-            Sil
-          </button>
+          <span className="category-name">{cat.name}</span>
+          <div className="button-group">
+            <button
+              onClick={() => setEditing(true)}
+              className="bg-yellow-400 px-3 py-1 rounded"
+            >
+              Düzenle
+            </button>
+            <button
+              onClick={onDelete}
+              className="bg-red-500 text-white px-3 py-1 rounded"
+            >
+              Sil
+            </button>
+          </div>
         </>
       )}
     </div>
