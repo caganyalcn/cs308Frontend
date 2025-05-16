@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { FaPlus, FaEdit, FaTrash, FaSave, FaTimes } from 'react-icons/fa';
+import "../styles/ProductManagementPage.css"
 
 const ProductManagementPage = () => {
   const [products, setProducts] = useState([]);
@@ -164,6 +165,7 @@ const ProductManagementPage = () => {
                       {editingId === prod.id ? (
                         <input
                           type="number"
+                          min="0"
                           value={editedProduct.stock}
                           onChange={(e) => setEditedProduct({ ...editedProduct, stock: e.target.value })}
                           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -176,6 +178,7 @@ const ProductManagementPage = () => {
                       {editingId === prod.id ? (
                         <input
                           type="number"
+                          min="0"
                           value={editedProduct.price}
                           onChange={(e) => setEditedProduct({ ...editedProduct, price: e.target.value })}
                           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -247,6 +250,7 @@ const ProductManagementPage = () => {
               <input
                 type="number"
                 placeholder="Stok"
+                min="0"
                 value={newProduct.stock}
                 onChange={(e) => setNewProduct({ ...newProduct, stock: e.target.value })}
                 className="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -255,6 +259,7 @@ const ProductManagementPage = () => {
               <input
                 type="number"
                 placeholder="Fiyat"
+                min="0"
                 value={newProduct.price}
                 onChange={(e) => setNewProduct({ ...newProduct, price: e.target.value })}
                 className="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
