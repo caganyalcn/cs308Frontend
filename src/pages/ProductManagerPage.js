@@ -1,6 +1,8 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { FaBox, FaTags, FaTruck, FaFileInvoice, FaComments } from "react-icons/fa";
+import "../styles/ProductManagerPage.css";
+
 
 const ProductManagerPage = () => {
   const navigate = useNavigate();
