@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { FaCheck, FaTimes, FaStar } from "react-icons/fa";
+import "../styles/CommentManagementPage.css";
 
 const CommentManagementPage = () => {
   const [comments, setComments] = useState([
@@ -39,12 +40,10 @@ const CommentManagementPage = () => {
     setComments((prev) =>
       prev.map((c) => (c.id === id ? { ...c, approved: true } : c))
     );
-    // TODO: fetch PUT /api/reviews/<id> { approved: true }
   };
 
   const handleReject = (id) => {
     setComments((prev) => prev.filter((c) => c.id !== id));
-    // TODO: fetch DELETE /api/reviews/<id>  veya approved: false
   };
 
   const renderStars = (rating) => {
@@ -59,44 +58,31 @@ const CommentManagementPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-gray-50 py-14 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-12">
-          <h1 className="text-4xl font-extrabold text-gray-900 sm:text-5xl sm:tracking-tight lg:text-6xl">
+          <h1 className="text-4xl font-extrabold text-gray-900 sm:text-5xl">
             Yorum Moderasyonu
           </h1>
-          <p className="mt-5 max-w-xl mx-auto text-xl text-gray-500">
+          <p className="mt-4 text-xl text-gray-500">
             Kullanıcı yorumlarını onaylayın veya reddedin
           </p>
         </div>
 
         <div className="space-y-6">
           {comments.map((comment) => (
-            <div
-              key={comment.id}
-              className="bg-white rounded-xl shadow-lg overflow-hidden transform transition-all duration-200 hover:shadow-xl"
-            >
+            <div key={comment.id} className="comment-card">
               <div className="p-6">
-                <div className="flex justify-between items-start">
+                <div className="flex justify-between items-start flex-wrap gap-4">
                   <div className="space-y-2">
-                    <div className="flex items-center space-x-2">
-                      <span className="text-sm font-medium text-gray-500">
-                        #{comment.id}
-                      </span>
-                      <span className="text-lg font-semibold text-gray-900">
-                        {comment.productName}
-                      </span>
-                      <span className="text-sm text-gray-500">
-                        (Ürün ID: {comment.productId})
-                      </span>
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <span className="text-sm font-medium text-gray-500">#{comment.id}</span>
+                      <span className="text-lg font-semibold text-gray-900">{comment.productName}</span>
+                      <span className="text-sm text-gray-500">(Ürün ID: {comment.productId})</span>
                     </div>
-                    <div className="flex items-center space-x-2">
-                      <span className="text-sm text-gray-600">
-                        Müşteri: {comment.customer}
-                      </span>
-                      <span className="text-sm text-gray-500">
-                        • {new Date(comment.date).toLocaleDateString('tr-TR')}
-                      </span>
+                    <div className="flex items-center gap-2 text-sm text-gray-600 flex-wrap">
+                      <span>Müşteri: {comment.customer}</span>
+                      <span>• {new Date(comment.date).toLocaleDateString("tr-TR")}</span>
                     </div>
                     <div className="flex items-center space-x-1">
                       {renderStars(comment.rating)}
@@ -105,6 +91,7 @@ const CommentManagementPage = () => {
                       </span>
                     </div>
                   </div>
+
                   <div>
                     {comment.approved ? (
                       <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800">
@@ -130,14 +117,14 @@ const CommentManagementPage = () => {
                   <div className="mt-6 flex justify-end space-x-3">
                     <button
                       onClick={() => handleReject(comment.id)}
-                      className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-colors duration-200"
+                      className="inline-flex items-center px-4 py-2 rounded-md text-sm font-medium text-white bg-red-600 hover:bg-red-700"
                     >
                       <FaTimes className="w-4 h-4 mr-2" />
                       Reddet
                     </button>
                     <button
                       onClick={() => handleApprove(comment.id)}
-                      className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors duration-200"
+                      className="inline-flex items-center px-4 py-2 rounded-md text-sm font-medium text-white bg-green-600 hover:bg-green-700"
                     >
                       <FaCheck className="w-4 h-4 mr-2" />
                       Onayla
