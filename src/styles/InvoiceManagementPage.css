@@ -1,0 +1,96 @@
+.invoice-page {
+  max-width: 1100px;
+  margin: 80px auto 60px auto; /* üst marjı artırdık */
+  padding: 0 24px;
+  background-color: #f9fafb;
+}
+
+.invoice-title {
+  text-align: center;
+  font-size: 2rem;
+  font-weight: bold;
+  color: #1f2937;
+  margin-top: 40px; /* eğer component özelinde gerekiyorsa */
+  margin-bottom: 2rem;
+}
+
+.invoice-grid {
+  display: grid;
+  gap: 1.5rem;
+  grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+}
+
+.invoice-card {
+  background-color: #fff;
+  border-radius: 8px;
+  padding: 24px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  transition: box-shadow 0.3s ease;
+}
+
+.invoice-card:hover {
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+}
+
+.invoice-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  border-bottom: 1px solid #e5e7eb;
+  padding-bottom: 12px;
+  margin-bottom: 16px;
+}
+
+.invoice-meta {
+  color: #374151;
+}
+
+.invoice-id {
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.invoice-customer {
+  color: #2563eb;
+  margin-bottom: 2px;
+}
+
+.invoice-date {
+  font-size: 0.9rem;
+  color: #6b7280;
+}
+
+.invoice-total {
+  color: #10b981;
+  font-weight: 700;
+  font-size: 1.2rem;
+  text-align: right;
+}
+
+.invoice-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.95rem;
+}
+
+.invoice-table th,
+.invoice-table td {
+  padding: 10px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.invoice-table th {
+  text-align: left;
+  background-color: #f3f4f6;
+  color: #374151;
+}
+
+.invoice-table td:nth-child(2),
+.invoice-table th:nth-child(2) {
+  text-align: center;
+}
+
+.invoice-table td:nth-child(3),
+.invoice-table th:nth-child(3) {
+  text-align: right;
+}
