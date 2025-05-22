@@ -18,11 +18,20 @@ const CategoryManagementPage = () => {
       setIsLoading(true);
       const response = await fetch(`${API}/api/products/categories/`, {
         credentials: 'include',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json; charset=utf-8'
+        }
       });
       if (!response.ok) throw new Error('Kategoriler yüklenemedi');
       const data = await response.json();
-      setCategories(data.categories);
-      setError(null);
+      if (Array.isArray(data.categories)) {
+        setCategories(data.categories);
+        setError(null);
+      } else {
+        console.error('API response for categories is not an array:', data);
+        setError('Kategoriler beklenmedik formatta geldi.');
+      }
     } catch (err) {
       setError('Kategoriler yüklenirken bir hata oluştu.');
       console.error('Kategoriler alınamadı:', err);
@@ -37,7 +46,10 @@ const CategoryManagementPage = () => {
     try {
       const response = await fetch(`${API}/api/products/categories/create/`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+          'Content-Type': 'application/json; charset=utf-8',
+          'Accept': 'application/json'
+        },
         credentials: 'include',
         body: JSON.stringify({ name: newCat.trim() }),
       });
@@ -47,8 +59,7 @@ const CategoryManagementPage = () => {
         throw new Error(errorData.error || 'Kategori eklenemedi');
       }
 
-      const data = await response.json();
-      setCategories([...categories, data]);
+      await fetchCategories();
       setNewCat("");
       setError(null);
     } catch (err) {
@@ -62,12 +73,19 @@ const CategoryManagementPage = () => {
     try {
       const response = await fetch(`${API}/api/products/categories/${id}/delete/`, {
         method: 'DELETE',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json; charset=utf-8'
+        },
         credentials: 'include',
       });
 
-      if (!response.ok) throw new Error('Kategori silinemedi');
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Kategori silinemedi');
+      }
 
-      setCategories(categories.filter((c) => c.id !== id));
+      await fetchCategories();
       setError(null);
     } catch (err) {
       setError('Kategori silinirken bir hata oluştu: ' + err.message);
@@ -78,7 +96,10 @@ const CategoryManagementPage = () => {
     try {
       const response = await fetch(`${API}/api/products/categories/${id}/update/`, {
         method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+          'Content-Type': 'application/json; charset=utf-8',
+          'Accept': 'application/json'
+        },
         credentials: 'include',
         body: JSON.stringify({ name: name.trim() }),
       });
@@ -88,8 +109,7 @@ const CategoryManagementPage = () => {
         throw new Error(errorData.error || 'Kategori güncellenemedi');
       }
 
-      const data = await response.json();
-      setCategories(categories.map((c) => (c.id === id ? data : c)));
+      await fetchCategories();
       setError(null);
     } catch (err) {
       setError('Kategori güncellenirken bir hata oluştu: ' + err.message);
@@ -98,8 +118,11 @@ const CategoryManagementPage = () => {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+      <div className="max-w-4xl mx-auto py-10 px-6">
+        <h2 className="text-2xl font-bold mb-6 text-center text-gray-800">
+          Kategori Yönetimi
+        </h2>
+        <p>Yükleniyor...</p>
       </div>
     );
   }
@@ -149,34 +172,39 @@ const CategoryManagementPage = () => {
 };
 
 const CategoryRow = ({ cat, onDelete, onSave }) => {
-  const [editing, setEditing] = useState(false);
-  const [tempName, setTempName] = useState(cat.name);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editedName, setEditedName] = useState(cat.name);
+
+  const handleSave = () => {
+    onSave(editedName);
+    setIsEditing(false);
+  };
+
+  const handleCancel = () => {
+    setEditedName(cat.name);
+    setIsEditing(false);
+  };
 
   return (
-    <div className="category-row">
-      {editing ? (
+    <div className="flex items-center justify-between p-4 border-b last:border-b-0">
+      {isEditing ? (
         <>
           <input
-            className="flex-1 p-1 border rounded mr-4"
-            value={tempName}
-            onChange={(e) => setTempName(e.target.value)}
+            type="text"
+            value={editedName}
+            onChange={(e) => setEditedName(e.target.value)}
+            className="flex-1 p-2 border rounded mr-2"
           />
-          <div className="button-group">
+          <div className="flex gap-2">
             <button
-              onClick={() => {
-                onSave(tempName.trim() || cat.name);
-                setEditing(false);
-              }}
-              className="bg-green-500 text-white px-3 py-1 rounded"
+              onClick={handleSave}
+              className="text-green-600 hover:text-green-900"
             >
               Kaydet
             </button>
             <button
-              onClick={() => {
-                setTempName(cat.name);
-                setEditing(false);
-              }}
-              className="bg-gray-400 text-white px-3 py-1 rounded"
+              onClick={handleCancel}
+              className="text-gray-600 hover:text-gray-900"
             >
               İptal
             </button>
@@ -184,17 +212,17 @@ const CategoryRow = ({ cat, onDelete, onSave }) => {
         </>
       ) : (
         <>
-          <span className="category-name">{cat.name}</span>
-          <div className="button-group">
+          <span className="text-gray-800">{cat.name}</span>
+          <div className="flex gap-2">
             <button
-              onClick={() => setEditing(true)}
-              className="bg-yellow-400 px-3 py-1 rounded"
+              onClick={() => setIsEditing(true)}
+              className="text-blue-600 hover:text-blue-900"
             >
               Düzenle
             </button>
             <button
               onClick={onDelete}
-              className="bg-red-500 text-white px-3 py-1 rounded"
+              className="text-red-600 hover:text-red-900"
             >
               Sil
             </button>

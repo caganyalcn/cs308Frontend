@@ -160,15 +160,15 @@ const CommentManagementPage = () => {
                     </div>
                      {comment.rating !== null && comment.rating !== undefined && ( // Only show rating if it exists
                        <div className="comment-rating">
-                          {renderStars(comment.rating)}
+                      {renderStars(comment.rating)}
                           <span className="rating-value">({comment.rating}/5)</span>
-                       </div>
-                    )}
                   </div>
-                 
+                    )}
+                </div>
+
                   <div className="comment-text-section">
                     <p className="comment-text">"{comment.comment || 'Yorum Yok'}"</p>
-                  </div>
+                </div>
 
                   <div className="comment-actions-section">
                     <span className={`status-badge ${status}`}>
@@ -177,19 +177,19 @@ const CommentManagementPage = () => {
 
                     {status !== 'rejected' && comment.comment && (
                       <>
-                        <button 
-                          onClick={() => handleReject(comment.id)}
+                    <button
+                      onClick={() => handleReject(comment.id)}
                           className="reject-button"
-                        >
-                          Reddet
-                        </button>
+                    >
+                      Reddet
+                    </button>
                         {status === 'pending' && (
-                          <button 
-                            onClick={() => handleApprove(comment.id)}
+                    <button
+                      onClick={() => handleApprove(comment.id)}
                             className="approve-button"
-                          >
-                            Onayla
-                          </button>
+                    >
+                      Onayla
+                    </button>
                         )}
                       </>
                     )}
@@ -197,7 +197,7 @@ const CommentManagementPage = () => {
                 </div>
               );
             })
-        )}
+                )}
       </div>
     </div>
   );
