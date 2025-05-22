@@ -64,7 +64,8 @@ form {
   color: #555;
 }
 
-input {
+.input-group input,
+.input-group textarea { /* Added textarea for potential multiline address */
   width: 100%;
   padding: 15px;
   border: 1px solid #ddd;
@@ -75,16 +76,24 @@ input {
   background-color: #f9f9f9;
 }
 
-input:focus {
+input:focus,
+textarea:focus { /* Added textarea for potential multiline address */
   outline: none;
   border-color: #01048f;
   box-shadow: 0 0 0 2px rgba(1, 4, 143, 0.2);
   background-color: #ffffff;
 }
 
-input.filled {
+input.filled,
+textarea.filled { /* Added textarea for potential multiline address */
   background-color: #ffffff;
   border-color: #01048f;
+}
+
+/* Style for textarea if you decide to use it for address */
+textarea {
+  min-height: 80px; /* Example height */
+  resize: vertical; /* Allow vertical resizing */
 }
 
 .password-input-container {
@@ -290,4 +299,3 @@ input:invalid::-webkit-validation-bubble-message,
 input:invalid::-webkit-validation-bubble {
   display: none;
 }
-  

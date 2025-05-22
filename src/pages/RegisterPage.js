@@ -13,7 +13,8 @@ function RegisterPage() {
     lastName: "",
     email: "",
     password: "",
-    confirmPassword: ""
+    confirmPassword: "",
+    address: ""
   });
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -62,7 +63,8 @@ function RegisterPage() {
       name: formData.firstName,
       surname: formData.lastName,
       email: formData.email,
-      password: formData.password
+      password: formData.password,
+      delivery_address: formData.address
     };
 
     console.log('Sending request to:', `${API_BASE_URL}/api/accounts/signup/`);
@@ -165,6 +167,19 @@ function RegisterPage() {
             required
             placeholder="Enter your email address"
             className={formData.email ? "filled" : ""}
+          />
+        </div>
+        
+        <div className="input-group">
+          <label>Address*</label>
+          <input
+            type="text"
+            name="address"
+            value={formData.address}
+            onChange={handleChange}
+            required
+            placeholder="Enter your address"
+            className={formData.address ? "filled" : ""}
           />
         </div>
         
