@@ -1,5 +1,6 @@
 // src/AppContext.js
 import React, { createContext, useState, useEffect } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 
 export const AppContext = createContext();
 
@@ -43,10 +44,19 @@ export const AppProvider = ({ children }) => {
       const res = await fetch(`${API}/api/products/products/`);
       if (res.ok) {
         const data = await res.json();
-        setProducts(data);
+        if (Array.isArray(data)) {
+          setProducts(data);
+        } else {
+          console.error('API response for products in AppContext is not an array:', data);
+          setProducts([]);
+        }
+      } else {
+        console.error('Failed to fetch products:', res.status);
+        setProducts([]);
       }
     } catch (err) {
-      console.error("Ürünler alınamadı", err);
+      console.error("Error fetching products in AppContext:", err);
+      setProducts([]);
     }
   };
 
@@ -189,7 +199,7 @@ export const AppProvider = ({ children }) => {
         const data = await res.json();
         setIsAuthenticated(true);
         setCurrentUser(data.user);
-        return { success: true, isAdmin: data.is_admin };
+        return { success: true, role: data.role, user: data.user };
       } else {
         const error = await res.json();
         return { success: false, message: error.message };

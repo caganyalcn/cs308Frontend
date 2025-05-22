@@ -2,28 +2,66 @@ import React, { useEffect, useState } from 'react';
 import { FaPlus, FaEdit, FaTrash, FaSave, FaTimes } from 'react-icons/fa';
 import "../styles/ProductManagementPage.css"
 
+const API = process.env.REACT_APP_API_BASE_URL || "http://localhost:8000";
+
 const ProductManagementPage = () => {
   const [products, setProducts] = useState([]);
-  const [newProduct, setNewProduct] = useState({ name: '', stock: '', price: '' });
+  const [newProduct, setNewProduct] = useState({ name: '', stock_quantity: '', description: '', category: '', serial_number: '', distributor_info: '', image_url: '' });
   const [editingId, setEditingId] = useState(null);
-  const [editedProduct, setEditedProduct] = useState({ name: '', stock: '', price: '' });
+  const [editedProduct, setEditedProduct] = useState({ name: '', stock_quantity: '', description: '', category: '', serial_number: '', distributor_info: '', image_url: '' });
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [categories, setCategories] = useState([]);
 
   useEffect(() => {
     fetchProducts();
+    fetchCategories();
   }, []);
+
+  const fetchCategories = async () => {
+    try {
+      const response = await fetch(`${API}/api/products/categories/`, {
+        credentials: 'include',
+      });
+      if (!response.ok) throw new Error('Kategoriler yüklenemedi');
+      const data = await response.json();
+      if (Array.isArray(data.categories)) {
+        setCategories(data.categories);
+      } else {
+        console.error('API response for categories is not an array:', data);
+        setError('Kategoriler beklenmedik formatta geldi.');
+      }
+    } catch (err) {
+      console.error('Kategoriler alınamadı:', err);
+      setError('Kategoriler yüklenirken bir hata oluştu.');
+    }
+  };
 
   const fetchProducts = async () => {
     try {
       setIsLoading(true);
-      const response = await fetch('/api/products/products/');
+      const response = await fetch(`${API}/api/products/products/`, {
+        credentials: 'include',
+      });
+      if (!response.ok) {
+        console.error('Failed to fetch products:', response.status);
+        setError('Ürünler yüklenemedi.');
+        setProducts([]);
+        return;
+      }
       const data = await response.json();
-      setProducts(data);
-      setError(null);
+      if (Array.isArray(data)) {
+        setProducts(data);
+        setError(null);
+      } else {
+        console.error('API response for products is not an array:', data);
+        setError('Ürünler beklenmedik formatta geldi.');
+        setProducts([]);
+      }
     } catch (err) {
       setError('Ürünler yüklenirken bir hata oluştu.');
-      console.error('Ürünler alınamadı:', err);
+      console.error('Error fetching products:', err);
+      setProducts([]);
     } finally {
       setIsLoading(false);
     }
@@ -31,21 +69,29 @@ const ProductManagementPage = () => {
 
   const handleAddProduct = async () => {
     try {
-      const response = await fetch('/api/products/products/', {
+      const response = await fetch(`${API}/api/products/products/create/`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
         body: JSON.stringify(newProduct),
       });
       
-      if (!response.ok) throw new Error('Ürün eklenemedi');
+      if (!response.ok) {
+        const errorData = await response.json();
+        if (typeof errorData === 'object' && errorData !== null) {
+          const errorMessage = errorData.error || (errorData.detail ? errorData.detail : JSON.stringify(errorData));
+          throw new Error(errorMessage || 'Ürün eklenemedi');
+        } else {
+          throw new Error(errorData || 'Ürün eklenemedi');
+        }
+      }
       
       const data = await response.json();
       setProducts([...products, data]);
-      setNewProduct({ name: '', stock: '', price: '' });
+      setNewProduct({ name: '', stock_quantity: '', description: '', category: '', serial_number: '', distributor_info: '', image_url: '' });
       setError(null);
     } catch (err) {
-      setError('Ürün eklenirken bir hata oluştu.');
-      alert('Hata: ' + err.message);
+      setError('Ürün eklenirken bir hata oluştu: ' + err.message);
     }
   };
 
@@ -53,8 +99,9 @@ const ProductManagementPage = () => {
     if (!window.confirm('Bu ürünü silmek istediğinize emin misiniz?')) return;
 
     try {
-      const response = await fetch(`/api/products/products/${id}/`, {
+      const response = await fetch(`${API}/api/products/products/${id}/`, {
         method: 'DELETE',
+        credentials: 'include',
       });
       
       if (!response.ok) throw new Error('Silme işlemi başarısız');
@@ -62,8 +109,7 @@ const ProductManagementPage = () => {
       setProducts(products.filter((p) => p.id !== id));
       setError(null);
     } catch (err) {
-      setError('Ürün silinirken bir hata oluştu.');
-      alert('Silinemedi: ' + err.message);
+      setError('Ürün silinirken bir hata oluştu: ' + err.message);
     }
   };
 
@@ -71,36 +117,43 @@ const ProductManagementPage = () => {
     setEditingId(product.id);
     setEditedProduct({
       name: product.name,
-      stock: product.stock_quantity || product.stock,
-      price: product.price,
+      stock_quantity: product.stock_quantity,
+      description: product.description || '',
+      category: product.category || '',
+      serial_number: product.serial_number || '',
+      distributor_info: product.distributor_info || '',
+      image_url: product.image_url || ''
     });
   };
 
   const handleSaveEdit = async (id) => {
     try {
-      const response = await fetch(`/api/products/products/${id}/`, {
+      const response = await fetch(`${API}/api/products/products/${id}/update/`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
         body: JSON.stringify(editedProduct),
       });
       
-      if (!response.ok) throw new Error('Güncelleme başarısız');
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Güncelleme başarısız');
+      }
       
       const data = await response.json();
       const updatedList = products.map((p) => (p.id === id ? data : p));
       setProducts(updatedList);
       setEditingId(null);
-      setEditedProduct({ name: '', stock: '', price: '' });
+      setEditedProduct({ name: '', stock_quantity: '', description: '', category: '', serial_number: '', distributor_info: '', image_url: '' });
       setError(null);
     } catch (err) {
-      setError('Ürün güncellenirken bir hata oluştu.');
-      alert('Kaydedilemedi: ' + err.message);
+      setError('Ürün güncellenirken bir hata oluştu: ' + err.message);
     }
   };
 
   const handleCancelEdit = () => {
     setEditingId(null);
-    setEditedProduct({ name: '', stock: '', price: '' });
+    setEditedProduct({ name: '', stock_quantity: '', description: '', category: '', serial_number: '', distributor_info: '', image_url: '' });
   };
 
   if (isLoading) {
@@ -141,7 +194,7 @@ const ProductManagementPage = () => {
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">İsim</th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Stok</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Fiyat</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Kategori</th>
                   <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">İşlemler</th>
                 </tr>
               </thead>
@@ -166,25 +219,30 @@ const ProductManagementPage = () => {
                         <input
                           type="number"
                           min="0"
-                          value={editedProduct.stock}
-                          onChange={(e) => setEditedProduct({ ...editedProduct, stock: e.target.value })}
+                          value={editedProduct.stock_quantity}
+                          onChange={(e) => setEditedProduct({ ...editedProduct, stock_quantity: e.target.value })}
                           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                         />
                       ) : (
-                        <span className="text-sm text-gray-900">{prod.stock_quantity || prod.stock}</span>
+                        <span className="text-sm text-gray-900">{prod.stock_quantity}</span>
                       )}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       {editingId === prod.id ? (
-                        <input
-                          type="number"
-                          min="0"
-                          value={editedProduct.price}
-                          onChange={(e) => setEditedProduct({ ...editedProduct, price: e.target.value })}
+                        <select
+                          value={editedProduct.category}
+                          onChange={(e) => setEditedProduct({ ...editedProduct, category: e.target.value })}
                           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        />
+                        >
+                          <option value="">Kategori Seçin</option>
+                          {categories.map(cat => (
+                            <option key={cat.id} value={cat.id}>{cat.name}</option>
+                          ))}
+                        </select>
                       ) : (
-                        <span className="text-sm text-gray-900">{`${prod.price}₺`}</span>
+                        <span className="text-sm text-gray-900">
+                          {categories.find(cat => cat.id === prod.category)?.name || 'Kategorisiz'}
+                        </span>
                       )}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
@@ -251,19 +309,51 @@ const ProductManagementPage = () => {
                 type="number"
                 placeholder="Stok"
                 min="0"
-                value={newProduct.stock}
-                onChange={(e) => setNewProduct({ ...newProduct, stock: e.target.value })}
+                value={newProduct.stock_quantity}
+                onChange={(e) => setNewProduct({ ...newProduct, stock_quantity: e.target.value })}
+                className="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                required
+              />
+              <select
+                value={newProduct.category}
+                onChange={(e) => setNewProduct({ ...newProduct, category: e.target.value })}
+                className="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                required
+              >
+                <option value="">Kategori Seçin</option>
+                {categories.map(cat => (
+                  <option key={cat.id} value={cat.id}>{cat.name}</option>
+                ))}
+              </select>
+              <input
+                type="text"
+                placeholder="Seri Numarası"
+                value={newProduct.serial_number}
+                onChange={(e) => setNewProduct({ ...newProduct, serial_number: e.target.value })}
                 className="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                 required
               />
               <input
-                type="number"
-                placeholder="Fiyat"
-                min="0"
-                value={newProduct.price}
-                onChange={(e) => setNewProduct({ ...newProduct, price: e.target.value })}
+                type="text"
+                placeholder="Distribütör Bilgisi"
+                value={newProduct.distributor_info}
+                onChange={(e) => setNewProduct({ ...newProduct, distributor_info: e.target.value })}
                 className="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                 required
+              />
+              <input
+                type="text"
+                placeholder="Resim URL'si"
+                value={newProduct.image_url}
+                onChange={(e) => setNewProduct({ ...newProduct, image_url: e.target.value })}
+                className="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                required
+              />
+              <textarea
+                placeholder="Ürün açıklaması"
+                value={newProduct.description}
+                onChange={(e) => setNewProduct({ ...newProduct, description: e.target.value })}
+                className="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 md:col-span-3"
               />
               <button
                 type="submit"

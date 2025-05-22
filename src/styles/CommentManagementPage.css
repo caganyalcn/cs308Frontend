@@ -1,48 +1,170 @@
+.comment-management-container {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.comment-management-title {
+    text-align: center;
+    color: #333;
+    margin-bottom: 30px;
+}
+
+.comments-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
 
 .comment-card {
-  background-color: white;
-  border-radius: 0.75rem;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.1);
-  transition: box-shadow 0.2s ease;
-  overflow: hidden;
+    background-color: #fff;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    border-left: 5px solid #ccc; /* Default border */
+    display: flex; /* Use flexbox for main sections */
+    flex-direction: column;
+    gap: 15px; /* Space between sections */
 }
 
-.comment-card:hover {
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+.comment-card.pending {
+    border-left-color: #ffc107; /* Yellow for pending */
 }
 
-.comment-meta {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
+.comment-card.approved {
+    border-left-color: #28a745; /* Green for approved */
 }
 
-.comment-meta-left {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
+.comment-card.rejected {
+    border-left-color: #dc3545; /* Red for rejected */
+    background-color: #fff8f8; /* Light red background */
 }
 
-.comment-meta-line {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  flex-wrap: wrap;
+.comment-details-section {
+    display: flex;
+    flex-direction: column; /* Stack info vertically */
+    gap: 10px; /* Space between info rows */
+    padding-bottom: 10px;
+    border-bottom: 1px solid #eee;
 }
 
-.comment-text {
-  margin-top: 1rem;
-  padding-left: 1rem;
-  padding-top: 0.5rem;
-  padding-bottom: 0.5rem;
-  border-left: 4px solid #3b82f6;
-  color: #374151;
-  font-style: italic;
+.comment-product-info, .comment-customer-info {
+    display: flex;
+    align-items: center;
+    gap: 15px; /* Space between items in a row */
+    flex-wrap: wrap; /* Allow wrapping on smaller screens */
 }
 
-.comment-actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 0.75rem;
-  margin-top: 1.5rem;
+.comment-id, .product-id, .comment-date {
+    color: #555;
+    font-size: 0.9em;
+}
+
+.product-name {
+    font-size: 1.1em;
+    font-weight: 600;
+    color: #333;
+}
+
+.customer-name {
+     font-size: 0.9em;
+     color: #555;
+}
+
+.comment-rating {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.rating-value {
+    font-size: 0.9em;
+    color: #555;
+}
+
+.comment-text-section {
+    font-style: italic;
+    color: #333;
+    background-color: #f8f8f8;
+    padding: 15px;
+    border-radius: 4px;
+    border: 1px solid #eee;
+}
+
+.comment-card.rejected .comment-text-section {
+    background-color: #fff0f0;
+    border-color: #ffcdd2;
+    color: #d32f2f;
+}
+
+.comment-actions-section {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* Space between action items */
+    flex-wrap: wrap;
+    justify-content: flex-end; /* Align actions to the right */
+    padding-top: 10px;
+    border-top: 1px solid #eee;
+}
+
+.status-badge {
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-size: 0.8em;
+    font-weight: 600;
+}
+
+.status-badge.approved {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+.status-badge.pending {
+    background-color: #fff3cd;
+    color: #856404;
+}
+
+.status-badge.rejected {
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
+.approve-button, .reject-button {
+    padding: 8px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9em;
+    font-weight: 600;
+    transition: background-color 0.2s ease;
+}
+
+.approve-button {
+    background-color: #28a745;
+    color: white;
+}
+
+.approve-button:hover {
+    background-color: #218838;
+}
+
+.reject-button {
+    background-color: #dc3545;
+    color: white;
+}
+
+.reject-button:hover {
+    background-color: #c82333;
+}
+
+.error-message {
+    color: #dc3545;
+    background-color: #f8d7da;
+    border: 1px solid #f5c6cb;
+    padding: 10px;
+    border-radius: 4px;
+    margin-bottom: 20px;
 }

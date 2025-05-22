@@ -19,10 +19,12 @@ function LoginPage() {
     const result = await login(email, password);
     
     if (result.success) {
-      if (result.isAdmin) {
-        navigate("/admin");
-      } else {
+      if (result.role === 0) { // Regular user
         navigate("/home");
+      } else if (result.role === 1) { // Product manager
+        navigate("/product-manager");
+      } else if (result.role === 2) { // Sales manager
+        navigate("/sales-manager");
       }
     } else {
       setError(result.message || "An error occurred. Please try again later.");

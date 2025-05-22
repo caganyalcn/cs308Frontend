@@ -1,140 +1,203 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { FaCheck, FaTimes, FaStar } from "react-icons/fa";
 import "../styles/CommentManagementPage.css";
 
-const CommentManagementPage = () => {
-  const [comments, setComments] = useState([
-    {
-      id: 201,
-      productId: 1,
-      productName: "Organik Yumurta",
-      customer: "C-010",
-      text: "Harika lezzet, taze ve doğal 👍",
-      approved: false,
-      rating: 5,
-      date: "2024-03-15"
-    },
-    {
-      id: 202,
-      productId: 2,
-      productName: "Organik Süt",
-      customer: "C-011",
-      text: "Biraz fazla soğuktu teslimatta.",
-      approved: false,
-      rating: 3,
-      date: "2024-03-14"
-    },
-    {
-      id: 203,
-      productId: 3,
-      productName: "Organik Peynir",
-      customer: "C-012",
-      text: "Peynir çok iyiydi, teşekkürler!",
-      approved: true,
-      rating: 5,
-      date: "2024-03-13"
-    },
-  ]);
+const API = process.env.REACT_APP_API_BASE_URL || "http://localhost:8000";
 
-  const handleApprove = (id) => {
-    setComments((prev) =>
-      prev.map((c) => (c.id === id ? { ...c, approved: true } : c))
-    );
+const CommentManagementPage = () => {
+  const [comments, setComments] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    fetchComments();
+  }, []);
+
+  const fetchComments = async () => {
+    try {
+      setLoading(true);
+      const response = await fetch(`${API}/api/reviews/all/`, {
+        method: 'GET',
+        credentials: 'include',
+        headers: {
+          'Accept': 'application/json',
+        }
+      });
+
+      if (response.status === 401) {
+        // Handle unauthorized - maybe redirect to login or show a message
+        setError('Authentication required to view comments.');
+        setLoading(false);
+        return;
+      }
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        const errorMessage = errorData.error || 'Yorumlar yüklenemedi';
+        throw new Error(errorMessage);
+      }
+
+      const data = await response.json();
+      // Assuming the backend returns an object with a 'reviews' key containing an array
+      if (Array.isArray(data.reviews)) {
+         setComments(data.reviews);
+         setError(null);
+      } else {
+         console.error('API response for comments is not an array:', data);
+         setError('Yorum listesi beklenmedik formatta geldi.');
+         setComments([]);
+      }
+     
+    } catch (err) {
+      setError('Yorumlar yüklenirken bir hata oluştu: ' + err.message);
+      setComments([]);
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const handleReject = (id) => {
-    setComments((prev) => prev.filter((c) => c.id !== id));
+  const handleApprove = async (id) => {
+    try {
+      const response = await fetch(`${API}/api/reviews/${id}/update-approval/`, {
+        method: 'PUT',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ is_approved: true })
+      });
+
+      if (!response.ok) {
+         const errorData = await response.json();
+         throw new Error(errorData.error || 'Onaylama başarısız');
+      }
+
+      // Refresh comments after approval
+      fetchComments();
+
+    } catch (err) {
+      setError('Yorum onaylanırken bir hata oluştu: ' + err.message);
+    }
+  };
+
+  const handleReject = async (id) => {
+     try {
+      const response = await fetch(`${API}/api/reviews/${id}/update-approval/`, {
+        method: 'PUT',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ is_approved: false })
+      });
+
+      if (!response.ok) {
+         const errorData = await response.json();
+         throw new Error(errorData.error || 'Reddetme başarısız');
+      }
+
+      // Refresh comments after rejection
+      fetchComments();
+
+    } catch (err) {
+      setError('Yorum reddedilirken bir hata oluştu: ' + err.message);
+    }
   };
 
   const renderStars = (rating) => {
-    return [...Array(5)].map((_, index) => (
-      <FaStar
-        key={index}
-        className={`w-4 h-4 ${
-          index < rating ? "text-yellow-400" : "text-gray-300"
-        }`}
-      />
-    ));
+    const fullStars = Math.floor(rating);
+    const stars = [];
+    for (let i = 0; i < fullStars; i++) {
+      stars.push(<FaStar key={`full-${i}`} color="#ffc107" />);
+    }
+    // You can add half or empty stars if needed
+    return stars;
   };
 
-  return (
-    <div className="min-h-screen bg-gray-50 py-14 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-7xl mx-auto">
-        <div className="text-center mb-12">
-          <h1 className="text-4xl font-extrabold text-gray-900 sm:text-5xl">
-            Yorum Moderasyonu
-          </h1>
-          <p className="mt-4 text-xl text-gray-500">
-            Kullanıcı yorumlarını onaylayın veya reddedin
-          </p>
-        </div>
+  const getCommentStatus = (comment) => {
+    if (comment.comment && comment.comment.includes('This comment is rejected')) {
+      return 'rejected';
+    }
+    return comment.approved ? 'approved' : 'pending';
+  };
 
-        <div className="space-y-6">
-          {comments.map((comment) => (
-            <div key={comment.id} className="comment-card">
-              <div className="p-6">
-                <div className="flex justify-between items-start flex-wrap gap-4">
-                  <div className="space-y-2">
-                    <div className="flex items-center gap-2 flex-wrap">
-                      <span className="text-sm font-medium text-gray-500">#{comment.id}</span>
-                      <span className="text-lg font-semibold text-gray-900">{comment.productName}</span>
-                      <span className="text-sm text-gray-500">(Ürün ID: {comment.productId})</span>
+  if (loading) {
+    return (
+       <div className="comment-management-container">
+          <h2 className="comment-management-title">Yorum Yönetimi</h2>
+          <p>Yükleniyor...</p>
+        </div>
+    );
+  }
+
+  return (
+    <div className="comment-management-container">
+      <h2 className="comment-management-title">Yorum Yönetimi</h2>
+
+      {error && (
+        <div className="error-message">
+          {error}
+        </div>
+      )}
+
+      <div className="comments-list">
+        {comments.length === 0 ? (
+            <p>Henüz yorum yok.</p>
+        ) : (
+            comments.map((comment) => {
+              const status = getCommentStatus(comment);
+              return (
+                <div key={comment.id} className={`comment-card ${status}`}>
+                  <div className="comment-details-section">
+                    <div className="comment-product-info">
+                      <span className="comment-id">#{comment.id}</span>
+                      <span className="product-name">{comment.product_name || 'Ürün Bilgisi Yok'}</span>
+                      <span className="product-id">(Ürün ID: {comment.product_id || 'Yok'})</span>
                     </div>
-                    <div className="flex items-center gap-2 text-sm text-gray-600 flex-wrap">
-                      <span>Müşteri: {comment.customer}</span>
-                      <span>• {new Date(comment.date).toLocaleDateString("tr-TR")}</span>
+                    <div className="comment-customer-info">
+                      <span className="customer-name">Müşteri: {comment.customer_name || 'Bilinmiyor'}</span>
+                      <span className="comment-date">• {comment.created_at ? new Date(comment.created_at).toLocaleDateString("tr-TR") : 'Tarih Bilgisi Yok'}</span>
                     </div>
-                    <div className="flex items-center space-x-1">
-                      {renderStars(comment.rating)}
-                      <span className="text-sm text-gray-600 ml-2">
-                        ({comment.rating}/5)
-                      </span>
-                    </div>
+                     {comment.rating !== null && comment.rating !== undefined && ( // Only show rating if it exists
+                       <div className="comment-rating">
+                          {renderStars(comment.rating)}
+                          <span className="rating-value">({comment.rating}/5)</span>
+                       </div>
+                    )}
+                  </div>
+                 
+                  <div className="comment-text-section">
+                    <p className="comment-text">"{comment.comment || 'Yorum Yok'}"</p>
                   </div>
 
-                  <div>
-                    {comment.approved ? (
-                      <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800">
-                        <FaCheck className="w-4 h-4 mr-1" />
-                        Onaylandı
-                      </span>
-                    ) : (
-                      <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-yellow-100 text-yellow-800">
-                        <FaTimes className="w-4 h-4 mr-1" />
-                        Beklemede
-                      </span>
+                  <div className="comment-actions-section">
+                    <span className={`status-badge ${status}`}>
+                      {status === 'rejected' ? 'Reddedildi' : status === 'approved' ? 'Onaylı' : 'Beklemede'}
+                    </span>
+
+                    {status !== 'rejected' && comment.comment && (
+                      <>
+                        <button 
+                          onClick={() => handleReject(comment.id)}
+                          className="reject-button"
+                        >
+                          Reddet
+                        </button>
+                        {status === 'pending' && (
+                          <button 
+                            onClick={() => handleApprove(comment.id)}
+                            className="approve-button"
+                          >
+                            Onayla
+                          </button>
+                        )}
+                      </>
                     )}
                   </div>
                 </div>
-
-                <div className="mt-4">
-                  <p className="text-gray-700 italic border-l-4 border-blue-500 pl-4 py-2">
-                    "{comment.text}"
-                  </p>
-                </div>
-
-                {!comment.approved && (
-                  <div className="mt-6 flex justify-end space-x-3">
-                    <button
-                      onClick={() => handleReject(comment.id)}
-                      className="inline-flex items-center px-4 py-2 rounded-md text-sm font-medium text-white bg-red-600 hover:bg-red-700"
-                    >
-                      <FaTimes className="w-4 h-4 mr-2" />
-                      Reddet
-                    </button>
-                    <button
-                      onClick={() => handleApprove(comment.id)}
-                      className="inline-flex items-center px-4 py-2 rounded-md text-sm font-medium text-white bg-green-600 hover:bg-green-700"
-                    >
-                      <FaCheck className="w-4 h-4 mr-2" />
-                      Onayla
-                    </button>
-                  </div>
-                )}
-              </div>
-            </div>
-          ))}
-        </div>
+              );
+            })
+        )}
       </div>
     </div>
   );
