@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import '../styles/SalesManagerPage.css'; 
 
 const SalesManagerPage = () => {
@@ -13,12 +13,53 @@ const SalesManagerPage = () => {
   const [viewingInvoices, setViewingInvoices] = useState(false);
   const [startDateRev, setStartDateRev] = useState('');
   const [endDateRev, setEndDateRev] = useState('');
-  const [defaultCostPercentage, setDefaultCostPercentage] = useState('60');
+  const [defaultCostPercentage] = useState('50');
   const [revenueReport, setRevenueReport] = useState(null);
+  const [showChart, setShowChart] = useState(false);
+  const [pendingProducts, setPendingProducts] = useState([]);
+  const [pendingPrice, setPendingPrice] = useState({});
+  const [error, setError] = useState(null);
 
   const [priceSuccess, setPriceSuccess] = useState(false);
   const [discountSuccess, setDiscountSuccess] = useState(false);
   const [notificationSuccess, setNotificationSuccess] = useState(false);
+  const [priceApprovalSuccess, setPriceApprovalSuccess] = useState(false);
+
+  useEffect(() => {
+    fetchPendingProducts();
+  }, []);
+
+  const fetchPendingProducts = async () => {
+    try {
+      const response = await fetch('/api/sales-admin/pending-products/');
+      if (!response.ok) throw new Error('Failed to fetch pending products');
+      const data = await response.json();
+      setPendingProducts(data);
+      setError(null);
+    } catch (err) {
+      setError('Error fetching pending products');
+    }
+  };
+
+  const handleApprovePrice = async (productId) => {
+    try {
+      const response = await fetch('/api/sales-admin/products/set-price/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ product_id: productId, new_price: pendingPrice[productId] }),
+      });
+      if (!response.ok) throw new Error('Failed to set price');
+      setPriceApprovalSuccess(true);
+      setTimeout(() => setPriceApprovalSuccess(false), 3000);
+      fetchPendingProducts();
+    } catch (err) {
+      setError('Error setting price');
+    }
+  };
+
+  const handlePendingPriceChange = (productId, value) => {
+    setPendingPrice((prev) => ({ ...prev, [productId]: value }));
+  };
 
   const handleSetPrice = () => {
     if (!productIdPrice || newPrice === '') {
@@ -63,30 +104,41 @@ const SalesManagerPage = () => {
     setTimeout(() => setNotificationSuccess(false), 3000);
   };
 
-  const handleViewInvoices = () => {
-    console.log(`Fetching invoices from ${startDateInv} to ${endDateInv}`);
-    const mockInvoices = [
-      { id: 'INV001', date: '2023-10-01', amount: 150.00, customer: 'Alice' },
-      { id: 'INV002', date: '2023-10-05', amount: 200.50, customer: 'Bob' },
-    ];
-    setInvoices(mockInvoices);
-    setViewingInvoices(true);
+  const handleViewInvoices = async () => {
+    try {
+      const response = await fetch(`/api/sales-admin/invoices?start_date=${startDateInv}&end_date=${endDateInv}`);
+      if (!response.ok) throw new Error('Failed to fetch invoices');
+      const data = await response.json();
+      setInvoices(data);
+      setViewingInvoices(true);
+      setError(null);
+    } catch (err) {
+      setError('Error fetching invoices');
+    }
   };
 
-  const handleExportInvoicesPDF = () => {
-    console.log(`Exporting invoices from ${startDateInv} to ${endDateInv} to PDF`);
-    alert('PDF export functionality to be implemented.');
+  const handleExportInvoicesPDF = async () => {
+    try {
+      const response = await fetch(`/api/sales-admin/invoices/export-pdf?start_date=${startDateInv}&end_date=${endDateInv}`);
+      if (!response.ok) throw new Error('Failed to export PDF');
+      // For file download, you may need to handle blob response here
+      alert('PDF export functionality to be implemented.');
+    } catch (err) {
+      setError('Error exporting PDF');
+    }
   };
 
-  const handleCalculateRevenueLoss = () => {
-    console.log(`Calculating revenue/loss from ${startDateRev} to ${endDateRev} with ${defaultCostPercentage}% default cost.`);
-    const mockReport = {
-      totalRevenue: 5000,
-      totalCost: parseFloat(defaultCostPercentage) / 100 * 5000,
-      netProfit: 5000 - (parseFloat(defaultCostPercentage) / 100 * 5000),
-      period: `${startDateRev} to ${endDateRev}`
-    };
-    setRevenueReport(mockReport);
+  const handleCalculateRevenueLoss = async () => {
+    try {
+      const response = await fetch(`/api/sales-admin/revenue-loss?start_date=${startDateRev}&end_date=${endDateRev}&default_cost_percentage=${defaultCostPercentage}`);
+      if (!response.ok) throw new Error('Failed to fetch revenue/loss');
+      const data = await response.json();
+      setRevenueReport(data);
+      setShowChart(true);
+      setError(null);
+    } catch (err) {
+      setError('Error fetching revenue/loss');
+    }
   };
 
   return (
@@ -133,6 +185,95 @@ const SalesManagerPage = () => {
         </div>
         <button onClick={handleSendNotifications} className="action-button">Send Notifications</button>
         {notificationSuccess && <div className="success-message">✅ Notifications sent successfully!</div>}
+      </div>
+
+      {/* New Section: Price Approval for New Products */}
+      <div className="feature-section">
+        <h2>📋 Price Approval for New Products</h2>
+        <p>Products pending price approval will be listed here. Set their prices to make them visible.</p>
+        {priceApprovalSuccess && <div className="success-message">✅ Price approved successfully!</div>}
+        {error && <div className="error-message">{error}</div>}
+        <div className="pending-products-list">
+          {pendingProducts.length === 0 ? (
+            <div>No products pending price approval.</div>
+          ) : (
+            pendingProducts.map(product => (
+              <div key={product.id} className="pending-product-item">
+                <span>{product.name} (ID: {product.id})</span>
+                <input
+                  type="number"
+                  placeholder="Enter price"
+                  value={pendingPrice[product.id] || ''}
+                  onChange={e => handlePendingPriceChange(product.id, e.target.value)}
+                />
+                <button onClick={() => handleApprovePrice(product.id)}>Approve Price</button>
+              </div>
+            ))
+          )}
+        </div>
+      </div>
+
+      {/* New Section: Invoice Viewing and PDF Export */}
+      <div className="feature-section">
+        <h2>📄 Invoice Management</h2>
+        <div className="form-inline">
+          <div className="form-group">
+            <label htmlFor="startDateInv">Start Date:</label>
+            <input type="date" id="startDateInv" value={startDateInv} onChange={(e) => setStartDateInv(e.target.value)} />
+          </div>
+          <div className="form-group">
+            <label htmlFor="endDateInv">End Date:</label>
+            <input type="date" id="endDateInv" value={endDateInv} onChange={(e) => setEndDateInv(e.target.value)} />
+          </div>
+        </div>
+        <button onClick={handleViewInvoices} className="action-button">View Invoices</button>
+        <button onClick={handleExportInvoicesPDF} className="action-button">Export as PDF</button>
+        {viewingInvoices && (
+          <div className="invoices-list">
+            {invoices.length === 0 ? (
+              <div>No invoices found for the selected period.</div>
+            ) : (
+              invoices.map(invoice => (
+                <div key={invoice.id} className="invoice-item">
+                  <span>Invoice ID: {invoice.id}</span>
+                  <span>Date: {invoice.date}</span>
+                  <span>Amount: ${invoice.amount}</span>
+                  <span>Customer: {invoice.customer}</span>
+                </div>
+              ))
+            )}
+          </div>
+        )}
+      </div>
+
+      {/* New Section: Revenue/Loss Calculation and Chart */}
+      <div className="feature-section">
+        <h2>📊 Revenue/Loss Calculation</h2>
+        <div className="form-inline">
+          <div className="form-group">
+            <label htmlFor="startDateRev">Start Date:</label>
+            <input type="date" id="startDateRev" value={startDateRev} onChange={(e) => setStartDateRev(e.target.value)} />
+          </div>
+          <div className="form-group">
+            <label htmlFor="endDateRev">End Date:</label>
+            <input type="date" id="endDateRev" value={endDateRev} onChange={(e) => setEndDateRev(e.target.value)} />
+          </div>
+          <div className="form-group">
+            <label htmlFor="defaultCostPercentage">Default Cost Percentage (%):</label>
+            <input type="number" id="defaultCostPercentage" value={defaultCostPercentage} readOnly />
+          </div>
+        </div>
+        <button onClick={handleCalculateRevenueLoss} className="action-button">Calculate Revenue/Loss</button>
+        {revenueReport && (
+          <div className="revenue-report">
+            <h3>Revenue Report for {revenueReport.period}</h3>
+            <p>Total Revenue: ${revenueReport.totalRevenue}</p>
+            <p>Total Cost: ${revenueReport.totalCost}</p>
+            <p>Net Profit: ${revenueReport.netProfit}</p>
+            {showChart && <div className="chart-placeholder">Chart will be displayed here.</div>}
+          </div>
+        )}
+        {error && <div className="error-message">{error}</div>}
       </div>
 
     </div>
