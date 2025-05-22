@@ -22,6 +22,10 @@ const ProductManagementPage = () => {
     try {
       const response = await fetch(`${API}/api/products/categories/`, {
         credentials: 'include',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json; charset=utf-8'
+        }
       });
       if (!response.ok) throw new Error('Kategoriler yüklenemedi');
       const data = await response.json();
@@ -42,6 +46,10 @@ const ProductManagementPage = () => {
       setIsLoading(true);
       const response = await fetch(`${API}/api/products/products/`, {
         credentials: 'include',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json; charset=utf-8'
+        }
       });
       if (!response.ok) {
         console.error('Failed to fetch products:', response.status);
@@ -71,7 +79,10 @@ const ProductManagementPage = () => {
     try {
       const response = await fetch(`${API}/api/products/products/create/`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+          'Content-Type': 'application/json; charset=utf-8',
+          'Accept': 'application/json'
+        },
         credentials: 'include',
         body: JSON.stringify(newProduct),
       });
@@ -87,7 +98,7 @@ const ProductManagementPage = () => {
       }
       
       const data = await response.json();
-      setProducts([...products, data]);
+      await fetchProducts();
       setNewProduct({ name: '', stock_quantity: '', description: '', category: '', serial_number: '', distributor_info: '', image_url: '' });
       setError(null);
     } catch (err) {
@@ -102,11 +113,15 @@ const ProductManagementPage = () => {
       const response = await fetch(`${API}/api/products/products/${id}/`, {
         method: 'DELETE',
         credentials: 'include',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json; charset=utf-8'
+        }
       });
       
       if (!response.ok) throw new Error('Silme işlemi başarısız');
       
-      setProducts(products.filter((p) => p.id !== id));
+      await fetchProducts();
       setError(null);
     } catch (err) {
       setError('Ürün silinirken bir hata oluştu: ' + err.message);
@@ -130,7 +145,10 @@ const ProductManagementPage = () => {
     try {
       const response = await fetch(`${API}/api/products/products/${id}/update/`, {
         method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+          'Content-Type': 'application/json; charset=utf-8',
+          'Accept': 'application/json'
+        },
         credentials: 'include',
         body: JSON.stringify(editedProduct),
       });
@@ -140,9 +158,7 @@ const ProductManagementPage = () => {
         throw new Error(errorData.error || 'Güncelleme başarısız');
       }
       
-      const data = await response.json();
-      const updatedList = products.map((p) => (p.id === id ? data : p));
-      setProducts(updatedList);
+      await fetchProducts();
       setEditingId(null);
       setEditedProduct({ name: '', stock_quantity: '', description: '', category: '', serial_number: '', distributor_info: '', image_url: '' });
       setError(null);
