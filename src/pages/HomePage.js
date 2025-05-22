@@ -16,7 +16,7 @@ function HomePage() {
   const { products } = useContext(AppContext);
 
   const [searchQuery,   setSearchQuery]  = useState("");
-  const [selectedCat,   setSelectedCat]  = useState("");
+  const [selectedCat,   setSelectedCat]  = useState(""); // Now stores category ID
   const [sortOption,    setSortOption]   = useState(""); // "", "priceAsc", "priceDesc", "popular"
 
   /* filtre + sıralama */
@@ -33,7 +33,10 @@ function HomePage() {
 
     /* kategori */
     if (selectedCat) {
-      list = list.filter((p) => p.category === selectedCat);
+      list = list.filter((p) => {
+        const categoryId = typeof p.category_id === 'string' ? parseInt(p.category_id) : p.category_id;
+        return categoryId === parseInt(selectedCat);
+      });
     }
 
     /* sıralama */

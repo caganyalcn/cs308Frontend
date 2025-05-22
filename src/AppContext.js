@@ -41,13 +41,19 @@ export const AppProvider = ({ children }) => {
   // Fetch products from backend
   const fetchProducts = async () => {
     try {
-      const res = await fetch(`${API}/api/products/products/`);
+      const res = await fetch(`${API}/api/products/products/`, {
+        credentials: 'include',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json; charset=utf-8'
+        }
+      });
       if (res.ok) {
         const data = await res.json();
-        if (Array.isArray(data)) {
-          setProducts(data);
+        if (data.products && Array.isArray(data.products)) {
+          setProducts(data.products);
         } else {
-          console.error('API response for products in AppContext is not an array:', data);
+          console.error('API response for products in AppContext is not in expected format:', data);
           setProducts([]);
         }
       } else {
@@ -91,7 +97,7 @@ export const AppProvider = ({ children }) => {
   const removeFromFavorites = (productId) => {
     setFavorites(favorites.filter(item => item.id !== productId));
   };
-
+  
   // Add to cart (backend)
   const addToCart = async (product, quantity = 1) => {
     if (!product || product.stock_quantity === 0 || quantity <= 0) return;
