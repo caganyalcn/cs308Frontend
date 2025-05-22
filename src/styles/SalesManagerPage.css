@@ -1,53 +1,76 @@
+/* General Page Layout */
 .sales-manager-page {
-  padding: 20px;
-  font-family: Arial, sans-serif;
-  max-width: 800px;
-  margin: 0 auto;
+  padding: 32px 8px;
+  font-family: 'Segoe UI', Arial, sans-serif;
+  max-width: 900px;
+  margin: 18px auto 0 auto;
+  background: #f7f9fa;
 }
 
 .sales-manager-page h1 {
   color: #2e3b2c;
   text-align: center;
-  margin-bottom: 30px;
+  margin-bottom: 36px;
+  font-size: 2.5rem;
+  font-weight: 800;
+  letter-spacing: 1px;
 }
 
-.success-message {
-  background-color: #d4edda;
-  color: #155724;
-  padding: 10px 15px;
-  border: 1px solid #c3e6cb;
-  border-radius: 4px;
-  margin-top: 10px;
-  font-size: 0.95em;
-}
-
+/* Card-based Feature Sections */
 .feature-section {
-  background-color: #fdfdfb;
-  border: 1px solid #e0e0d1;
-  padding: 20px;
-  margin-bottom: 20px;
-  border-radius: 8px;
+  background: #fff;
+  border-radius: 14px;
+  box-shadow: 0 2px 12px rgba(44, 62, 80, 0.07);
+  margin-bottom: 40px;
+  transition: width 0.3s, padding 0.3s, min-height 0.3s;
+  width: 60px;
+  height: 60px;
+  min-width: 60px;
+  min-height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  overflow: hidden;
 }
-
+.feature-section.expanded {
+  width: 100%;
+  min-width: 0;
+  min-height: 0;
+  padding: 28px 24px 20px 24px;
+  display: block;
+  height: auto;
+}
 .feature-section h2 {
-  color: #3c503c;
+  color: #218838;
   margin-top: 0;
-  margin-bottom: 15px;
-  border-bottom: 1px solid #ddd;
-  padding-bottom: 10px;
+  margin-bottom: 18px;
+  font-size: 1.35rem;
+  font-weight: 700;
+  border-bottom: 1px solid #e6e6e6;
+  padding-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
-.form-group {
-  margin-bottom: 15px;
+/* Form Layouts */
+.form-inline {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
 }
-
+.form-inline .form-group {
+  flex: 1;
+  min-width: 180px;
+}
 .form-group label {
   display: block;
-  margin-bottom: 5px;
-  font-weight: bold;
-  color: #4e5d4e;
+  margin-bottom: 6px;
+  font-weight: 600;
+  color: #3c503c;
 }
-
 .form-group input[type="text"],
 .form-group input[type="number"],
 .form-group input[type="date"],
@@ -55,62 +78,197 @@
   width: 100%;
   padding: 10px;
   border: 1px solid #b5c2a5;
-  border-radius: 4px;
+  border-radius: 6px;
   box-sizing: border-box;
   background-color: #fefefc;
+  font-size: 1rem;
+  transition: border 0.2s;
+}
+.form-group input:focus {
+  border: 1.5px solid #218838;
+  outline: none;
 }
 
+/* Buttons */
 .action-button {
-  background-color: #28a745;
-  color: white;
-  padding: 10px 15px;
+  background: linear-gradient(90deg, #28a745 60%, #218838 100%);
+  color: #fff;
+  padding: 11px 22px;
   border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 1.08em;
+  font-weight: 600;
+  margin-right: 10px;
+  margin-top: 8px;
+  box-shadow: 0 2px 8px rgba(40,167,69,0.07);
+  transition: background 0.2s, box-shadow 0.2s;
+}
+.action-button:hover {
+  background: linear-gradient(90deg, #218838 60%, #28a745 100%);
+  box-shadow: 0 4px 16px rgba(40,167,69,0.13);
+}
+
+/* Success & Error Messages */
+.success-message {
+  background: #d4edda;
+  color: #155724;
+  padding: 10px 15px;
+  border: 1px solid #c3e6cb;
+  border-radius: 6px;
+  margin-top: 10px;
+  font-size: 1em;
+  font-weight: 500;
+}
+.error-message {
+  background: #f8d7da;
+  color: #721c24;
+  padding: 10px 15px;
+  border: 1px solid #f5c6cb;
+  border-radius: 6px;
+  margin-top: 10px;
+  font-size: 1em;
+  font-weight: 500;
+}
+
+/* Pending Products List */
+.pending-products-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-top: 10px;
+}
+.pending-product-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 18px;
+  background: #f8fafb;
+  border: 1px solid #e0e0d1;
+  border-radius: 8px;
+  transition: background 0.2s;
+  box-shadow: 0 1px 4px rgba(44, 62, 80, 0.04);
+}
+.pending-product-item:hover {
+  background: #eafaf1;
+}
+.pending-product-item span {
+  font-weight: 600;
+  color: #218838;
+  font-size: 1.08em;
+}
+.pending-product-item input[type="number"] {
+  padding: 8px;
+  border: 1px solid #b5c2a5;
   border-radius: 4px;
+  width: 110px;
+  font-size: 1em;
+}
+.pending-product-item button {
+  background: linear-gradient(90deg, #28a745 60%, #218838 100%);
+  color: #fff;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 5px;
   cursor: pointer;
   font-size: 1em;
-  transition: background-color 0.2s ease;
+  font-weight: 600;
+  transition: background 0.2s;
+}
+.pending-product-item button:hover {
+  background: linear-gradient(90deg, #218838 60%, #28a745 100%);
 }
 
-.action-button:hover {
-  background-color: #1e7e34;
-}
-
-.form-inline {
+/* Invoices List */
+.invoices-list {
+  margin-top: 18px;
   display: flex;
-  gap: 20px;
-  flex-wrap: wrap;
+  flex-direction: column;
+  gap: 10px;
+}
+.invoice-item {
+  background: #f8fafb;
+  border: 1px solid #e0e0d1;
+  border-radius: 8px;
+  padding: 10px 16px;
+  display: flex;
+  gap: 24px;
+  font-size: 1em;
+  color: #333;
+  align-items: center;
 }
 
-.form-inline .form-group {
-  flex: 1;
-  min-width: 200px;
+/* Revenue Report & Chart */
+.revenue-report {
+  background: #f8fafb;
+  border: 1px solid #e0e0d1;
+  border-radius: 8px;
+  padding: 18px 20px;
+  margin-top: 18px;
+  font-size: 1.08em;
+  color: #333;
+}
+.chart-placeholder {
+  margin-top: 18px;
+  background: #eafaf1;
+  border: 1px dashed #218838;
+  border-radius: 8px;
+  padding: 24px;
+  text-align: center;
+  color: #218838;
+  font-size: 1.1em;
 }
 
-/* ✅ MOBİL UYUMLULUK */
-@media (max-width: 600px) {
+/* Responsive Design */
+@media (max-width: 700px) {
   .sales-manager-page {
     padding: 10px;
   }
-
   .feature-section {
-    padding: 15px;
+    padding: 16px 8px 12px 8px;
   }
-
   .form-inline {
     flex-direction: column;
     gap: 10px;
   }
-
+  .pending-product-item, .invoice-item, .revenue-report {
+    flex-direction: column;
+    gap: 8px;
+    align-items: flex-start;
+  }
   .action-button {
     width: 100%;
-    font-size: 0.95em;
+    margin-right: 0;
+    margin-top: 10px;
   }
+}
 
-  .sales-manager-page h1 {
-    font-size: 1.5em;
-  }
-
-  .feature-section h2 {
-    font-size: 1.2em;
-  }
+.icon-header {
+  background: #111;
+  color: #e0e0e0;
+  border: none;
+  border-radius: 50%;
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 0;
+  margin-right: 0;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(40,167,69,0.07);
+  transition: background 0.2s, box-shadow 0.2s, color 0.2s;
+}
+.icon-header:hover, .icon-header:focus {
+  background: #222;
+  color: #28a745;
+  box-shadow: 0 4px 16px rgba(40,167,69,0.13);
+}
+.feature-content {
+  animation: fadeIn 0.3s;
+  margin-top: 8px;
+}
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
 }
