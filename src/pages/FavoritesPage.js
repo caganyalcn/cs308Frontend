@@ -17,7 +17,7 @@ const FavoritesPage = () => {
         <div className="favorites-list">
           {favorites.map((item) => (
            <div key={item.id} className="favorite-card">
-           <img src={item.image} alt={item.name} className="favorite-image" />
+           <img src={item.image_url} alt={item.name} className="favorite-image" />
            <div className="favorite-info">
              <h3 className="product-name">{item.name}</h3>
              <p className="favorite-description">{item.description}</p>

@@ -88,16 +88,68 @@ export const AppProvider = ({ children }) => {
     }
   };
 
-  // Favorites (local only)
-  const addToFavorites = (product) => {
-    if (!favorites.some((fav) => fav.id === product.id)) {
-      setFavorites([...favorites, product]);
+  // Fetch favorites from backend
+  const fetchFavorites = async () => {
+    try {
+      const res = await fetch(`${API}/api/products/favorites/`, {
+        credentials: 'include',
+      });
+      if (res.ok) {
+        const data = await res.json();
+        // Extract product objects from favorite entries
+        setFavorites((data.favorites || []).map(fav => fav.product));
+      } else {
+        console.error('Failed to fetch favorites:', res.status);
+        setFavorites([]);
+      }
+    } catch (err) {
+      console.error('Error fetching favorites:', err);
+      setFavorites([]);
     }
   };
-  const removeFromFavorites = (productId) => {
-    setFavorites(favorites.filter(item => item.id !== productId));
+
+  // Initialize favorites on auth change
+  useEffect(() => {
+    if (isAuthenticated) {
+      fetchFavorites();
+    } else {
+      setFavorites([]);
+    }
+  }, [isAuthenticated]);
+
+  // Favorites (backend)
+  const addToFavorites = async (product) => {
+    try {
+      const res = await fetch(`${API}/api/products/favorites/add/`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ product_id: product.id }),
+      });
+      if (!res.ok) console.error('Failed to add favorite:', res.status);
+    } catch (err) {
+      console.error('Error adding favorite:', err);
+    } finally {
+      fetchFavorites();
+    }
   };
-  
+
+  const removeFromFavorites = async (productId) => {
+    try {
+      const res = await fetch(`${API}/api/products/favorites/remove/`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ product_id: productId }),
+      });
+      if (!res.ok) console.error('Failed to remove favorite:', res.status);
+    } catch (err) {
+      console.error('Error removing favorite:', err);
+    } finally {
+      fetchFavorites();
+    }
+  };
+
   // Add to cart (backend)
   const addToCart = async (product, quantity = 1) => {
     if (!product || product.stock_quantity === 0 || quantity <= 0) return;
@@ -234,6 +286,7 @@ export const AppProvider = ({ children }) => {
       login,
       fetchCart,
       fetchProducts,
+      fetchFavorites,
     }}>
       {children}
     </AppContext.Provider>
