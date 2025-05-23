@@ -38,7 +38,8 @@ function HomePage() {
         return categoryId === parseInt(selectedCat);
       });
     }
-
+    list = list.filter(p => p.price != null);
+    
     /* sıralama */
     switch (sortOption) {
       case "priceAsc":
