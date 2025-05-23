@@ -15,37 +15,71 @@ const OrdersPage = ({ isEmbedded = false }) => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    const fetchOrders = async () => {
-      try {
-        const res = await fetch(`${API}/api/orders/all/`, { 
-          method: 'GET', 
-          credentials: 'include',
-          headers: {
-            "Accept": "application/json",
-            "Content-Type": "application/json",
-          }
-        });
-        if (res.status === 401) { navigate('/'); return; }
-        if (res.status === 404) { setError('Siparişler bulunamadı.'); setLoading(false); return; }
-        if (!res.ok) { setError('Bir hata oluştu.'); setLoading(false); return; }
-        const data = await res.json();
-        setOrders(data.orders || []);
-      } catch (err) {
-        setError('Ağ hatası: ' + err.message);
-      } finally {
-        setLoading(false);
-      }
-    };
     fetchOrders();
   }, [navigate]);
 
-  const handleReturnRequest = () => {
-    navigate("/return");
+  const fetchOrders = async () => {
+    try {
+      const res = await fetch(`${API}/api/orders/all/`, {
+        method: 'GET',
+        credentials: 'include',
+        headers: {
+          "Accept": "application/json",
+          "Content-Type": "application/json",
+        }
+      });
+      if (res.status === 401) { navigate('/'); return; }
+      if (res.status === 404) { setError('Siparişler bulunamadı.'); setLoading(false); return; }
+      if (!res.ok) { setError('Bir hata oluştu.'); setLoading(false); return; }
+      const data = await res.json();
+      setOrders(data.orders || []);
+    } catch (err) {
+      setError('Ağ hatası: ' + err.message);
+    } finally {
+      setLoading(false);
+    }
   };
-  
+
+  const handleReturnRequest = () => {
+    // navigate("/return"); // We will handle the refund request on this page later
+    console.log("İade Talebi clicked - future implementation here");
+  };
+
+  const handleCancelOrder = async (orderId) => {
+    if (!window.confirm(`Sipariş #${orderId} iptal etmek istediğinize emin misiniz?`)) return;
+
+    try {
+      const response = await fetch(`${API}/api/orders/${orderId}/cancel/`, {
+        method: 'POST', // or 'PUT' depending on backend implementation, POST is fine for this case
+        credentials: 'include',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        },
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        // Handle backend errors (e.g., status is not processing)
+        setError(data.error || 'Sipariş iptal edilirken bir hata oluştu.');
+      } else {
+        // Handle success
+        console.log(data.message);
+        // After successful cancellation, refetch orders to update the list
+        fetchOrders();
+        setError(null); // Clear any previous errors
+      }
+    } catch (error) {
+      console.error(`Error cancelling order ${orderId}:`, error);
+      setError('Ağ hatası veya başka bir hata oluştu.');
+    }
+  };
+
   const getStatusClass = (status) => {
-    if (status === "shipped") return "shipped";
+    if (status === "in-transit") return "in-transit";
     if (status === "delivered") return "delivered";
+    if (status === "cancelled") return "cancelled";
     return "preparing";
   };
 
@@ -92,9 +126,11 @@ const OrdersPage = ({ isEmbedded = false }) => {
             <div className="order-footer">
               <div className="order-total">{order.total_price.toLocaleString('tr-TR', { style: 'currency', currency: 'TRY' })}</div>
               <div className="action-buttons">
-                <button className="details-button">Detayları Gör</button>
+                {/* Removed Details button */}
                 {order.status !== "delivered" ? (
-                  <button className="track-button">Kargo Takibi</button>
+                  <button className="cancel-button" onClick={() => handleCancelOrder(order.order_id)}> {/* Renamed and repurposed Kargo Takibi */}
+                    Siparişi İptal Et
+                  </button>
                 ) : null}
                 <button className="return-button" onClick={handleReturnRequest}>
                   İade Talebi
