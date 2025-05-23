@@ -29,12 +29,10 @@ const SalesManagerPage = () => {
   const [revenueReport, setRevenueReport] = useState(null);
   const [showChart, setShowChart] = useState(false);
   const [pendingProducts, setPendingProducts] = useState([]);
-  const [pendingPrice, setPendingPrice] = useState({});
   const [error, setError] = useState(null);
 
   const [priceSuccess, setPriceSuccess] = useState(false);
   const [discountSuccess, setDiscountSuccess] = useState(false);
-  const [priceApprovalSuccess, setPriceApprovalSuccess] = useState(false);
 
   const [openSections, setOpenSections] = useState([]);
 
@@ -44,34 +42,20 @@ const SalesManagerPage = () => {
 
   const fetchPendingProducts = async () => {
     try {
-      const response = await fetch(`${API_BASE_URL}/api/products/sales/pending-products/`);
+      const response = await fetch(`${API_BASE_URL}/api/products/products/null-price/`, {
+        credentials: 'include', // Added credentials
+      });
       if (!response.ok) throw new Error('Failed to fetch pending products');
-      const data = await response.json();
-      setPendingProducts(data);
+      const responseData = await response.json(); // Renamed data to responseData
+      // Access the products array from the responseData object
+      const productsArray = responseData.products;
+      // Ensure productsArray is an array before setting state
+      setPendingProducts(Array.isArray(productsArray) ? productsArray : []);
       setError(null);
     } catch (err) {
       setError('Error fetching pending products');
+      setPendingProducts([]); // Also set to empty array on error
     }
-  };
-
-  const handleApprovePrice = async (productId) => {
-    try {
-      const response = await fetch(`${API_BASE_URL}/api/products/sales/set-price/`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ product_id: productId, new_price: pendingPrice[productId] }),
-      });
-      if (!response.ok) throw new Error('Failed to set price');
-      setPriceApprovalSuccess(true);
-      setTimeout(() => setPriceApprovalSuccess(false), 3000);
-      fetchPendingProducts();
-    } catch (err) {
-      setError('Error setting price');
-    }
-  };
-
-  const handlePendingPriceChange = (productId, value) => {
-    setPendingPrice((prev) => ({ ...prev, [productId]: value }));
   };
 
   const handleSetPrice = async () => {
@@ -93,6 +77,7 @@ const SalesManagerPage = () => {
       if (!response.ok) throw new Error('Failed to update price');
       setPriceSuccess(true);
       fetchProducts(); // Call fetchProducts to refresh product list in AppContext
+      fetchPendingProducts(); // Refresh the list of products with null prices
       setTimeout(() => setPriceSuccess(false), 3000);
       setProductIdPrice('');
       setNewPrice('');
@@ -224,24 +209,16 @@ const SalesManagerPage = () => {
         <button className="icon-header" onClick={() => toggleSection('priceApproval')}><FaClipboardList size={28} /></button>
         {openSections.includes('priceApproval') && (
           <div className="feature-content">
-            <h2>📋 Price Approval for New Products</h2>
-            <p>Products pending price approval will be listed here. Set their prices to make them visible.</p>
-            {priceApprovalSuccess && <div className="success-message">✅ Price approved successfully!</div>}
+            <h2>📋 Products with Null Prices</h2>
+            <p>Products with null prices are listed here.</p>
             {error && <div className="error-message">{error}</div>}
             <div className="pending-products-list">
               {pendingProducts.length === 0 ? (
-                <div>No products pending price approval.</div>
+                <div>No products with null prices found.</div>
               ) : (
                 pendingProducts.map(product => (
                   <div key={product.id} className="pending-product-item">
                     <span>{product.name} (ID: {product.id})</span>
-                    <input
-                      type="number"
-                      placeholder="Enter price"
-                      value={pendingPrice[product.id] || ''}
-                      onChange={e => handlePendingPriceChange(product.id, e.target.value)}
-                    />
-                    <button onClick={() => handleApprovePrice(product.id)}>Approve Price</button>
                   </div>
                 ))
               )}
