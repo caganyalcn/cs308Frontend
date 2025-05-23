@@ -8,7 +8,10 @@ const API = process.env.REACT_APP_API_BASE_URL || "http://localhost:8000";
 const STATUS_OPTIONS = [
   { value: "processing", label: "İşleniyor" },
   { value: "in-transit", label: "Yolda" },
-  { value: "delivered", label: "Teslim Edildi" }
+  { value: "delivered", label: "Teslim Edildi" },
+  { value: "cancelled", label: "İptal Edildi" },
+  { value: "refundwaiting", label: "İade Bekleniyor" },
+  { value: "refunded", label: "İade Edildi" }
 ];
 
 const DeliveryManagementPage = () => {

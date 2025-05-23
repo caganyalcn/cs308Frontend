@@ -40,9 +40,58 @@ const OrdersPage = ({ isEmbedded = false }) => {
     }
   };
 
-  const handleReturnRequest = () => {
+  const handleReturnRequest = async (order) => {
     // navigate("/return"); // We will handle the refund request on this page later
-    console.log("İade Talebi clicked - future implementation here");
+    console.log("İade Talebi clicked for order:", order);
+
+    const purchaseDate = new Date(order.created_at);
+    const today = new Date();
+    const diffTime = today - purchaseDate;
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+    if (diffDays > 30) {
+      setError('İade talebi sadece satın alma tarihinden sonraki 30 gün içinde yapılabilir.');
+      console.log(`Order ${order.order_id} is older than 30 days. (${diffDays} days)`);
+    } else {
+      setError(null); // Clear previous errors
+      console.log(`Order ${order.order_id} is within 30 days. (${diffDays} days). Proceed with refund request...`);
+      // TODO: Implement the next steps for initiating a refund request (e.g., showing a modal to select products)
+
+      // Call backend to initiate refund request
+      await initiateRefund(order.order_id);
+
+      // alert('İade talebiniz alınmıştır. Ancak ürün seçme ve sales manager onayı gibi adımlar henüz tamamlanmamıştır.'); // Temporary alert
+    }
+  };
+
+  // New function to call the backend refund initiation endpoint
+  const initiateRefund = async (orderId) => {
+    try {
+      const response = await fetch(`${API}/api/orders/${orderId}/refund-request/`, {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        },
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        // Handle backend errors
+        setError(data.error || 'İade talebi başlatılırken bir hata oluştu.');
+      } else {
+        // Handle success
+        console.log(data.message);
+        // Refresh orders list to show updated status (refundwaiting)
+        fetchOrders();
+        setError(null); // Clear any previous errors
+      }
+    } catch (error) {
+      console.error(`Error initiating refund for order ${orderId}:`, error);
+      setError('Ağ hatası veya başka bir hata oluştu.');
+    }
   };
 
   const handleCancelOrder = async (orderId) => {
@@ -132,7 +181,7 @@ const OrdersPage = ({ isEmbedded = false }) => {
                     Siparişi İptal Et
                   </button>
                 ) : null}
-                <button className="return-button" onClick={handleReturnRequest}>
+                <button className="return-button" onClick={() => handleReturnRequest(order)}>
                   İade Talebi
                 </button>
               </div>
