@@ -1,22 +1,24 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react'; // Added useContext
 import '../styles/SalesManagerPage.css';
-import { FaDollarSign, FaPercent, FaBell, FaClipboardList, FaFileInvoice, FaChartBar } from 'react-icons/fa';
+import { FaDollarSign, FaPercent, FaClipboardList, FaFileInvoice, FaChartBar } from 'react-icons/fa';
+import { AppContext } from '../AppContext'; // Added AppContext import
+
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || 'http://localhost:8000';
 
 const SECTION_KEYS = [
   'setPrice',
   'discount',
-  'notify',
   'priceApproval',
   'invoice',
   'revenue',
 ];
 
 const SalesManagerPage = () => {
+  const { fetchProducts } = useContext(AppContext); // Get fetchProducts from context
   const [productIdPrice, setProductIdPrice] = useState('');
   const [newPrice, setNewPrice] = useState('');
   const [productIdDiscount, setProductIdDiscount] = useState('');
   const [discountPercentage, setDiscountPercentage] = useState('');
-  const [productIdNotification, setProductIdNotification] = useState('');
   const [startDateInv, setStartDateInv] = useState('');
   const [endDateInv, setEndDateInv] = useState('');
   const [invoices, setInvoices] = useState([]);
@@ -32,7 +34,6 @@ const SalesManagerPage = () => {
 
   const [priceSuccess, setPriceSuccess] = useState(false);
   const [discountSuccess, setDiscountSuccess] = useState(false);
-  const [notificationSuccess, setNotificationSuccess] = useState(false);
   const [priceApprovalSuccess, setPriceApprovalSuccess] = useState(false);
 
   const [openSections, setOpenSections] = useState([]);
@@ -43,7 +44,7 @@ const SalesManagerPage = () => {
 
   const fetchPendingProducts = async () => {
     try {
-      const response = await fetch('/api/products/sales/pending-products/');
+      const response = await fetch(`${API_BASE_URL}/api/products/sales/pending-products/`);
       if (!response.ok) throw new Error('Failed to fetch pending products');
       const data = await response.json();
       setPendingProducts(data);
@@ -55,7 +56,7 @@ const SalesManagerPage = () => {
 
   const handleApprovePrice = async (productId) => {
     try {
-      const response = await fetch('/api/products/sales/set-price/', {
+      const response = await fetch(`${API_BASE_URL}/api/products/sales/set-price/`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ product_id: productId, new_price: pendingPrice[productId] }),
@@ -73,7 +74,7 @@ const SalesManagerPage = () => {
     setPendingPrice((prev) => ({ ...prev, [productId]: value }));
   };
 
-  const handleSetPrice = () => {
+  const handleSetPrice = async () => {
     if (!productIdPrice || newPrice === '') {
       alert('Please enter both product ID and new price.');
       return;
@@ -82,14 +83,25 @@ const SalesManagerPage = () => {
       alert('Price cannot be negative.');
       return;
     }
-    console.log(`Setting price for product ${productIdPrice} to ${newPrice}`);
-    setProductIdPrice('');
-    setNewPrice('');
-    setPriceSuccess(true);
-    setTimeout(() => setPriceSuccess(false), 3000);
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/products/products/update_price/${productIdPrice}/`, {
+        method: 'POST',
+        credentials: 'include',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ price: newPrice }), 
+      });
+      if (!response.ok) throw new Error('Failed to update price');
+      setPriceSuccess(true);
+      fetchProducts(); // Call fetchProducts to refresh product list in AppContext
+      setTimeout(() => setPriceSuccess(false), 3000);
+      setProductIdPrice('');
+      setNewPrice('');
+    } catch (err) {
+      alert('Error updating price');
+    }
   };
 
-  const handleApplyDiscount = () => {
+  const handleApplyDiscount = async () => { // Make function async
     if (!productIdDiscount || discountPercentage === '') {
       alert('Please enter both product ID and discount percentage.');
       return;
@@ -98,27 +110,30 @@ const SalesManagerPage = () => {
       alert('Discount percentage cannot be negative.');
       return;
     }
-    console.log(`Applying ${discountPercentage}% discount to product ${productIdDiscount}`);
-    setProductIdDiscount('');
-    setDiscountPercentage('');
-    setDiscountSuccess(true);
-    setTimeout(() => setDiscountSuccess(false), 3000);
-  };
-
-  const handleSendNotifications = () => {
-    if (!productIdNotification) {
-      alert('Please enter product ID to notify users.');
-      return;
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/products/products/${productIdDiscount}/discount/`, { // Updated endpoint
+        method: 'POST',
+        credentials: 'include',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ discount_percentage: parseFloat(discountPercentage) }), 
+      });
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({ message: 'Failed to apply discount' }));
+        throw new Error(errorData.message || 'Failed to apply discount');
+      }
+      setDiscountSuccess(true);
+      fetchProducts(); // Call fetchProducts to refresh product list in AppContext
+      setTimeout(() => setDiscountSuccess(false), 3000);
+      setProductIdDiscount('');
+      setDiscountPercentage('');
+    } catch (err) {
+      alert(`Error applying discount: ${err.message}`);
     }
-    console.log(`Sending wishlist notifications for product ${productIdNotification}`);
-    setProductIdNotification('');
-    setNotificationSuccess(true);
-    setTimeout(() => setNotificationSuccess(false), 3000);
   };
 
   const handleViewInvoices = async () => {
     try {
-      const response = await fetch(`/api/products/sales/invoices?start_date=${startDateInv}&end_date=${endDateInv}`);
+      const response = await fetch(`${API_BASE_URL}/api/products/sales/invoices?start_date=${startDateInv}&end_date=${endDateInv}`);
       if (!response.ok) throw new Error('Failed to fetch invoices');
       const data = await response.json();
       setInvoices(data);
@@ -131,7 +146,7 @@ const SalesManagerPage = () => {
 
   const handleExportInvoicesPDF = async () => {
     try {
-      const response = await fetch(`/api/products/sales/invoices/export-pdf?start_date=${startDateInv}&end_date=${endDateInv}`);
+      const response = await fetch(`${API_BASE_URL}/api/products/sales/invoices/export-pdf?start_date=${startDateInv}&end_date=${endDateInv}`);
       if (!response.ok) throw new Error('Failed to export PDF');
       // For file download, you may need to handle blob response here
       alert('PDF export functionality to be implemented.');
@@ -142,7 +157,7 @@ const SalesManagerPage = () => {
 
   const handleCalculateRevenueLoss = async () => {
     try {
-      const response = await fetch(`/api/products/sales/revenue-loss?start_date=${startDateRev}&end_date=${endDateRev}&default_cost_percentage=${defaultCostPercentage}`);
+      const response = await fetch(`${API_BASE_URL}/api/products/sales/revenue-loss?start_date=${startDateRev}&end_date=${endDateRev}&default_cost_percentage=${defaultCostPercentage}`);
       if (!response.ok) throw new Error('Failed to fetch revenue/loss');
       const data = await response.json();
       setRevenueReport(data);
@@ -201,20 +216,6 @@ const SalesManagerPage = () => {
             </div>
             <button onClick={handleApplyDiscount} className="action-button">Apply Discount</button>
             {discountSuccess && <div className="success-message">✅ Discount applied successfully!</div>}
-          </div>
-        )}
-      </div>
-      {/* Notify Wishlist Users */}
-      <div className={`feature-section${openSections.includes('notify') ? ' expanded' : ''}`}>
-        <button className="icon-header" onClick={() => toggleSection('notify')}><FaBell size={28} /></button>
-        {openSections.includes('notify') && (
-          <div className="feature-content">
-            <div className="form-group">
-              <label htmlFor="productIdNotification">Product ID:</label>
-              <input type="text" id="productIdNotification" value={productIdNotification} onChange={(e) => setProductIdNotification(e.target.value)} placeholder="Enter product ID for notifications" />
-            </div>
-            <button onClick={handleSendNotifications} className="action-button">Send Notifications</button>
-            {notificationSuccess && <div className="success-message">✅ Notifications sent successfully!</div>}
           </div>
         )}
       </div>
