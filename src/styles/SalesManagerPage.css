@@ -255,6 +255,75 @@
   font-size: 1.1em;
 }
 
+/* Refund Waiting Orders */
+.refund-orders-list {
+  margin-top: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.refund-order-item {
+  background: #f8fafb;
+  border: 1px solid #e0e0d1;
+  border-radius: 8px;
+  padding: 18px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  font-size: 1em;
+  color: #333;
+}
+
+.refund-order-details h3 {
+  color: #218838;
+  margin-top: 0;
+  margin-bottom: 10px;
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+.refund-order-details p {
+  margin: 6px 0;
+}
+
+.refund-order-items {
+  list-style-type: none;
+  padding-left: 10px;
+  margin-top: 8px;
+}
+
+.refund-order-items li {
+  padding: 5px 0;
+  border-bottom: 1px dashed #e0e0d1;
+}
+
+.refund-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 8px;
+  flex-wrap: wrap;
+}
+
+.approve-button {
+  background: linear-gradient(90deg, #28a745 60%, #218838 100%);
+}
+
+.reject-button {
+  background: linear-gradient(90deg, #dc3545 60%, #c82333 100%);
+}
+
+.reject-button:hover {
+  background: linear-gradient(90deg, #c82333 60%, #dc3545 100%);
+}
+
+.loading-indicator {
+  text-align: center;
+  color: #218838;
+  padding: 10px;
+  margin-top: 10px;
+}
+
 /* Responsive Design */
 @media (max-width: 700px) {
   .sales-manager-page {

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react'; // Added useContext
 import '../styles/SalesManagerPage.css';
-import { FaDollarSign, FaPercent, FaClipboardList, FaFileInvoice, FaChartBar } from 'react-icons/fa';
+import { FaDollarSign, FaPercent, FaClipboardList, FaFileInvoice, FaChartBar, FaExchangeAlt } from 'react-icons/fa';
 import { AppContext } from '../AppContext'; // Added AppContext import
 
 const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || 'http://localhost:8000';
@@ -11,6 +11,7 @@ const SECTION_KEYS = [
   'priceApproval',
   'invoice',
   'revenue',
+  'refundWaiting',
 ];
 
 const SalesManagerPage = () => {
@@ -28,6 +29,9 @@ const SalesManagerPage = () => {
   const [revenueReport, setRevenueReport] = useState(null);
   const [pendingProducts, setPendingProducts] = useState([]);
   const [error, setError] = useState(null);
+  const [refundWaitingOrders, setRefundWaitingOrders] = useState([]);
+  const [loadingRefunds, setLoadingRefunds] = useState(false);
+  const [refundError, setRefundError] = useState(null);
 
   const [priceSuccess, setPriceSuccess] = useState(false);
   const [discountSuccess, setDiscountSuccess] = useState(false);
@@ -37,6 +41,31 @@ const SalesManagerPage = () => {
   useEffect(() => {
     fetchPendingProducts();
   }, []);
+
+  const fetchRefundWaitingOrders = async () => {
+    try {
+      setLoadingRefunds(true);
+      setRefundError(null);
+      
+      const response = await fetch(`${API_BASE_URL}/api/orders/refund-waiting/`, {
+        credentials: 'include', 
+      });
+      
+      if (!response.ok) {
+        throw new Error(`Failed to fetch refund waiting orders. Status: ${response.status}`);
+      }
+      
+      const data = await response.json();
+      const ordersArray = data.orders || data || [];
+      setRefundWaitingOrders(Array.isArray(ordersArray) ? ordersArray : []);
+    } catch (err) {
+      console.error('Error fetching refund waiting orders:', err);
+      setRefundError(`Error fetching refund waiting orders: ${err.message}`);
+      setRefundWaitingOrders([]);
+    } finally {
+      setLoadingRefunds(false);
+    }
+  };
 
   const fetchPendingProducts = async () => {
     try {
@@ -192,6 +221,31 @@ const SalesManagerPage = () => {
         ? prev.filter((section) => section !== key)
         : [...prev, key]
     );
+    
+    // When opening the refund waiting section, fetch the data
+    if (key === 'refundWaiting' && !openSections.includes('refundWaiting')) {
+      fetchRefundWaitingOrders();
+    }
+  };
+
+  const handleRefundRequest = async (orderId, action) => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/orders/${orderId}/${action}-refund/`, {
+        method: 'POST',
+        credentials: 'include',
+        headers: { 'Content-Type': 'application/json' },
+      });
+      
+      if (!response.ok) {
+        throw new Error(`Failed to ${action} refund for order ${orderId}`);
+      }
+      
+      // After successful action, refresh the list
+      fetchRefundWaitingOrders();
+      alert(`Refund ${action === 'approve' ? 'approved' : 'rejected'} successfully!`);
+    } catch (err) {
+      setRefundError(`Error processing refund: ${err.message}`);
+    }
   };
 
   return (
@@ -371,6 +425,67 @@ const SalesManagerPage = () => {
               </div>
             )}
             {error && <div className="error-message">{error}</div>}
+          </div>
+        )}
+      </div>
+      
+      {/* Refund Waiting Orders */}
+      <div className={`feature-section${openSections.includes('refundWaiting') ? ' expanded' : ''}`}>
+        <button className="icon-header" onClick={() => toggleSection('refundWaiting')}><FaExchangeAlt size={28} /></button>
+        {openSections.includes('refundWaiting') && (
+          <div className="feature-content">
+            <h2>🔄 Refund Waiting Orders</h2>
+            <p>Orders waiting for refund approval are listed here.</p>
+            {loadingRefunds && <div className="loading-indicator">Loading refund requests...</div>}
+            {refundError && <div className="error-message">{refundError}</div>}
+            
+            <div className="refund-orders-list">
+              {refundWaitingOrders.length === 0 ? (
+                <div>No orders waiting for refund approval.</div>
+              ) : (
+                refundWaitingOrders.map(order => (
+                  <div key={order.id} className="refund-order-item">
+                    <div className="refund-order-details">
+                      <h3>Order ID: {order.id || 'N/A'}</h3>
+                      <p>User Email: {order.user_email || 'N/A'}</p>
+                      <p>Created At: {order.created_at ? new Date(order.created_at).toLocaleString() : 'N/A'}</p>
+                      <p>Total Price: ${order.total_price ? order.total_price.toFixed(2) : '0.00'}</p>
+                      
+                      <h4>Items:</h4>
+                      {order.items && Array.isArray(order.items) && order.items.length > 0 ? (
+                        <ul className="refund-order-items">
+                          {order.items.map(item => (
+                            <li key={item.product_id || Math.random()}>
+                              {item.product_name || 'Unknown Product'} 
+                              {item.product_id ? `(ID: ${item.product_id})` : ''} - 
+                              Quantity: {item.quantity || 0} - 
+                              Price: ${item.price_at_purchase ? item.price_at_purchase.toFixed(2) : '0.00'}
+                            </li>
+                          ))}
+                        </ul>
+                      ) : (
+                        <p>No items in this order.</p>
+                      )}
+                    </div>
+                    
+                    <div className="refund-actions">
+                      <button 
+                        onClick={() => handleRefundRequest(order.id, 'approve')} 
+                        className="action-button approve-button"
+                      >
+                        Approve Refund
+                      </button>
+                      <button 
+                        onClick={() => handleRefundRequest(order.id, 'reject')} 
+                        className="action-button reject-button"
+                      >
+                        Reject Refund
+                      </button>
+                    </div>
+                  </div>
+                ))
+              )}
+            </div>
           </div>
         )}
       </div>
