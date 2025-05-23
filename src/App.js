@@ -14,8 +14,7 @@ import PaymentSuccessPage from "./pages/PaymentSuccessPage";
 import OrdersPage from "./pages/OrdersPage";
 import ReturnPage from "./pages/ReturnPage";
 import AccountPage from "./pages/AccountPage";
-import PaymentMethodsPage from "./pages/PaymentMethodsPage"; 
-import AddressesPage from "./pages/AddressesPage"; 
+import PaymentMethodsPage from "./pages/PaymentMethodsPage";
 import AdminDashboardPage from "./pages/AdminDashboardPage";
 import SalesManagerPage from "./pages/SalesManagerPage";
 import ProductManagerPage from "./pages/ProductManagerPage"; 
@@ -49,7 +48,6 @@ const AppLayout = () => {
         <Route path="/return" element={<ReturnPage />} />
         <Route path="/hesabim" element={<AccountPage />} />
         <Route path="/payment-methods" element={<PaymentMethodsPage />} />
-        <Route path="/addresses" element={<AddressesPage />} />
         <Route path="/admin" element={<AdminDashboardPage />} />
         <Route path="/sales-manager" element={<SalesManagerPage />} />
         <Route path="/product-manager" element={<ProductManagerPage />} /> {}

@@ -110,7 +110,7 @@ const ProductManagementPage = () => {
     if (!window.confirm('Bu ürünü silmek istediğinize emin misiniz?')) return;
 
     try {
-      const response = await fetch(`${API}/api/products/products/${id}/`, {
+      const response = await fetch(`${API}/api/products/products/${id}/delete/`, {
         method: 'DELETE',
         credentials: 'include',
         headers: {
@@ -119,7 +119,10 @@ const ProductManagementPage = () => {
         }
       });
       
-      if (!response.ok) throw new Error('Silme işlemi başarısız');
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Silme işlemi başarısız');
+      }
       
       await fetchProducts();
       setError(null);

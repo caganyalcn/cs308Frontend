@@ -9,7 +9,6 @@ function PaymentPage() {
     cardNumber: "",
     expiryDate: "",
     cvv: "",
-    address: "",
   });
   const [formErrors, setFormErrors] = useState({});
 
@@ -78,9 +77,7 @@ function PaymentPage() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          address: paymentDetails.address,
-        }),
+        body: JSON.stringify({}),
       });
 
       if (res.ok) {
@@ -146,15 +143,6 @@ function PaymentPage() {
             maxLength="3"
             pattern="\d{3}"
             title="CVV kodu 3 haneli olmalıdır."
-          />
-        </div>
-        <div className="input-group">
-          <label>Teslimat Adresi</label>
-          <textarea
-            name="address"
-            value={paymentDetails.address}
-            onChange={handleChange}
-            required
           />
         </div>
         <button type="submit" className="payment-button">Ödemeyi Tamamla</button>

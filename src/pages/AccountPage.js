@@ -11,8 +11,7 @@ const API = process.env.REACT_APP_API_BASE_URL || "http://localhost:8000";
 const AccountPage = () => {
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
-  const [editMode, setEditMode] = useState({ name: false, email: false, phone: false });
-  const [formData, setFormData] = useState({ name: "", email: "", phone: "" });
+  const [formData, setFormData] = useState({ name: "", email: "", address: "" });
   const [activeTab, setActiveTab] = useState("profile");
   const { logout } = useContext(AppContext);
 
@@ -27,31 +26,14 @@ const AccountPage = () => {
     })
       .then((res) => res.json())
       .then((data) => {
-        setUser(data);
-        setFormData({ name: data.name, email: data.email, phone: data.phone || "" });
+        setUser(data.user);
+        setFormData({ name: data.user.name, email: data.user.email, address: data.user.delivery_address || "" });
       })
       .catch((err) => console.error("Kullanıcı verileri alınamadı", err));
   }, []);
 
   const handleInputChange = (field, value) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
-  };
-
-  const handleSave = () => {
-    fetch(`${API}/api/accounts/update/`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      credentials: "include",
-      body: JSON.stringify(formData),
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        setUser(data);
-        setEditMode({ name: false, email: false, phone: false });
-      })
-      .catch((err) => console.error("Güncelleme hatası", err));
   };
 
   const gotoFavorites = () => navigate("/favorites");
@@ -65,7 +47,7 @@ const AccountPage = () => {
       <div className="account-container">
         <div className="account-sidebar">
           <div className="profile-summary">
-            <img src={"https://via.placeholder.com/150"} alt={user.name} className="profile-picture" />
+            {/* <img src={"https://via.placeholder.com/150"} alt={user.name} className="profile-picture" /> */}
             <h3>{user.name}</h3>
             <p>{user.email}</p>
           </div>
@@ -73,7 +55,6 @@ const AccountPage = () => {
             <button className={`menu-item ${activeTab === "profile" ? "active" : ""}`} onClick={() => setActiveTab("profile")}> <i className="fa fa-user" /> Profil Bilgilerim</button>
             <button className={`menu-item ${activeTab === "orders" ? "active" : ""}`} onClick={() => setActiveTab("orders")}> <i className="fa fa-shopping-bag" /> Siparişlerim</button>
             <button className="menu-item" onClick={gotoFavorites}><i className="fa fa-heart" /> Favorilerim</button>
-            <button className="menu-item" onClick={() => navigate("/addresses")}><i className="fa fa-map-marker" /> Adreslerim</button>
             <button className="menu-item" onClick={gotoPaymentPage}><i className="fa fa-credit-card" /> Ödeme Yöntemlerim</button>
             <button className="menu-item" onClick={logout} style={{ backgroundColor: "#dc3545", color: "white" }}><i className="fa fa-sign-out" /> Çıkış Yap</button>
           </div>
@@ -82,23 +63,19 @@ const AccountPage = () => {
         <div className="account-content">
           {activeTab === "profile" && (
             <div className="profile-details">
-              <h2>Kışisel Bilgilerim</h2>
+              <h2>Kişisel Bilgilerim</h2>
               <div className="edit-profile-form">
-                {['name', 'email', 'phone'].map((field) => (
+                {['name', 'email', 'address'].map((field) => (
                   <div className="form-group" key={field}>
-                    <label>{field === 'name' ? 'Ad Soyad' : field === 'email' ? 'E-Posta Adresi' : 'Telefon Numarası'}</label>
+                    <label>{field === 'name' ? 'Ad Soyad' : field === 'email' ? 'E-Posta Adresi' : 'Adres'}</label>
                     <input
                       type={field === 'email' ? 'email' : 'text'}
                       value={formData[field]}
                       onChange={(e) => handleInputChange(field, e.target.value)}
-                      readOnly={!editMode[field]}
+                      readOnly
                     />
-                    <button className="edit-button" onClick={() => setEditMode((prev) => ({ ...prev, [field]: !prev[field] }))}>
-                      {editMode[field] ? "İptal" : "Düzenle"}
-                    </button>
                   </div>
                 ))}
-                <button className="save-button" onClick={handleSave}>Değişiklikleri Kaydet</button>
               </div>
             </div>
           )}
