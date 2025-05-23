@@ -25,9 +25,7 @@ const SalesManagerPage = () => {
   const [viewingInvoices, setViewingInvoices] = useState(false);
   const [startDateRev, setStartDateRev] = useState('');
   const [endDateRev, setEndDateRev] = useState('');
-  const [defaultCostPercentage] = useState('50');
   const [revenueReport, setRevenueReport] = useState(null);
-  const [showChart, setShowChart] = useState(false);
   const [pendingProducts, setPendingProducts] = useState([]);
   const [error, setError] = useState(null);
 
@@ -116,22 +114,47 @@ const SalesManagerPage = () => {
     }
   };
 
-  const handleViewInvoices = async () => {
-    try {
-      const response = await fetch(`${API_BASE_URL}/api/products/sales/invoices?start_date=${startDateInv}&end_date=${endDateInv}`);
-      if (!response.ok) throw new Error('Failed to fetch invoices');
-      const data = await response.json();
-      setInvoices(data);
-      setViewingInvoices(true);
-      setError(null);
-    } catch (err) {
-      setError('Error fetching invoices');
+  const handleShowInvoices = async () => {
+    if (!startDateInv || !endDateInv) {
+      setError('Please select both start and end dates');
+      return;
     }
+    
+    try {
+      setError(null); // Clear any previous errors
+      const response = await fetch(`${API_BASE_URL}/api/orders/by-date-range/?start_date=${startDateInv}&end_date=${endDateInv}`, {
+        credentials: 'include',
+      });
+      
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error('Invoice fetch error:', errorText);
+        throw new Error(`Failed to fetch invoices (${response.status})`);
+      }
+      
+      const data = await response.json();
+      console.log('Invoice data received:', data); // Debug log to see the structure
+      
+      // Handle different possible response structures
+      const ordersArray = data.orders || data || [];
+      setInvoices(Array.isArray(ordersArray) ? ordersArray : []);
+      setViewingInvoices(true);
+    } catch (err) {
+      console.error('Error in handleShowInvoices:', err);
+      setError(`Error fetching invoices: ${err.message}`);
+      setInvoices([]);
+      setViewingInvoices(false);
+    }
+  };
+
+  const handlePrintInvoices = () => {
+    alert('Print functionality to be implemented.');
+    // Later, you can implement window.print() or a library for better print formatting.
   };
 
   const handleExportInvoicesPDF = async () => {
     try {
-      const response = await fetch(`${API_BASE_URL}/api/products/sales/invoices/export-pdf?start_date=${startDateInv}&end_date=${endDateInv}`);
+      const response = await fetch(`${API_BASE_URL}/api/orders/sales/invoices/export-pdf?start_date=${startDateInv}&end_date=${endDateInv}`);
       if (!response.ok) throw new Error('Failed to export PDF');
       // For file download, you may need to handle blob response here
       alert('PDF export functionality to be implemented.');
@@ -142,14 +165,24 @@ const SalesManagerPage = () => {
 
   const handleCalculateRevenueLoss = async () => {
     try {
-      const response = await fetch(`${API_BASE_URL}/api/products/sales/revenue-loss?start_date=${startDateRev}&end_date=${endDateRev}&default_cost_percentage=${defaultCostPercentage}`);
-      if (!response.ok) throw new Error('Failed to fetch revenue/loss');
+      const response = await fetch(`${API_BASE_URL}/api/orders/calculate-revenue/?start_date=${startDateRev}&end_date=${endDateRev}`, {
+        credentials: 'include',
+      });
+      if (!response.ok) throw new Error('Failed to fetch revenue');
       const data = await response.json();
-      setRevenueReport(data);
-      setShowChart(true);
+      
+      // Calculate expense as half of the revenue
+      const revenue = typeof data === 'number' ? data : 0;
+      const expense = revenue / 2;
+      
+      setRevenueReport({
+        revenue: revenue,
+        expense: expense
+      });
+      
       setError(null);
     } catch (err) {
-      setError('Error fetching revenue/loss');
+      setError('Error fetching revenue');
     }
   };
 
@@ -242,19 +275,38 @@ const SalesManagerPage = () => {
                 <input type="date" id="endDateInv" value={endDateInv} onChange={(e) => setEndDateInv(e.target.value)} />
               </div>
             </div>
-            <button onClick={handleViewInvoices} className="action-button">View Invoices</button>
-            <button onClick={handleExportInvoicesPDF} className="action-button">Export as PDF</button>
+            <button onClick={handleShowInvoices} className="action-button">Show</button>
+            <button onClick={handlePrintInvoices} className="action-button">Print</button>
+            <button onClick={handleExportInvoicesPDF} className="action-button">Download as PDF</button>
+            {error && <div className="error-message">{error}</div>}
             {viewingInvoices && (
               <div className="invoices-list">
                 {invoices.length === 0 ? (
                   <div>No invoices found for the selected period.</div>
                 ) : (
                   invoices.map(invoice => (
-                    <div key={invoice.id} className="invoice-item">
-                      <span>Invoice ID: {invoice.id}</span>
-                      <span>Date: {invoice.date}</span>
-                      <span>Amount: ${invoice.amount}</span>
-                      <span>Customer: {invoice.customer}</span>
+                    <div key={invoice.id || Math.random()} className="invoice-item">
+                      <h3>Order ID: {invoice.id || 'N/A'}</h3>
+                      <p>User Email: {invoice.user_email || 'N/A'}</p>
+                      <p>Created At: {invoice.created_at ? new Date(invoice.created_at).toLocaleString() : 'N/A'}</p>
+                      <p>Total Price: ${invoice.total_price ? invoice.total_price.toFixed(2) : '0.00'}</p>
+                      <p>Delivery Address: {invoice.delivery_address || 'N/A'}</p>
+                      <p>Status: {invoice.status || 'N/A'}</p>
+                      <h4>Items:</h4>
+                      {invoice.items && Array.isArray(invoice.items) && invoice.items.length > 0 ? (
+                        <ul>
+                          {invoice.items.map(item => (
+                            <li key={item.product_id || Math.random()}>
+                              {item.product_name || 'Unknown Product'} 
+                              {item.product_id ? `(ID: ${item.product_id})` : ''} - 
+                              Quantity: {item.quantity || 0} - 
+                              Price: ${item.price_at_purchase ? item.price_at_purchase.toFixed(2) : '0.00'}
+                            </li>
+                          ))}
+                        </ul>
+                      ) : (
+                        <p>No items in this order.</p>
+                      )}
                     </div>
                   ))
                 )}
@@ -263,12 +315,12 @@ const SalesManagerPage = () => {
           </div>
         )}
       </div>
-      {/* Revenue/Loss Calculation */}
+      {/* Revenue Calculation */}
       <div className={`feature-section${openSections.includes('revenue') ? ' expanded' : ''}`}>
         <button className="icon-header" onClick={() => toggleSection('revenue')}><FaChartBar size={28} /></button>
         {openSections.includes('revenue') && (
           <div className="feature-content">
-            <h2>📊 Revenue/Loss Calculation</h2>
+            <h2>📊 Revenue Calculation</h2>
             <div className="form-inline">
               <div className="form-group">
                 <label htmlFor="startDateRev">Start Date:</label>
@@ -278,19 +330,44 @@ const SalesManagerPage = () => {
                 <label htmlFor="endDateRev">End Date:</label>
                 <input type="date" id="endDateRev" value={endDateRev} onChange={(e) => setEndDateRev(e.target.value)} />
               </div>
-              <div className="form-group">
-                <label htmlFor="defaultCostPercentage">Default Cost Percentage (%):</label>
-                <input type="number" id="defaultCostPercentage" value={defaultCostPercentage} readOnly />
-              </div>
             </div>
-            <button onClick={handleCalculateRevenueLoss} className="action-button">Calculate Revenue/Loss</button>
+            <button onClick={handleCalculateRevenueLoss} className="action-button">Calculate Revenue</button>
             {revenueReport && (
               <div className="revenue-report">
-                <h3>Revenue Report for {revenueReport.period}</h3>
-                <p>Total Revenue: ${revenueReport.totalRevenue}</p>
-                <p>Total Cost: ${revenueReport.totalCost}</p>
-                <p>Net Profit: ${revenueReport.netProfit}</p>
-                {showChart && <div className="chart-placeholder">Chart will be displayed here.</div>}
+                <h3>Revenue Report</h3>
+                
+                <div className="revenue-item">
+                  <div className="revenue-label">Toplam Kazanç:</div>
+                  <div className="revenue-value">${revenueReport.revenue.toFixed(2)}</div>
+                  <div className="revenue-bar-container">
+                    <div 
+                      className="revenue-bar" 
+                      style={{ 
+                        width: `100%`, 
+                        backgroundColor: '#4CAF50'
+                      }}
+                    ></div>
+                  </div>
+                </div>
+                
+                <div className="revenue-item">
+                  <div className="revenue-label">Toplam Gider:</div>
+                  <div className="revenue-value">${revenueReport.expense.toFixed(2)}</div>
+                  <div className="revenue-bar-container">
+                    <div 
+                      className="revenue-bar" 
+                      style={{ 
+                        width: `${(revenueReport.expense / revenueReport.revenue) * 100}%`, 
+                        backgroundColor: '#f44336'
+                      }}
+                    ></div>
+                  </div>
+                </div>
+                
+                <div className="revenue-item">
+                  <div className="revenue-label">Net Kazanç:</div>
+                  <div className="revenue-value">${(revenueReport.revenue - revenueReport.expense).toFixed(2)}</div>
+                </div>
               </div>
             )}
             {error && <div className="error-message">{error}</div>}
