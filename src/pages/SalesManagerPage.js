@@ -43,7 +43,7 @@ const SalesManagerPage = () => {
 
   const fetchPendingProducts = async () => {
     try {
-      const response = await fetch('/api/sales-admin/pending-products/');
+      const response = await fetch('/api/products/sales/pending-products/');
       if (!response.ok) throw new Error('Failed to fetch pending products');
       const data = await response.json();
       setPendingProducts(data);
@@ -55,7 +55,7 @@ const SalesManagerPage = () => {
 
   const handleApprovePrice = async (productId) => {
     try {
-      const response = await fetch('/api/sales-admin/products/set-price/', {
+      const response = await fetch('/api/products/sales/set-price/', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ product_id: productId, new_price: pendingPrice[productId] }),
@@ -118,7 +118,7 @@ const SalesManagerPage = () => {
 
   const handleViewInvoices = async () => {
     try {
-      const response = await fetch(`/api/sales-admin/invoices?start_date=${startDateInv}&end_date=${endDateInv}`);
+      const response = await fetch(`/api/products/sales/invoices?start_date=${startDateInv}&end_date=${endDateInv}`);
       if (!response.ok) throw new Error('Failed to fetch invoices');
       const data = await response.json();
       setInvoices(data);
@@ -131,7 +131,7 @@ const SalesManagerPage = () => {
 
   const handleExportInvoicesPDF = async () => {
     try {
-      const response = await fetch(`/api/sales-admin/invoices/export-pdf?start_date=${startDateInv}&end_date=${endDateInv}`);
+      const response = await fetch(`/api/products/sales/invoices/export-pdf?start_date=${startDateInv}&end_date=${endDateInv}`);
       if (!response.ok) throw new Error('Failed to export PDF');
       // For file download, you may need to handle blob response here
       alert('PDF export functionality to be implemented.');
@@ -142,7 +142,7 @@ const SalesManagerPage = () => {
 
   const handleCalculateRevenueLoss = async () => {
     try {
-      const response = await fetch(`/api/sales-admin/revenue-loss?start_date=${startDateRev}&end_date=${endDateRev}&default_cost_percentage=${defaultCostPercentage}`);
+      const response = await fetch(`/api/products/sales/revenue-loss?start_date=${startDateRev}&end_date=${endDateRev}&default_cost_percentage=${defaultCostPercentage}`);
       if (!response.ok) throw new Error('Failed to fetch revenue/loss');
       const data = await response.json();
       setRevenueReport(data);
