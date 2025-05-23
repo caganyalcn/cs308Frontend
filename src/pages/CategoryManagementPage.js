@@ -195,16 +195,16 @@ const CategoryRow = ({ cat, onDelete, onSave }) => {
             onChange={(e) => setEditedName(e.target.value)}
             className="flex-1 p-2 border rounded mr-2"
           />
-          <div className="flex gap-2">
+          <div className="flex gap-1">
             <button
               onClick={handleSave}
-              className="text-green-600 hover:text-green-900"
+              className="bg-gray-200 border border-gray-300 text-gray-800 px-2 py-0.5 rounded hover:bg-gray-300 transition-colors duration-200 text-sm"
             >
               Kaydet
             </button>
             <button
               onClick={handleCancel}
-              className="text-gray-600 hover:text-gray-900"
+              className="bg-gray-200 border border-gray-300 text-gray-800 px-2 py-0.5 rounded hover:bg-gray-300 transition-colors duration-200 text-sm"
             >
               İptal
             </button>
@@ -212,17 +212,17 @@ const CategoryRow = ({ cat, onDelete, onSave }) => {
         </>
       ) : (
         <>
-          <span className="text-gray-800">{cat.name}</span>
-          <div className="flex gap-2">
+          <span className="text-gray-800 flex-1">{cat.name}</span>
+          <div className="flex gap-1 flex-none ml-auto">
             <button
               onClick={() => setIsEditing(true)}
-              className="text-blue-600 hover:text-blue-900"
+              className="bg-gray-200 border border-gray-300 text-gray-800 px-2 py-0.5 rounded hover:bg-gray-300 transition-colors duration-200 text-sm"
             >
               Düzenle
             </button>
             <button
               onClick={onDelete}
-              className="text-red-600 hover:text-red-900"
+              className="bg-gray-200 border border-gray-300 text-gray-800 px-2 py-0.5 rounded hover:bg-gray-300 transition-colors duration-200 text-sm"
             >
               Sil
             </button>

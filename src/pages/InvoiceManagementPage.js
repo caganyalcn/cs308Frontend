@@ -92,6 +92,7 @@ const InvoiceManagementPage = () => {
                 <p className="invoice-id">Fatura No: #{invoice.delivery_id}</p>
                 <p className="invoice-customer">Müşteri: {invoice.customer_name}</p>
                 <p className="invoice-date">Tarih: {new Date(invoice.created_at).toLocaleDateString('tr-TR')}</p>
+                <p className="invoice-address">Adres: {invoice.delivery_address}</p>
               </div>
               <div className="invoice-total">
                 Toplam: {invoice.total_price}₺

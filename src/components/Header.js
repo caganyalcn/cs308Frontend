@@ -116,9 +116,7 @@ const Header = ({
       {location.pathname !== "/home" && location.pathname !== "/admin" && (
         <button
           className="back-button"
-          onClick={() =>
-            location.pathname === "/return" ? navigate("/orders") : navigate("/home")
-          }
+          onClick={() => navigate(-1)}
         >
           ←
         </button>

@@ -20,17 +20,22 @@ export const AppProvider = ({ children }) => {
       try {
         const res = await fetch(`${API}/api/accounts/me/`, {
           credentials: 'include',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json; charset=utf-8'
+          }
         });
         if (res.ok) {
           const data = await res.json();
           setIsAuthenticated(true);
           setCurrentUser(data.user);
         } else {
+          console.log('Authentication check failed:', res.status);
           setIsAuthenticated(false);
           setCurrentUser(null);
         }
       } catch (err) {
-        console.error("Auth check failed", err);
+        console.error("Auth check failed:", err);
         setIsAuthenticated(false);
         setCurrentUser(null);
       }

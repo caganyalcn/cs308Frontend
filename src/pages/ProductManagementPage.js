@@ -58,11 +58,11 @@ const ProductManagementPage = () => {
         return;
       }
       const data = await response.json();
-      if (Array.isArray(data)) {
-        setProducts(data);
+      if (data.products && Array.isArray(data.products)) {
+        setProducts(data.products);
         setError(null);
       } else {
-        console.error('API response for products is not an array:', data);
+        console.error('API response for products is not in expected format:', data);
         setError('Ürünler beklenmedik formatta geldi.');
         setProducts([]);
       }
