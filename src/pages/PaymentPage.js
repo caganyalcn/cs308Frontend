@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "../styles/PaymentPage.css";
 
+const API = process.env.REACT_APP_API_BASE_URL || "http://localhost:8000"; // Define API constant
+
 function PaymentPage() {
   const navigate = useNavigate();
   const [paymentDetails, setPaymentDetails] = useState({
@@ -71,19 +73,43 @@ function PaymentPage() {
     }
 
     try {
-      const res = await fetch("http://localhost:8000/api/orders/place/", {
+      // Send credit card details to backend to save
+      // Use the new endpoint and include credentials
+      const saveCardResponse = await fetch(`${API}/api/products/save-credit-card-details/`, {
         method: "POST",
-        credentials: "include",
+        credentials: "include", // Important for sending session cookies
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({}),
+        body: JSON.stringify({
+          card_number: paymentDetails.cardNumber,
+          cvv: paymentDetails.cvv,
+          expiry_date: paymentDetails.expiryDate,
+          card_holder_name: paymentDetails.cardName,
+        }),
       });
 
-      if (res.ok) {
+      if (!saveCardResponse.ok) {
+        const errorData = await saveCardResponse.json();
+        console.error("Failed to save credit card details:", errorData);
+        // As per instruction, continue with payment even if saving card details fails
+        // In a real application, you might want to handle this more robustly
+      }
+
+      // Proceed with placing the order using the original endpoint
+      const orderResponse = await fetch("http://localhost:8000/api/orders/place/", {
+        method: "POST",
+        credentials: "include", // Important for sending session cookies
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({}), // Assuming order placement doesn't need card details here
+      });
+
+      if (orderResponse.ok) {
         navigate("/payment-success");
       } else {
-        const data = await res.json();
+        const data = await orderResponse.json();
         alert(data.error || "Ödeme başarısız oldu!");
       }
     } catch (error) {
