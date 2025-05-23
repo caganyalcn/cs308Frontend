@@ -338,29 +338,14 @@ const SalesManagerPage = () => {
                 {invoices.length === 0 ? (
                   <div>No invoices found for the selected period.</div>
                 ) : (
-                  invoices.map(invoice => (
+                  invoices.map((invoice) => (
                     <div key={invoice.id || Math.random()} className="invoice-item">
                       <h3>Order ID: {invoice.id || 'N/A'}</h3>
                       <p>User Email: {invoice.user_email || 'N/A'}</p>
                       <p>Created At: {invoice.created_at ? new Date(invoice.created_at).toLocaleString() : 'N/A'}</p>
-                      <p>Total Price: ${invoice.total_price ? invoice.total_price.toFixed(2) : '0.00'}</p>
+                      <p>Total Price: ${invoice.total_price ? parseFloat(invoice.total_price).toFixed(2) : '0.00'}</p>
                       <p>Delivery Address: {invoice.delivery_address || 'N/A'}</p>
                       <p>Status: {invoice.status || 'N/A'}</p>
-                      <h4>Items:</h4>
-                      {invoice.items && Array.isArray(invoice.items) && invoice.items.length > 0 ? (
-                        <ul>
-                          {invoice.items.map(item => (
-                            <li key={item.product_id || Math.random()}>
-                              {item.product_name || 'Unknown Product'} 
-                              {item.product_id ? `(ID: ${item.product_id})` : ''} - 
-                              Quantity: {item.quantity || 0} - 
-                              Price: ${item.price_at_purchase ? item.price_at_purchase.toFixed(2) : '0.00'}
-                            </li>
-                          ))}
-                        </ul>
-                      ) : (
-                        <p>No items in this order.</p>
-                      )}
                     </div>
                   ))
                 )}
@@ -392,7 +377,7 @@ const SalesManagerPage = () => {
                 
                 <div className="revenue-item">
                   <div className="revenue-label">Toplam Kazanç:</div>
-                  <div className="revenue-value">${revenueReport.revenue.toFixed(2)}</div>
+                  <div className="revenue-value">${parseFloat(revenueReport.revenue).toFixed(2)}</div>
                   <div className="revenue-bar-container">
                     <div 
                       className="revenue-bar" 
@@ -406,12 +391,12 @@ const SalesManagerPage = () => {
                 
                 <div className="revenue-item">
                   <div className="revenue-label">Toplam Gider:</div>
-                  <div className="revenue-value">${revenueReport.expense.toFixed(2)}</div>
+                  <div className="revenue-value">${parseFloat(revenueReport.expense).toFixed(2)}</div>
                   <div className="revenue-bar-container">
                     <div 
                       className="revenue-bar" 
                       style={{ 
-                        width: `${(revenueReport.expense / revenueReport.revenue) * 100}%`, 
+                        width: `${(parseFloat(revenueReport.expense) / parseFloat(revenueReport.revenue)) * 100}%`, 
                         backgroundColor: '#f44336'
                       }}
                     ></div>
@@ -420,7 +405,7 @@ const SalesManagerPage = () => {
                 
                 <div className="revenue-item">
                   <div className="revenue-label">Net Kazanç:</div>
-                  <div className="revenue-value">${(revenueReport.revenue - revenueReport.expense).toFixed(2)}</div>
+                  <div className="revenue-value">${(parseFloat(revenueReport.revenue) - parseFloat(revenueReport.expense)).toFixed(2)}</div>
                 </div>
               </div>
             )}
@@ -449,7 +434,7 @@ const SalesManagerPage = () => {
                       <h3>Order ID: {order.id || 'N/A'}</h3>
                       <p>User Email: {order.user_email || 'N/A'}</p>
                       <p>Created At: {order.created_at ? new Date(order.created_at).toLocaleString() : 'N/A'}</p>
-                      <p>Total Price: ${order.total_price ? order.total_price.toFixed(2) : '0.00'}</p>
+                      <p>Total Price: ${order.total_price ? parseFloat(order.total_price).toFixed(2) : '0.00'}</p>
                       
                       <h4>Items:</h4>
                       {order.items && Array.isArray(order.items) && order.items.length > 0 ? (
@@ -459,7 +444,7 @@ const SalesManagerPage = () => {
                               {item.product_name || 'Unknown Product'} 
                               {item.product_id ? `(ID: ${item.product_id})` : ''} - 
                               Quantity: {item.quantity || 0} - 
-                              Price: ${item.price_at_purchase ? item.price_at_purchase.toFixed(2) : '0.00'}
+                              Price: ${item.price_at_purchase ? parseFloat(item.price_at_purchase).toFixed(2) : '0.00'}
                             </li>
                           ))}
                         </ul>
